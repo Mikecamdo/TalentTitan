@@ -96,7 +96,7 @@ export const SignInPage = () => {
             </Form.Group>
 
             <Button
-              className="col-12 mt-2"
+              className="col-12 mt-2 button-bg"
               disabled={disableButton}
               onClick={() => {
                 login();

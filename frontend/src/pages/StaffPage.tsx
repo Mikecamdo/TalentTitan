@@ -49,7 +49,6 @@ export const StaffPage = () => {
                     </Col>
                 </Row>
             </Container>
-            
         </Navbar>
         </>
     );

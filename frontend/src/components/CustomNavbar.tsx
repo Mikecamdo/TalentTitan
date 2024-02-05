@@ -1,6 +1,8 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
+import { Row, Col, Nav, NavDropdown } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
 import { useContext } from "react";
@@ -18,7 +20,7 @@ export const CustomNavbar = () => {
     if (!currentUser) {
         return (
             <>
-                <Navbar sticky="top" collapseOnSelect>
+                <Navbar sticky="top" className="nav-main" collapseOnSelect>
                     <Container fluid className="m-0">
                     <Navbar.Brand>
                         <Link to={"/"} className={`nav-link`}>
@@ -26,6 +28,37 @@ export const CustomNavbar = () => {
                         </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />
+                        <Row >
+                            <Col md={"auto"} >
+                                <Navbar.Toggle aria-controls="account-requests" />
+                                <Navbar.Collapse id="account-requests">
+                                <Nav>
+                                    <NavDropdown
+                                    id="account-requests"
+                                    className="text-light"
+                                    title="Account Requests"
+                                    >
+                                    <NavDropdown.Item href="/employeer-requests">
+                                        Employeer Requests
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/professional-requests">
+                                        Professional Requests
+                                    </NavDropdown.Item>
+                                    </NavDropdown>
+                                </Nav>
+                                </Navbar.Collapse>
+                            </Col>
+                            <Col md={"auto"} >
+                                <NavLink to={"/employeer-list"} className="text-dark">
+                                    View All Employeers
+                                </NavLink>
+                            </Col>
+                            <Col md={"auto"} >
+                                <NavLink to={"/professionals-list"} className="text-dark">
+                                    View All Professionals
+                                </NavLink>
+                            </Col>
+                        </Row>
                     <NavbarCollapse className="fs-5">
                         <Link to={"/signIn"} className={`ms-auto nav-link`}>
                             Sign up/Sign In
@@ -49,6 +82,7 @@ export const CustomNavbar = () => {
                     </Navbar.Brand>
                     <Navbar.Toggle />
                     <NavbarCollapse className="fs-5">
+
                         <div className="ms-auto">
                             Hello {currentUser}!
 

@@ -7,6 +7,9 @@ import { SignUpPage } from './pages/SignUpPage';
 import { CustomNavbar } from './components/CustomNavbar';
 import User from './types/User';
 import { AccountRequestsPage } from './pages/AccountRequestsPage';
+import { ProfessionalHomePage } from './pages/ProfessionalHomePage';
+import { EmployeerHomePage } from './pages/EmployeerHomePage';
+import { ProfilePage } from './pages/ProfilePage';
 
 interface UserContextProps { //TODO might need to move this to its own file
   currentUser: string | undefined;
@@ -51,6 +54,9 @@ function App() {
             {currentUser && (<>
               <Route path='/accountRequests' element={ <AccountRequestsPage/> } />
             </>)}
+              <Route path='/professional' element={ <ProfessionalHomePage/> } />
+              <Route path='/employeer' element={ <EmployeerHomePage/> } />
+              <Route path='/profile' element={ <ProfilePage/> } />
           </Routes>
         </Router>
       </UserContext.Provider>

@@ -1,3 +1,4 @@
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -115,7 +116,7 @@ export const SignInPage = () => {
               </Row>
             </Container>
           </Form>
-        {/* <NavLink to={"/professional"} className="text-decoration-none">
+        <NavLink to={"/professional"} className="text-decoration-none">
           Professional Test
         </NavLink>
         <br/>
@@ -126,7 +127,11 @@ export const SignInPage = () => {
         <NavLink to={"/profile"} className="text-decoration-none">
           Profile Test
         </NavLink>
-        <br/> */}
+        <br/>
+        <NavLink to={"/staff"} className="text-decoration-none">
+          Staff Test
+        </NavLink>
+        <br/>
         </div>
       </div>
     </div>

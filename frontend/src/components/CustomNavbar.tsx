@@ -1,3 +1,4 @@
+import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
@@ -27,7 +28,7 @@ export const CustomNavbar = () => {
                     <Navbar.Toggle />
                     <NavbarCollapse className="fs-5">
                         <Link to={"/signIn"} className={`ms-auto nav-link`}>
-                            Sign In
+                            Sign up/Sign In
                         </Link>
                     </NavbarCollapse>
                     </Container>

@@ -1,19 +1,24 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { LandingPage } from './components/LandingPage';
-import { SignInPage } from './components/SignInPage';
-import { SignUpPage } from './components/SignUpPage';
+import { LandingPage } from './pages/LandingPage';
+import { SignInPage } from './pages/SignInPage';
+import { SignUpPage } from './pages/SignUpPage';
+import { CustomNavbar } from './components/CustomNavbar';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={ <LandingPage/> } />
-        <Route path='/signIn' element={ <SignInPage/> } />
-        <Route path='/signUp' element={ <SignUpPage/> } />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <CustomNavbar/>
+
+        <Routes>
+          <Route path='/' element={ <LandingPage/> } />
+          <Route path='/signIn' element={ <SignInPage/> } />
+          <Route path='/signUp' element={ <SignUpPage/> } />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

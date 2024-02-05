@@ -35,22 +35,6 @@ function App() {
     
   }, [currentUser]);
 
-  // if (!currentUser) {
-  //   return (
-  //     <>
-  //       <Router>
-  //         <CustomNavbar/>
-  
-  //         <Routes>
-  //           <Route path='/' element={ <LandingPage/> } />
-  //           <Route path='/signIn' element={ <SignInPage/> } />
-  //           <Route path='/signUp' element={ <SignUpPage/> } />
-  //         </Routes>
-  //       </Router>
-  //     </>
-  //   );
-  // }
-
   return (
     <>
       <UserContext.Provider value={{currentUser, setCurrentUser}}>
@@ -59,9 +43,14 @@ function App() {
   
           <Routes>
             <Route path='/' element={ <LandingPage/> } />
-            <Route path='/signIn' element={ <SignInPage/> } />
-            <Route path='/signUp' element={ <SignUpPage/> } />
-            <Route path='/accountRequests' element={ <AccountRequestsPage/> } />
+            {!currentUser && (<>
+              <Route path='/signIn' element={ <SignInPage/> } />
+              <Route path='/signUp' element={ <SignUpPage/> } />
+            </>)}
+            
+            {currentUser && (<>
+              <Route path='/accountRequests' element={ <AccountRequestsPage/> } />
+            </>)}
           </Routes>
         </Router>
       </UserContext.Provider>

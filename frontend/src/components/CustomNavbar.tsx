@@ -17,10 +17,12 @@ export const CustomNavbar = () => {
     if (!currentUser) {
         return (
             <>
-                <Navbar sticky="top" expand="lg" collapseOnSelect>
+                <Navbar sticky="top" collapseOnSelect>
                     <Container fluid className="m-0">
                     <Navbar.Brand>
-                        Logo
+                        <Link to={"/"} className={`nav-link`}>
+                            Logo
+                        </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                     <NavbarCollapse className="fs-5">
@@ -37,18 +39,22 @@ export const CustomNavbar = () => {
     } else {
         return (
             <>
-                <Navbar sticky="top" expand="lg" collapseOnSelect>
+                <Navbar sticky="top" expand="sm" collapseOnSelect>
                     <Container fluid className="m-0">
                     <Navbar.Brand>
-                        Logo
+                        <Link to={"/"} className={`nav-link`}>
+                            Logo
+                        </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                     <NavbarCollapse className="fs-5">
-                        Hello {currentUser}!
+                        <div className="ms-auto">
+                            Hello {currentUser}!
 
-                        <Link to={"/"} className={`ms-auto nav-link`} onClick={() => {setCurrentUser(undefined)}}>
+                            <Link to={"/"} className={`ms-2 inherit-color`} onClick={() => {setCurrentUser(undefined)}}>
                             Sign Out
-                        </Link>
+                            </Link>
+                        </div>
                     </NavbarCollapse>
                     </Container>
                 </Navbar>

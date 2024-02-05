@@ -18,3 +18,7 @@ a:active {
 .inherit-color {
   color: inherit;
 }
+
+.custom-navbar {
+  background-color: rgb(206, 140, 87); /*TODO: this color is temporary */
+}

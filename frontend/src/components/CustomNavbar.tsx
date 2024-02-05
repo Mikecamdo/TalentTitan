@@ -17,7 +17,7 @@ export const CustomNavbar = () => {
     if (!currentUser) {
         return (
             <>
-                <Navbar sticky="top" collapseOnSelect>
+                <Navbar sticky="top" collapseOnSelect className="custom-navbar">
                     <Container fluid className="m-0">
                     <Navbar.Brand>
                         <Link to={"/"} className={`nav-link`}>
@@ -32,8 +32,6 @@ export const CustomNavbar = () => {
                     </NavbarCollapse>
                     </Container>
                 </Navbar>
-    
-                <hr className="no-margin"/>
             </>
         );
     } else {
@@ -58,8 +56,6 @@ export const CustomNavbar = () => {
                     </NavbarCollapse>
                     </Container>
                 </Navbar>
-    
-                <hr className="no-margin"/>
             </>
         );
     }

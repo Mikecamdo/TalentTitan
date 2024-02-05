@@ -115,18 +115,6 @@ export const SignInPage = () => {
               </Row>
             </Container>
           </Form>
-        {/* <NavLink to={"/professional"} className="text-decoration-none">
-          Professional Test
-        </NavLink>
-        <br/>
-        <NavLink to={"/employeer"} className="text-decoration-none">
-          Employeer Test
-        </NavLink>
-        <br/>
-        <NavLink to={"/profile"} className="text-decoration-none">
-          Profile Test
-        </NavLink>
-        <br/> */}
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ export const CustomNavbar = () => {
                     </Navbar.Brand>
                     <Navbar.Toggle />
                         <Row >
-                            <Col md={"auto"} >
+                            {/* <Col md={"auto"} >
                                 <Navbar.Toggle aria-controls="account-requests" />
                                 <Navbar.Collapse id="account-requests">
                                 <Nav>
@@ -47,8 +47,75 @@ export const CustomNavbar = () => {
                                     </NavDropdown>
                                 </Nav>
                                 </Navbar.Collapse>
-                            </Col>
+                            </Col> */}
+
                             <Col md={"auto"} >
+                                <Navbar.Toggle aria-controls="employeer-resources" />
+                                <Navbar.Collapse id="employeer-resources">
+                                <Nav>
+                                    <NavDropdown
+                                    id="employeer-resources"
+                                    className="text-light"
+                                    title="Employeer Resources"
+                                    >
+                                    <NavDropdown.Item href="/employeer-requests">
+                                        Employeer Requests
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/professional-request">
+                                        Request Professional
+                                    </NavDropdown.Item>
+                                    </NavDropdown>
+                                </Nav>
+                                </Navbar.Collapse>
+                            </Col>
+
+                            <Col md={"auto"} >
+                                <Navbar.Toggle aria-controls="professional-resources" />
+                                <Navbar.Collapse id="professional-resources">
+                                <Nav>
+                                    <NavDropdown
+                                    id="professional-resources"
+                                    className="text-light"
+                                    title="Professional Resources"
+                                    >
+                                    <NavDropdown.Item href="/professional-requests">
+                                        Employeer Requests
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/professional-employeer-requests">
+                                        Request Employeer
+                                    </NavDropdown.Item>
+                                    </NavDropdown>
+                                </Nav>
+                                </Navbar.Collapse>
+                            </Col>
+                            
+                            <Col md={"auto"} >
+                                <Navbar.Toggle aria-controls="staff-resources" />
+                                <Navbar.Collapse id="staff-resources">
+                                <Nav>
+                                    <NavDropdown
+                                    id="professional-resources"
+                                    className="text-light"
+                                    title="Staff Resources"
+                                    >
+                                    <NavDropdown.Item href="/employeer-requests">
+                                        Employeer Requests
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/professional-requests">
+                                        Professional Requests
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/employeer-list">
+                                        View All Employeers
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/professionals-list">
+                                        View All Professionals
+                                    </NavDropdown.Item>
+                                    </NavDropdown>
+                                </Nav>
+                                </Navbar.Collapse>
+                            </Col>
+
+                            {/* <Col md={"auto"} >
                                 <NavLink to={"/employeer-list"} className="text-dark">
                                     View All Employeers
                                 </NavLink>
@@ -57,7 +124,7 @@ export const CustomNavbar = () => {
                                 <NavLink to={"/professionals-list"} className="text-dark">
                                     View All Professionals
                                 </NavLink>
-                            </Col>
+                            </Col> */}
                         </Row>
                     <NavbarCollapse className="fs-5">
                         <Link to={"/signIn"} className={`ms-auto nav-link`}>

@@ -36,12 +36,13 @@ export const CustomNavbar = () => {
                                 className="text-light"
                                 title="Employeer Resources"
                                 >
-                                <NavDropdown.Item href="/employeer-requests">
-                                    Employeer Requests
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/professional-request">
-                                    Request Professional
-                                </NavDropdown.Item>
+                                    <NavDropdown.Item href="/job-posting">
+                                        Post New Job
+                                    </NavDropdown.Item>
+
+                                    <NavDropdown.Item href="/job-search">
+                                        View Posted Jobs
+                                    </NavDropdown.Item>
                                 </NavDropdown>
                             </Nav>
                             </Navbar.Collapse>
@@ -56,12 +57,9 @@ export const CustomNavbar = () => {
                                 className="text-light"
                                 title="Professional Resources"
                                 >
-                                <NavDropdown.Item href="/professional-requests">
-                                    Employeer Requests
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/professional-employeer-requests">
-                                    Request Employeer
-                                </NavDropdown.Item>
+                                    <NavDropdown.Item href="/job-search">
+                                        View Posted Jobs
+                                    </NavDropdown.Item>
                                 </NavDropdown>
                             </Nav>
                             </Navbar.Collapse>
@@ -76,18 +74,15 @@ export const CustomNavbar = () => {
                                 className="text-light"
                                 title="Staff Resources"
                                 >
-                                <NavDropdown.Item href="/employeer-requests">
-                                    Employeer Requests
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/professional-requests">
-                                    Professional Requests
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/employeer-list">
-                                    View All Employeers
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/professionals-list">
-                                    View All Professionals
-                                </NavDropdown.Item>
+                                    <NavDropdown.Item href="/account-requests">
+                                        View Account Requests
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/account-search">
+                                        View Accounts
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/add-staff">
+                                        Add New Staff Account
+                                    </NavDropdown.Item>
                                 </NavDropdown>
                             </Nav>
                             </Navbar.Collapse>

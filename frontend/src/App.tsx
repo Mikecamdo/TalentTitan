@@ -7,10 +7,7 @@ import { SignUpPage } from './pages/SignUpPage';
 import { CustomNavbar } from './components/CustomNavbar';
 import User from './types/User';
 import { AccountRequestsPage } from './pages/AccountRequestsPage';
-import { ProfessionalHomePage } from './pages/ProfessionalHomePage';
-import { EmployeerHomePage } from './pages/EmployeerHomePage';
 import { ProfilePage } from './pages/ProfilePage';
-import { StaffPage } from './pages/StaffPage';
 import { ProfessionalRequests } from './pages/ProfessionalRequests';
 import { ProfessionalsList } from './pages/ProfessionalsList';
 import { EmployeerRequests } from './pages/EmployeerRequests';
@@ -55,16 +52,12 @@ function App() {
             {!currentUser && (<>
               <Route path='/signIn' element={ <SignInPage/> } />
               <Route path='/signUp' element={ <SignUpPage/> } />
-              <Route path='/staff' element={ <StaffPage/> } />
             </>)}
             
             {currentUser && (<>
               <Route path='/accountRequests' element={ <AccountRequestsPage/> } />
             </>)}
-              <Route path='/professional' element={ <ProfessionalHomePage/> } />
-              <Route path='/employeer' element={ <EmployeerHomePage/> } />
               <Route path='/profile' element={ <ProfilePage/> } />
-              <Route path='/staff' element={ <StaffPage/> } />
               <Route path='/professional-requests' element={ <ProfessionalRequests/> } />
               <Route path='/employeer-requests' element={ <EmployeerRequests/> } />
               <Route path='/employeer-list' element={ <EmployeersList/> } />

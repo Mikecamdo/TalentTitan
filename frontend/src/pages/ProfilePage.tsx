@@ -6,11 +6,11 @@ export const ProfilePage = () => {
         <>
         <Container className=" rounded">
             <Card className="bg-main rounded">
-                {/* <CardHeader className="button-bg">
+                <CardHeader className="button-bg">
                     <Card.Title>
-                        Username
+                        Professional (Role)
                     </Card.Title>
-                </CardHeader> */}
+                </CardHeader>
 
                 <Card.Body className="bg-main">
                     <Row className="d-flex">
@@ -91,8 +91,15 @@ export const ProfilePage = () => {
             </Card>
         </Container>
 
-        <Container className="rounded" >
-            <strong>Qualifications:</strong>
+        <Container className="d-flex rounded bg-alt text-light" >
+            <Col className="d-flex justify-content-center">
+                <Row> <strong>Qualifications:</strong> </Row>
+            </Col>
+
+            <Col className="d-flex justify-content-center">
+                <Row> <strong>Transaction History:</strong> </Row>
+            </Col>
+            
         </Container>
         </>
     );

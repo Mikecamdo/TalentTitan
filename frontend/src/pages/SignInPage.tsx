@@ -102,7 +102,7 @@ export const SignInPage = () => {
                 login();
               }}
             >
-              Submit
+              Sign In
             </Button>
 
             <Container fluid>

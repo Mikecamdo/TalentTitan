@@ -127,9 +127,9 @@ export const CustomNavbar = () => {
                             </Col> */}
                         </Row>
                     <NavbarCollapse className="fs-5">
-                        <Link to={"/signIn"} className={`ms-auto nav-link`}>
-                            Sign up/Sign In
-                        </Link>
+                        <div className={`ms-auto nav-link`}>
+                            <Link to={"/signUp"} className="inherit-color">Sign Up</Link> / <Link to={"/signIn"} className="inherit-color">Sign In</Link>
+                        </div>
                     </NavbarCollapse>
                     </Container>
                 </Navbar>

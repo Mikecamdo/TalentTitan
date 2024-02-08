@@ -383,7 +383,7 @@ export const SignUpPage = () => {
               <Row className="text-center mt-4">
                 <Col>
                   <p className="text-muted mb-0">Already have an account?</p>
-                  <NavLink to={"/login"}>
+                  <NavLink to={"/signIn"}>
                     Sign in
                   </NavLink>
                 </Col>

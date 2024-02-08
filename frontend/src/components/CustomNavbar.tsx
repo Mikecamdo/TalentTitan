@@ -133,8 +133,6 @@ export const CustomNavbar = () => {
                     </NavbarCollapse>
                     </Container>
                 </Navbar>
-    
-                <hr className="no-margin"/>
             </>
         );
     } else {
@@ -160,8 +158,6 @@ export const CustomNavbar = () => {
                     </NavbarCollapse>
                     </Container>
                 </Navbar>
-    
-                <hr className="no-margin"/>
             </>
         );
     }

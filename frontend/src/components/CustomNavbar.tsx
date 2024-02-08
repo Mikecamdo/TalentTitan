@@ -132,6 +132,9 @@ export const CustomNavbar = () => {
                             </Col> */}
                         </Row>
                     <NavbarCollapse className="fs-5">
+                    <Link to={"/profile"} className={`ms-auto nav-link`}>
+                            Temp Profile
+                        </Link>
                         <Link to={"/signIn"} className={`ms-auto nav-link`}>
                             Sign up/Sign In
                         </Link>

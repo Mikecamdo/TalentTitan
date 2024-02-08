@@ -8,10 +8,6 @@ import { CustomNavbar } from './components/CustomNavbar';
 import User from './types/User';
 import { AccountRequestsPage } from './pages/AccountRequestsPage';
 import { ProfilePage } from './pages/ProfilePage';
-import { ProfessionalRequests } from './pages/ProfessionalRequests';
-import { ProfessionalsList } from './pages/ProfessionalsList';
-import { EmployeerRequests } from './pages/EmployeerRequests';
-import { EmployeersList } from './pages/EmployeersList';
 import { JobPostingPage } from './pages/JobPostingPage';
 
 interface UserContextProps { //TODO might need to move this to its own file
@@ -58,10 +54,6 @@ function App() {
               <Route path='/accountRequests' element={ <AccountRequestsPage/> } />
             </>)}
               <Route path='/profile' element={ <ProfilePage/> } />
-              <Route path='/professional-requests' element={ <ProfessionalRequests/> } />
-              <Route path='/employeer-requests' element={ <EmployeerRequests/> } />
-              <Route path='/employeer-list' element={ <EmployeersList/> } />
-              <Route path='/professionals-list' element={ <ProfessionalsList/> } />
               <Route path='/job-posting' element={<JobPostingPage/> }/>
           </Routes>
         </Router>

@@ -28,13 +28,13 @@ export const CustomNavbar = () => {
                 <Navbar.Toggle />
                     <Row >
                         <Col md={"auto"} >
-                            <Navbar.Toggle aria-controls="employeer-resources" />
-                            <Navbar.Collapse id="employeer-resources">
+                            <Navbar.Toggle aria-controls="employer-resources" />
+                            <Navbar.Collapse id="employer-resources">
                             <Nav>
                                 <NavDropdown
-                                id="employeer-resources"
+                                id="employer-resources"
                                 className="text-light"
-                                title="Employeer Resources"
+                                title="Employer Resources"
                                 >
                                     <NavDropdown.Item href="/job-posting">
                                         Post New Job
@@ -87,17 +87,6 @@ export const CustomNavbar = () => {
                             </Nav>
                             </Navbar.Collapse>
                         </Col>
-
-                        {/* <Col md={"auto"} >
-                            <NavLink to={"/employeer-list"} className="text-dark">
-                                View All Employeers
-                            </NavLink>
-                        </Col>
-                        <Col md={"auto"} >
-                            <NavLink to={"/professionals-list"} className="text-dark">
-                                View All Professionals
-                            </NavLink>
-                        </Col> */}
                     </Row>
                     
                 <NavbarCollapse className="fs-5">

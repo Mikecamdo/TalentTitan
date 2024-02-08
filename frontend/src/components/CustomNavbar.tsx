@@ -24,7 +24,7 @@ export const CustomNavbar = () => {
                     <Container fluid className="m-0">
                     <Navbar.Brand>
                         <Link to={"/"} className={`nav-link`}>
-                            Logo
+                            Talent Titan Logo
                         </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />
@@ -61,6 +61,7 @@ export const CustomNavbar = () => {
                                     <NavDropdown.Item href="/employeer-requests">
                                         Employeer Requests
                                     </NavDropdown.Item>
+                                    <NavDropdown.Divider />
                                     <NavDropdown.Item href="/professional-request">
                                         Request Professional
                                     </NavDropdown.Item>
@@ -81,6 +82,7 @@ export const CustomNavbar = () => {
                                     <NavDropdown.Item href="/professional-requests">
                                         Employeer Requests
                                     </NavDropdown.Item>
+                                    <NavDropdown.Divider />
                                     <NavDropdown.Item href="/professional-employeer-requests">
                                         Request Employeer
                                     </NavDropdown.Item>
@@ -101,12 +103,15 @@ export const CustomNavbar = () => {
                                     <NavDropdown.Item href="/employeer-requests">
                                         Employeer Requests
                                     </NavDropdown.Item>
+                                    <NavDropdown.Divider />
                                     <NavDropdown.Item href="/professional-requests">
                                         Professional Requests
                                     </NavDropdown.Item>
+                                    <NavDropdown.Divider />
                                     <NavDropdown.Item href="/employeer-list">
                                         View All Employeers
                                     </NavDropdown.Item>
+                                    <NavDropdown.Divider />
                                     <NavDropdown.Item href="/professionals-list">
                                         View All Professionals
                                     </NavDropdown.Item>

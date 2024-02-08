@@ -13,11 +13,11 @@ export const ProfilePage = () => {
                 </CardHeader> */}
 
                 <Card.Body className="bg-main">
-                    <Row>
-                        <Col className="justify-center" sm="auto">
-                            <Image src="./default-avatar.png" width={"150px"} height={"150px"}></Image>
-                            <Card.Title className="justify-text-center">
-                                {"\t"}Username
+                    <Row className="d-flex">
+                        <Col className="d-flexjustify-content-center" sm="auto">
+                            <Image src="./default-avatar.png" width={"150px"} height={"150px"} className="d-flex justify-content-center"></Image>
+                            <Card.Title className="text-center">
+                                 {"\t"}Username
                             </Card.Title>
                         </Col>
                         <Col>

@@ -80,18 +80,21 @@ export const SignUpPage = () => {
           )}
 
           <Dropdown className="mt-4" onSelect={handleRoleSelect}>
-              <Dropdown.Toggle
-                className="col-12 text-white"
-                variant="info"
-                id="dropdown-menu"
-              >
+            <Form.Label>Account Type</Form.Label>
+
+            <Dropdown.Toggle
+            className="col-12 text-white"
+            variant="info"
+            id="dropdown-menu"
+            >
                 {roleValue}
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="col-12">
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className="col-12">
                 <Dropdown.Item eventKey="Employer">Employer</Dropdown.Item>
                 <Dropdown.Item eventKey="Professional">Professional</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown.Menu>
+           </Dropdown>
 
           <Form>
             {roleValue === "Professional" && (

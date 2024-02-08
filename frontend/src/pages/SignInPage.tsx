@@ -1,3 +1,4 @@
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -95,7 +96,7 @@ export const SignInPage = () => {
             </Form.Group>
 
             <Button
-              className="col-12 mt-2"
+              className="col-12 mt-2 button-bg"
               disabled={disableButton}
               onClick={() => {
                 login();
@@ -115,6 +116,22 @@ export const SignInPage = () => {
               </Row>
             </Container>
           </Form>
+        <NavLink to={"/professional"} className="text-decoration-none">
+          Professional Test
+        </NavLink>
+        <br/>
+        <NavLink to={"/employeer"} className="text-decoration-none">
+          Employeer Test
+        </NavLink>
+        <br/>
+        <NavLink to={"/profile"} className="text-decoration-none">
+          Profile Test
+        </NavLink>
+        <br/>
+        <NavLink to={"/staff"} className="text-decoration-none">
+          Staff Test
+        </NavLink>
+        <br/>
         </div>
       </div>
     </div>

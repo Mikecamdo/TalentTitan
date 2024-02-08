@@ -10,6 +10,11 @@ import { AccountRequestsPage } from './pages/AccountRequestsPage';
 import { ProfessionalHomePage } from './pages/ProfessionalHomePage';
 import { EmployeerHomePage } from './pages/EmployeerHomePage';
 import { ProfilePage } from './pages/ProfilePage';
+import { StaffPage } from './pages/StaffPage';
+import { ProfessionalRequests } from './pages/ProfessionalRequests';
+import { ProfessionalsList } from './pages/ProfessionalsList';
+import { EmployeerRequests } from './pages/EmployeerRequests';
+import { EmployeersList } from './pages/EmployeersList';
 
 interface UserContextProps { //TODO might need to move this to its own file
   currentUser: string | undefined;
@@ -49,6 +54,7 @@ function App() {
             {!currentUser && (<>
               <Route path='/signIn' element={ <SignInPage/> } />
               <Route path='/signUp' element={ <SignUpPage/> } />
+              <Route path='/staff' element={ <StaffPage/> } />
             </>)}
             
             {currentUser && (<>
@@ -57,6 +63,11 @@ function App() {
               <Route path='/professional' element={ <ProfessionalHomePage/> } />
               <Route path='/employeer' element={ <EmployeerHomePage/> } />
               <Route path='/profile' element={ <ProfilePage/> } />
+              <Route path='/staff' element={ <StaffPage/> } />
+              <Route path='/professional-requests' element={ <ProfessionalRequests/> } />
+              <Route path='/employeer-requests' element={ <EmployeerRequests/> } />
+              <Route path='/employeer-list' element={ <EmployeersList/> } />
+              <Route path='/professionals-list' element={ <ProfessionalsList/> } />
           </Routes>
         </Router>
       </UserContext.Provider>

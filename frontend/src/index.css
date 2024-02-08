@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+color-scheme {
+  color: #0C2D57;
+  color: #FC6736 100%;
+  color: #FFB0B0 100%;
+  color: #EFECEC 100%;
+
+}
+.nav-bg {
+  background: #0C2D57;
+  background: linear-gradient(90deg,#FC6736 50%, #FFB0B0 80%, #EFECEC 100%);
+}
+
+.nav-main {
+  background: #FC6736;
+}
+
+.button-bg {
+  background: #0C2D57;
+  background: linear-gradient(180deg,#FC6736 50%, #FFB0B0 80%, #EFECEC 100%);
+}

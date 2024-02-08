@@ -109,29 +109,16 @@ export const SignInPage = () => {
               <Row className="text-center mt-4">
                 <Col>
                   <p className="text-muted mb-0">Don't have an account?</p>
-                  <NavLink to={"/signup"} className="text-decoration-none">
+                  <NavLink to={"/signUp"} className="text-decoration-none">
                     Sign up
                   </NavLink>
                 </Col>
               </Row>
             </Container>
           </Form>
-        <NavLink to={"/professional"} className="text-decoration-none">
-          Professional Test
-        </NavLink>
-        <br/>
-        <NavLink to={"/employeer"} className="text-decoration-none">
-          Employeer Test
-        </NavLink>
-        <br/>
         <NavLink to={"/profile"} className="text-decoration-none">
           Profile Test
         </NavLink>
-        <br/>
-        <NavLink to={"/staff"} className="text-decoration-none">
-          Staff Test
-        </NavLink>
-        <br/>
         </div>
       </div>
     </div>

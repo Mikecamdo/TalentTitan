@@ -92,7 +92,7 @@ export const CustomNavbar = () => {
                 <NavbarCollapse className="fs-5">
                     {!currentUser && (<>
                         <div className={`ms-auto nav-link`}>
-                            <Link to={"/signUp"} className="inherit-color">Sign Up</Link> / <Link to={"/signIn"} className="inherit-color">Sign In</Link>
+                            <Link to={"/signIn"} className="inherit-color">Sign In</Link> / <Link to={"/signUp"} className="inherit-color">Sign Up</Link>
                         </div>
                     </>)}
 

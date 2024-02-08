@@ -1,0 +1,255 @@
+import { useContext, useEffect } from "react";
+import { UserContext } from "../App";
+import { useState } from "react";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/esm/Button";
+import Container from "react-bootstrap/esm/Container";
+import { useNavigate } from "react-router-dom";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+
+export const JobPostingPage = () => {
+    const userContext = useContext(UserContext);
+
+    const [positionName, setPositionName] = useState("");
+    const [positionId, setPositionId] = useState("");
+    const [contactFirstName, setContactFirstName] = useState("");
+    const [contactLastName, setContactLastName] = useState("");
+    const [contactPhoneNumber, setContactPhoneNumber] = useState("");
+    const [contactEmail, setContactEmail] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [hourlyRate, setHourlyRate] = useState("");
+
+    // TODO: Need to change the following
+    const [qualifications, setQualifications] = useState("");
+
+    const [disableButton, setDisableButton] = useState(true);
+
+    const postJob = () => {
+        console.log("Posting job!");
+    }
+
+    useEffect(() => {
+        if (positionName && positionId && contactFirstName && contactLastName
+         && contactPhoneNumber && contactEmail && startDate && endDate && hourlyRate) {
+        setDisableButton(false);
+        } else {
+        setDisableButton(true);
+        }
+    }, [positionName, positionId, contactFirstName, contactLastName, 
+        contactPhoneNumber, contactEmail, startDate, endDate, hourlyRate]);
+
+    return (
+        <>      
+        <Container className="mt-3 mb-3">
+            <div className="card">
+            <div className="card-header py-3">
+                <h1 className="fs-2 p-0 my-2" id="header">Post a New Job</h1>
+            </div>
+            <div className="card-body">
+                <Form>
+                <Row className="mb-3">
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Position Name</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter position name"
+                        value={positionName}
+                        onChange={(delta) => {
+                            setPositionName(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Position ID</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter position ID"
+                        value={positionId}
+                        onChange={(delta) => {
+                            setPositionId(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Contact First Name</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter first name"
+                        value={contactFirstName}
+                        onChange={(delta) => {
+                            setContactFirstName(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Contact Last Name</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter last name"
+                        value={contactLastName}
+                        onChange={(delta) => {
+                            setContactLastName(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Phone Number</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter phone number"
+                        value={contactPhoneNumber}
+                        onChange={(delta) => {
+                            setContactPhoneNumber(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Email</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter email"
+                        value={contactEmail}
+                        onChange={(delta) => {
+                            setContactEmail(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2} >
+                    <Form.Group controlId="order_date">
+                        <Form.Label id="header">Start Date</Form.Label>
+                        <Form.Control
+                        type="date"
+                        value={startDate}
+                        className="w-100"
+                        onChange={(delta) => {
+                            setStartDate(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2} >
+                    <Form.Group controlId="order_date">
+                        <Form.Label id="header">End Date</Form.Label>
+                        <Form.Control
+                        type="date"
+                        value={endDate}
+                        className="w-100"
+                        onChange={(delta) => {
+                            setEndDate(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Start Time</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter start time"
+                        value={startTime}
+                        onChange={(delta) => {
+                            setStartTime(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">End Time</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter end time"
+                        value={endTime}
+                        onChange={(delta) => {
+                            setEndTime(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Hourly Rate</Form.Label>
+                        <Form.Control
+                        type="number"
+                        min="0.00"
+                        step="0.01"
+                        placeholder="Enter hourly rate"
+                        value={hourlyRate}
+                        onChange={(delta) => {
+                            setHourlyRate(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                    <b>Change the following to a table!!!:</b>
+                <Row className="mb-3">
+                    <Form.Group controlId="claim_description">
+                    <Form.Label id="header">Qualifications</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={5}
+                        placeholder="Job qualifications"
+                        value={qualifications}
+                        onChange={(delta) => {
+                            setQualifications(delta.target.value);
+                        }}
+                    />
+                    </Form.Group>
+                </Row>
+                </Form>
+
+                <Button
+                className="submitButton fs-5"
+                disabled={disableButton}
+                type="button"
+                id="small-header"
+                onClick={() => {
+                    postJob();
+                }}
+                >
+                Post Job
+                </Button>
+            </div>
+            </div>
+        </Container>
+        </>
+    );
+};

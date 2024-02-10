@@ -18,3 +18,12 @@ a:active {
 .inherit-color {
   color: inherit;
 }
+
+.square-border {
+  border-radius: 0px !important;
+}
+
+#search-bar:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

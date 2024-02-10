@@ -60,6 +60,12 @@ export const SignUpPage = () => {
       setKeywords("");
   }
 
+  const removeQualification = (index: number) => {
+    const updatedQualifications = [...qualifications];
+    updatedQualifications.splice(index, 1);
+    setQualifications(updatedQualifications);
+  }
+
   const handleRoleSelect = (e: any) => {
     setRoleValue(e);
   };
@@ -313,6 +319,13 @@ export const SignUpPage = () => {
                                   <tr key={index}>
                                       <td>{qualification.category}</td>
                                       <td>{qualification.keywords}</td>
+                                      <td>
+                                        <Button onClick={() => {
+                                          removeQualification(index);
+                                        }}>
+                                          Remove
+                                        </Button>
+                                      </td>
                                   </tr>
                               ))}
                           </tbody>

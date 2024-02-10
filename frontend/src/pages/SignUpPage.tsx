@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import Alert from "react-bootstrap/Alert";
+import Qualification from "../types/Qualification";
+import Table from "react-bootstrap/Table";
 
 const professionalValues = {
     firstName: "",
@@ -47,6 +49,16 @@ export const SignUpPage = () => {
   const [companyValue, setCompanyValue] = useState("Select-Company");
   const [disableButton, setDisableButton] = useState(true);
   const [error, setError] = useState("");
+
+  const [qualifications, setQualifications] = useState<Qualification[]>([]);
+  const [category, setCategory] = useState("");
+  const [keywords, setKeywords] = useState("");
+  
+  const addQualification = () => {
+      setQualifications([...qualifications, {category, keywords}]);
+      setCategory("");
+      setKeywords("");
+  }
 
   const handleRoleSelect = (e: any) => {
     setRoleValue(e);
@@ -234,7 +246,7 @@ export const SignUpPage = () => {
                     <Form.Group className="mb-3" controlId="completionDate">
                     <Form.Label>Completion Date</Form.Label>
                     <Form.Control
-                        type="email"
+                        type="date"
                         placeholder="Enter completion date"
                         value={professional.completionDate}
                         onChange={(delta) => {
@@ -242,6 +254,71 @@ export const SignUpPage = () => {
                         }}
                     />
                     </Form.Group>
+
+                    <Form.Label id="header">Qualifications</Form.Label>
+                    <Row className="mb-3">
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
+                    
+                      <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Category</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter category"
+                        value={category}
+                        onChange={(delta) => {
+                            setCategory(delta.target.value);
+                        }}
+                        />
+                      </Form.Group>
+                      </Col>
+
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
+                      <Form.Group controlId="amount_requested">
+                          <Form.Label id="header">Keyword(s)</Form.Label>
+                          <Form.Control
+                          type="text"
+                          placeholder="Enter keyword(s)"
+                          value={keywords}
+                          onChange={(delta) => {
+                              setKeywords(delta.target.value);
+                          }}
+                          />
+                      </Form.Group>
+                      </Col>
+
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6} className="mt-2">
+                      <Form.Group controlId="amount_requested">
+                          <Button
+                          onClick={() => {
+                              addQualification();
+                          }}>
+                              Add Qualification
+                          </Button>
+                      </Form.Group>
+                      </Col>
+                  </Row>
+
+                  <Row className="mb-3">
+                      <Form.Group controlId="claim_description">
+                      
+                      <Table striped bordered hover>
+                          <thead>
+                              <tr>
+                                  <th>Category</th>
+                                  <th>Keywords/Key phrases</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {qualifications.map((qualification, index) => (
+                                  <tr key={index}>
+                                      <td>{qualification.category}</td>
+                                      <td>{qualification.keywords}</td>
+                                  </tr>
+                              ))}
+                          </tbody>
+                      </Table>
+                      </Form.Group>
+                  </Row>
                 </>
             )}
 

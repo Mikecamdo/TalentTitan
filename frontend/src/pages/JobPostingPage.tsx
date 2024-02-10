@@ -7,6 +7,8 @@ import Container from "react-bootstrap/esm/Container";
 import { useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
+import Qualification from "../types/Qualification";
 
 export const JobPostingPage = () => {
     const userContext = useContext(UserContext);
@@ -24,12 +26,20 @@ export const JobPostingPage = () => {
     const [hourlyRate, setHourlyRate] = useState("");
 
     // TODO: Need to change the following
-    const [qualifications, setQualifications] = useState("");
+    const [qualifications, setQualifications] = useState<Qualification[]>([]);
+    const [category, setCategory] = useState("");
+    const [keywords, setKeywords] = useState("");
 
     const [disableButton, setDisableButton] = useState(true);
 
     const postJob = () => {
         console.log("Posting job!");
+    }
+
+    const addQualification = () => {
+        setQualifications([...qualifications, {category, keywords}]);
+        setCategory("");
+        setKeywords("");
     }
 
     useEffect(() => {
@@ -52,7 +62,7 @@ export const JobPostingPage = () => {
             <div className="card-body">
                 <Form>
                 <Row className="mb-3">
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Position Name</Form.Label>
                         <Form.Control
@@ -66,7 +76,7 @@ export const JobPostingPage = () => {
                     </Form.Group>
                     </Col>
 
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Position ID</Form.Label>
                         <Form.Control
@@ -82,7 +92,7 @@ export const JobPostingPage = () => {
                 </Row>
 
                 <Row className="mb-3">
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Contact First Name</Form.Label>
                         <Form.Control
@@ -96,7 +106,7 @@ export const JobPostingPage = () => {
                     </Form.Group>
                     </Col>
 
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Contact Last Name</Form.Label>
                         <Form.Control
@@ -112,7 +122,7 @@ export const JobPostingPage = () => {
                 </Row>
 
                 <Row className="mb-3">
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Phone Number</Form.Label>
                         <Form.Control
@@ -126,7 +136,7 @@ export const JobPostingPage = () => {
                     </Form.Group>
                     </Col>
 
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Email</Form.Label>
                         <Form.Control
@@ -142,7 +152,7 @@ export const JobPostingPage = () => {
                 </Row>
 
                 <Row className="mb-3">
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2} >
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="order_date">
                         <Form.Label id="header">Start Date</Form.Label>
                         <Form.Control
@@ -156,7 +166,7 @@ export const JobPostingPage = () => {
                     </Form.Group>
                     </Col>
 
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2} >
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="order_date">
                         <Form.Label id="header">End Date</Form.Label>
                         <Form.Control
@@ -172,7 +182,7 @@ export const JobPostingPage = () => {
                 </Row>
 
                 <Row className="mb-3">
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Start Time</Form.Label>
                         <Form.Control
@@ -186,7 +196,7 @@ export const JobPostingPage = () => {
                     </Form.Group>
                     </Col>
 
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">End Time</Form.Label>
                         <Form.Control
@@ -202,7 +212,7 @@ export const JobPostingPage = () => {
                 </Row>
 
                 <Row className="mb-3">
-                    <Col xs={5} sm={5} md={4} lg={3} xl={3} xxl={2}>
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                     <Form.Group controlId="amount_requested">
                         <Form.Label id="header">Hourly Rate</Form.Label>
                         <Form.Control
@@ -219,19 +229,68 @@ export const JobPostingPage = () => {
                     </Col>
                 </Row>
 
-                    <b>Change the following to a table!!!:</b>
+                <Form.Label id="header">Qualifications</Form.Label>
+                <Row className="mb-3">
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
+                    
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Category</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter category"
+                        value={category}
+                        onChange={(delta) => {
+                            setCategory(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
+                    <Form.Group controlId="amount_requested">
+                        <Form.Label id="header">Keyword(s)</Form.Label>
+                        <Form.Control
+                        type="text"
+                        placeholder="Enter keyword(s)"
+                        value={keywords}
+                        onChange={(delta) => {
+                            setKeywords(delta.target.value);
+                        }}
+                        />
+                    </Form.Group>
+                    </Col>
+
+                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6} className="mt-2">
+                    <Form.Group controlId="amount_requested">
+                        <Button
+                        onClick={() => {
+                            addQualification();
+                        }}>
+                            Add Qualification
+                        </Button>
+                    </Form.Group>
+                    </Col>
+                </Row>
+
                 <Row className="mb-3">
                     <Form.Group controlId="claim_description">
-                    <Form.Label id="header">Qualifications</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={5}
-                        placeholder="Job qualifications"
-                        value={qualifications}
-                        onChange={(delta) => {
-                            setQualifications(delta.target.value);
-                        }}
-                    />
+                    
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Keywords/Key phrases</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {qualifications.map((qualification, index) => (
+                                <tr key={index}>
+                                    <td>{qualification.category}</td>
+                                    <td>{qualification.keywords}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                     </Form.Group>
                 </Row>
                 </Form>

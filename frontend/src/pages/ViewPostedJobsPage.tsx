@@ -3,39 +3,19 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Container } from "react-bootstrap";
+import { CustomSearchBar } from "../components/CustomSearchBar";
 
 
 export const ViewPostedJobsPage = () => {
 
-    const [searchValue, setSearchValue] = useState("");
+    const [searchValue, setSearchValue] = useState<string>("");
 
     return (
         <>
             <Form>
                 <Row className="w-100">
                     <Col xs={9} sm={9} md={9} lg={9} xl={9} xxl={9} className="mx-auto">
-                        <div className="my-5">
-                            <Row>
-                                <Col>
-                                    <div className="input-group" id="search-bar">
-                                        <input className="form-control border-secondary py-2" 
-                                               type="search" 
-                                               value={searchValue}
-                                               onChange={(delta) => {
-                                                setSearchValue(delta.target.value);
-                                              }}/>
-                                        <div className="input-group-append">
-                                            <button className="btn btn-outline-secondary py-2 square-border" type="button">
-                                                <FontAwesomeIcon icon={faSearch} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </div>
+                        <CustomSearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
 
                         <Form.Group controlId="claim_description">
                         

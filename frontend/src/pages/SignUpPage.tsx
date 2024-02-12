@@ -44,10 +44,7 @@ export const SignUpPage = () => {
   const [professional, setProfessional] = useState(professionalValues);
   const [employer, setEmployer] = useState(employerValues);
 
-
-  const [roleValue, setRoleValue] = useState("Select-Role");
-  const [companyValue, setCompanyValue] = useState("Select-Company");
-  const [disableButton, setDisableButton] = useState(true);
+  const [accountType, setAccountType] = useState("Select-Account-Type");
   const [error, setError] = useState("");
 
   const [qualifications, setQualifications] = useState<Qualification[]>([]);
@@ -55,6 +52,32 @@ export const SignUpPage = () => {
   const [keywords, setKeywords] = useState("");
 
   const [disableAdd, setDisableAdd] = useState(true);
+  const [disableSignUp, setDisableSignUp] = useState(true);
+
+  useEffect(() => {
+    console.log("Changing!!")
+    if (accountType == "Employer") {
+      console.log(employer);
+      if (employer.companyName && employer.address && employer.city && employer.state && employer.zipCode
+       && employer.contactFirstName && employer.contactLastName && employer.contactPhoneNumber && employer.contactEmail
+       && employer.userName) {
+        console.log("Oh boy")
+        setDisableSignUp(false);
+      } else {
+        setDisableSignUp(true);
+      }
+    } else { // accountType == "Professional"
+      console.log(professional)
+      if (professional.firstName && professional.lastName && professional.address && professional.city
+       && professional.state && professional.zipCode && professional.phoneNumber && professional.email
+       && professional.userName && professional.schoolName && professional.degreeName && professional.completionDate
+       && professional.qualifications) {
+         setDisableSignUp(false);
+      } else {
+        setDisableSignUp(true);
+      }
+    }
+  }, [professional, employer]);
 
   useEffect(() => {
     if (category && keywords) {
@@ -76,12 +99,8 @@ export const SignUpPage = () => {
     setQualifications(updatedQualifications);
   }
 
-  const handleRoleSelect = (e: any) => {
-    setRoleValue(e);
-  };
-
-  const handleCompanySelect = (e: any) => {
-    setCompanyValue(e);
+  const handleAccountTypeSelect = (e: any) => {
+    setAccountType(e);
   };
 
   const createAccount = () => {
@@ -107,15 +126,15 @@ export const SignUpPage = () => {
             </Alert>
           )}
 
-          <Dropdown className="mt-4" onSelect={handleRoleSelect}>
+          <Dropdown className="mt-4" onSelect={handleAccountTypeSelect}>
             <Form.Label>Account Type</Form.Label>
 
             <Dropdown.Toggle
-            className="col-12 text-white"
+            className="col-12 text-white button-bg"
             variant="info"
             id="dropdown-menu"
             >
-                {roleValue}
+                {accountType}
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="col-12">
@@ -125,7 +144,7 @@ export const SignUpPage = () => {
            </Dropdown>
 
           <Form>
-            {roleValue === "Professional" && (
+            {accountType === "Professional" && (
                 <>
                     <Form.Group className="mb-3" controlId="firstName">
                     <Form.Label>First Name</Form.Label>
@@ -134,7 +153,7 @@ export const SignUpPage = () => {
                         placeholder="Enter first name"
                         value={professional.firstName}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, firstName: delta.target.value });
+                          setProfessional({ ...professional, firstName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -146,7 +165,7 @@ export const SignUpPage = () => {
                         placeholder="Enter last name"
                         value={professional.lastName}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, lastName: delta.target.value });
+                          setProfessional({ ...professional, lastName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -158,7 +177,7 @@ export const SignUpPage = () => {
                         placeholder="Enter address"
                         value={professional.address}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, address: delta.target.value });
+                          setProfessional({ ...professional, address: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -170,7 +189,7 @@ export const SignUpPage = () => {
                         placeholder="Enter city"
                         value={professional.city}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, city: delta.target.value });
+                          setProfessional({ ...professional, city: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -182,7 +201,7 @@ export const SignUpPage = () => {
                         placeholder="Enter state"
                         value={professional.state}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, state: delta.target.value });
+                          setProfessional({ ...professional, state: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -194,7 +213,7 @@ export const SignUpPage = () => {
                         placeholder="Enter zip code"
                         value={professional.zipCode}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, zipCode: delta.target.value });
+                          setProfessional({ ...professional, zipCode: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -206,7 +225,7 @@ export const SignUpPage = () => {
                         placeholder="Enter phone number"
                         value={professional.phoneNumber}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, phoneNumber: delta.target.value });
+                          setProfessional({ ...professional, phoneNumber: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -218,7 +237,7 @@ export const SignUpPage = () => {
                         placeholder="Enter email"
                         value={professional.email}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, email: delta.target.value });
+                          setProfessional({ ...professional, email: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -230,7 +249,7 @@ export const SignUpPage = () => {
                         placeholder="Enter username"
                         value={professional.userName}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, userName: delta.target.value });
+                          setProfessional({ ...professional, userName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -242,7 +261,7 @@ export const SignUpPage = () => {
                         placeholder="Enter school name"
                         value={professional.schoolName}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, schoolName: delta.target.value });
+                          setProfessional({ ...professional, schoolName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -252,9 +271,9 @@ export const SignUpPage = () => {
                     <Form.Control
                         type="email"
                         placeholder="Enter degree name"
-                        value={professional.schoolName}
+                        value={professional.degreeName}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, degreeName: delta.target.value });
+                          setProfessional({ ...professional, degreeName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -266,7 +285,7 @@ export const SignUpPage = () => {
                         placeholder="Enter completion date"
                         value={professional.completionDate}
                         onChange={(delta) => {
-                        setProfessional({ ...professional, completionDate: delta.target.value });
+                          setProfessional({ ...professional, completionDate: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -346,7 +365,7 @@ export const SignUpPage = () => {
                 </>
             )}
 
-            {roleValue === "Employer" && (
+            {accountType === "Employer" && (
                 <>
                     <Form.Group className="mb-3" controlId="companyName">
                     <Form.Label>Company Name</Form.Label>
@@ -355,7 +374,7 @@ export const SignUpPage = () => {
                         placeholder="Enter company name"
                         value={employer.companyName}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, companyName: delta.target.value });
+                          setEmployer({ ...employer, companyName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -367,7 +386,7 @@ export const SignUpPage = () => {
                         placeholder="Enter address"
                         value={employer.address}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, address: delta.target.value });
+                          setEmployer({ ...employer, address: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -379,7 +398,7 @@ export const SignUpPage = () => {
                         placeholder="Enter city"
                         value={employer.city}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, city: delta.target.value });
+                          setEmployer({ ...employer, city: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -391,7 +410,7 @@ export const SignUpPage = () => {
                         placeholder="Enter state"
                         value={employer.state}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, state: delta.target.value });
+                          setEmployer({ ...employer, state: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -403,7 +422,7 @@ export const SignUpPage = () => {
                         placeholder="Enter zip code"
                         value={employer.zipCode}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, zipCode: delta.target.value });
+                          setEmployer({ ...employer, zipCode: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -415,7 +434,7 @@ export const SignUpPage = () => {
                         placeholder="Enter first name"
                         value={employer.contactFirstName}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, contactFirstName: delta.target.value });
+                          setEmployer({ ...employer, contactFirstName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -427,7 +446,7 @@ export const SignUpPage = () => {
                         placeholder="Enter last name"
                         value={employer.contactLastName}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, contactLastName: delta.target.value });
+                          setEmployer({ ...employer, contactLastName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -439,7 +458,7 @@ export const SignUpPage = () => {
                         placeholder="Enter phone number"
                         value={employer.contactPhoneNumber}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, contactPhoneNumber: delta.target.value });
+                          setEmployer({ ...employer, contactPhoneNumber: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -451,7 +470,7 @@ export const SignUpPage = () => {
                         placeholder="Enter email"
                         value={employer.contactEmail}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, contactEmail: delta.target.value });
+                          setEmployer({ ...employer, contactEmail: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -463,7 +482,7 @@ export const SignUpPage = () => {
                         placeholder="Enter username"
                         value={employer.userName}
                         onChange={(delta) => {
-                        setEmployer({ ...employer, userName: delta.target.value });
+                          setEmployer({ ...employer, userName: delta.target.value });
                         }}
                     />
                     </Form.Group>
@@ -472,7 +491,7 @@ export const SignUpPage = () => {
             
             <Button
               className="col-12 mt-3 button-bg"
-              disabled={disableButton}
+              disabled={disableSignUp}
               onClick={() => {
                 createAccount();
               }}

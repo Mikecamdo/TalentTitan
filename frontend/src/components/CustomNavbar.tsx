@@ -102,8 +102,8 @@ export const CustomNavbar = () => {
 
                     {currentUser && (<>
                         <div className="ms-auto">
-                            Hello {currentUser}!
-
+                            <Link to={"/profile"} className="inherit-color">{currentUser} </Link>
+                            /
                             <Link to={"/"} className={`ms-2 inherit-color`} onClick={() => {setCurrentUser(undefined)}}>
                             Sign Out
                             </Link>

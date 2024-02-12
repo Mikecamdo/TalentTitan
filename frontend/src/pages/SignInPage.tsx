@@ -49,7 +49,7 @@ export const SignInPage = () => {
 
   const login = () => {
     setCurrentUser(values.username);
-    navigate("/accountRequests");
+    navigate("/job-search");
   };
 
   return (

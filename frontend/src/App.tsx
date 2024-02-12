@@ -12,6 +12,7 @@ import { JobPostingPage } from './pages/JobPostingPage';
 import { ViewPostedJobsPage } from './pages/ViewPostedJobsPage';
 import { ViewAccountsPage } from './pages/ViewAccountsPage';
 import { AddStaffAccountPage } from './pages/AddStaffAccountPage';
+import { ViewAccountRequestsPage } from './pages/ViewAccountRequestsPage';
 
 interface UserContextProps { //TODO might need to move this to its own file
   currentUser: string | undefined;
@@ -61,6 +62,7 @@ function App() {
               <Route path='/job-search' element={<ViewPostedJobsPage/>}/>
               <Route path='/account-search' element={<ViewAccountsPage/>}/>
               <Route path='/add-staff' element={<AddStaffAccountPage/>}/>
+              <Route path='/account-requests' element={<ViewAccountRequestsPage/>}/>
           </Routes>
         </Router>
       </UserContext.Provider>

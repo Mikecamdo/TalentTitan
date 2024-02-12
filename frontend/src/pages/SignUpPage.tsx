@@ -53,6 +53,16 @@ export const SignUpPage = () => {
   const [qualifications, setQualifications] = useState<Qualification[]>([]);
   const [category, setCategory] = useState("");
   const [keywords, setKeywords] = useState("");
+
+  const [disableAdd, setDisableAdd] = useState(true);
+
+  useEffect(() => {
+    if (category && keywords) {
+        setDisableAdd(false);
+    } else {
+        setDisableAdd(true);
+    }
+  }, [category, keywords]);
   
   const addQualification = () => {
       setQualifications([...qualifications, {category, keywords}]);
@@ -292,15 +302,16 @@ export const SignUpPage = () => {
                       </Form.Group>
                       </Col>
 
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6} className="mt-2">
-                      <Form.Group controlId="amount_requested">
-                          <Button
-                          onClick={() => {
-                              addQualification();
-                          }}>
-                              Add Qualification
-                          </Button>
-                      </Form.Group>
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6} className="mt-3">
+                        <Form.Group controlId="amount_requested">
+                            <Button
+                            disabled={disableAdd}
+                            onClick={() => {
+                                addQualification();
+                            }}>
+                                Add Qualification
+                            </Button>
+                        </Form.Group>
                       </Col>
                   </Row>
 

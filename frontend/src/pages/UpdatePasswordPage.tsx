@@ -14,7 +14,7 @@ const formValues = {
   password: "",
 };
 
-export const SignInPage = () => {
+export const UpdatePasswordPage = () => {
   const navigate = useNavigate();
 
   const [disableButton, setDisableButton] = useState(true);
@@ -49,7 +49,7 @@ export const SignInPage = () => {
 
   const login = () => {
     setCurrentUser(values.username);
-    navigate("/update-password");
+    navigate("/job-search");
   };
 
   return (
@@ -70,11 +70,11 @@ export const SignInPage = () => {
             className="rounded p-4 p-sm-3"
           >
             <Form.Group className="mb-3" controlId="username">
-              <Form.Label>Username</Form.Label>
+              <Form.Label>Password</Form.Label>
               <Form.Control
                 required
-                type="username"
-                placeholder="Enter username"
+                type="password"
+                placeholder="Enter password"
                 value={values.username}
                 onChange={(delta) => {
                   setValues({ ...values, username: delta.target.value });
@@ -83,11 +83,11 @@ export const SignInPage = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="password">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>Confirm Password</Form.Label>
               <Form.Control
                 required
                 type="password"
-                placeholder="Enter password"
+                placeholder="Confirm password"
                 value={values.password}
                 onChange={(delta) => {
                   setValues({ ...values, password: delta.target.value });
@@ -102,19 +102,8 @@ export const SignInPage = () => {
                 login();
               }}
             >
-              Sign In
+              Update Password
             </Button>
-
-            <Container fluid>
-              <Row className="text-center mt-4">
-                <Col>
-                  <p className="text-muted mb-0">Don't have an account?</p>
-                  <NavLink to={"/signUp"} className="text-decoration-none">
-                    Sign up
-                  </NavLink>
-                </Col>
-              </Row>
-            </Container>
           </Form>
         </div>
       </div>

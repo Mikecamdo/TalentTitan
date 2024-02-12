@@ -13,6 +13,7 @@ import { ViewAccountsPage } from './pages/ViewAccountsPage';
 import { AddStaffAccountPage } from './pages/AddStaffAccountPage';
 import { ViewAccountRequestsPage } from './pages/ViewAccountRequestsPage';
 import { JobPage } from './pages/JobPage';
+import { UpdatePasswordPage } from './pages/UpdatePasswordPage';
 
 interface UserContextProps { //TODO might need to move this to its own file
   currentUser: string | undefined;
@@ -64,6 +65,7 @@ function App() {
               <Route path='/add-staff' element={<AddStaffAccountPage/>}/>
               <Route path='/account-requests' element={<ViewAccountRequestsPage/>}/>
               <Route path='/job' element={<JobPage/>}/>
+              <Route path='/update-password' element={<UpdatePasswordPage/>}/>
           </Routes>
         </Router>
       </UserContext.Provider>

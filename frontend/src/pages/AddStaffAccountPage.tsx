@@ -7,8 +7,6 @@ import Container from "react-bootstrap/esm/Container";
 import { useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Table from "react-bootstrap/Table";
-import Qualification from "../types/Qualification";
 
 export const AddStaffAccountPage = () => {
     const userContext = useContext(UserContext);
@@ -39,7 +37,7 @@ export const AddStaffAccountPage = () => {
         <Container className="mt-3 mb-3">
             <div className="card">
             <div className="card-header py-3">
-                <h1 className="fs-2 p-0 my-2" id="header">Add a New Account</h1>
+                <h1 className="fs-2 p-0 my-2" id="header">Add a New Staff Account</h1>
             </div>
             <div className="card-body">
                 <Form>

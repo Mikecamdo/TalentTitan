@@ -82,6 +82,12 @@ export const ProfilePage = () => {
                             <br/>
                             <Row>
                                 <Button className="button-bg">
+                                    Change Password
+                                </Button>
+                            </Row>
+                            <br/>
+                            <Row>
+                                <Button className="button-bg">
                                     Edit Profile
                                 </Button>
                             </Row>

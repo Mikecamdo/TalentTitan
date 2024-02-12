@@ -18,6 +18,12 @@ export const ViewPostedJobsPage = () => {
                     <Col xs={9} sm={9} md={9} lg={9} xl={9} xxl={9} className="mx-auto">
                         <CustomSearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
 
+                        <Form.Check 
+                            type="checkbox"
+                            label="Only Matched Jobs"
+                            id="checkbox"
+                        />
+
                         <Form.Group controlId="claim_description">
                         
                         <Table striped bordered hover>

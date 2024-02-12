@@ -10,7 +10,7 @@ interface SearchComponents {
 
 export const CustomSearchBar: React.FC<SearchComponents> = ({searchValue, setSearchValue}) => {
     return (<>
-        <div className="my-5">
+        <div className="mt-5 mb-4">
             <Row>
                 <Col>
                     <div className="input-group" id="search-bar">

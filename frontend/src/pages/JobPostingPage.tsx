@@ -25,7 +25,6 @@ export const JobPostingPage = () => {
     const [endTime, setEndTime] = useState("");
     const [hourlyRate, setHourlyRate] = useState("");
 
-    // TODO: Need to change the following
     const [qualifications, setQualifications] = useState<Qualification[]>([]);
     const [category, setCategory] = useState("");
     const [keywords, setKeywords] = useState("");

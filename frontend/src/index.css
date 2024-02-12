@@ -11,6 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.bg-alt {
+  background: #0C2D57;
+}
+
 color-scheme {
   color: #0C2D57;
   color: #FC6736 100%;
@@ -24,6 +29,10 @@ color-scheme {
 }
 
 .nav-main {
+  background: #FC6736;
+}
+
+.bg-main {
   background: #FC6736;
 }
 

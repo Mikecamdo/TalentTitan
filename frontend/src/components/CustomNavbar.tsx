@@ -22,7 +22,7 @@ export const CustomNavbar = () => {
                 <Container fluid className="m-0">
                 <Navbar.Brand>
                     <Link to={"/"} className={`nav-link`}>
-                        Logo
+                        Talent Titan Logo
                     </Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />
@@ -80,6 +80,7 @@ export const CustomNavbar = () => {
                                     <NavDropdown.Item href="/account-search">
                                         View Accounts
                                     </NavDropdown.Item>
+
                                     <NavDropdown.Item href="/add-staff">
                                         Add New Staff Account
                                     </NavDropdown.Item>

@@ -21,10 +21,10 @@ export const ViewPostedJobsPage = () => {
                         
                         <Table striped bordered hover>
                             <thead>
-                                <tr>
-                                    <th>Position Title</th>
-                                    <th>Employer</th>
-                                    <th>Start/End Date</th>
+                                <tr className="button-bg text-light">
+                                    <th className="button-bg text-light">Position Title</th>
+                                    <th className="button-bg text-light">Employer</th>
+                                    <th className="button-bg text-light">Start/End Date</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -4,10 +4,10 @@ import { Button, Card, CardHeader, Col, Container, Image, Row } from "react-boot
 export const ProfilePage = () => {
     return (
         <>
-        <Container className=" rounded">
+        <Container className="rounded mt-3">
             <Card className="bg-main rounded">
                 <CardHeader className="button-bg">
-                    <Card.Title>
+                    <Card.Title className="my-auto">
                         Professional (Role)
                     </Card.Title>
                 </CardHeader>
@@ -91,15 +91,14 @@ export const ProfilePage = () => {
             </Card>
         </Container>
 
-        <Container className="d-flex rounded bg-alt text-light" >
-            <Col className="d-flex justify-content-center">
+        <Container className="d-flex rounded text-light">
+            <Col className="d-flex justify-content-center bg-alt">
                 <Row> <strong>Qualifications:</strong> </Row>
             </Col>
 
-            <Col className="d-flex justify-content-center">
+            <Col className="d-flex justify-content-center bg-alt">
                 <Row> <strong>Transaction History:</strong> </Row>
             </Col>
-            
         </Container>
         </>
     );

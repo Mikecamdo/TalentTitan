@@ -19,145 +19,87 @@ export const CustomNavbar = () => {
 
     if (!currentUser) {
         return (
-            <>
-                <Navbar sticky="top" className="nav-main" collapseOnSelect>
-                    <Container fluid className="m-0">
-                    <Navbar.Brand>
-                        <Link to={"/"} className={`nav-link`}>
-                            <Image src="/TalentTitanLogo.png" width={"100px"}></Image>
-                        </Link>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                        <Row >
-                            {/* <Col md={"auto"} >
-                                <Navbar.Toggle aria-controls="account-requests" />
-                                <Navbar.Collapse id="account-requests">
-                                <Nav>
-                                    <NavDropdown
-                                    id="account-requests"
-                                    className="text-light"
-                                    title="Account Requests"
-                                    >
-                                    <NavDropdown.Item href="/employeer-requests">
-                                        Employeer Requests
+        <>
+            <Navbar sticky="top" className="nav-main" collapseOnSelect>
+                <Container fluid className="m-0">
+                <Navbar.Brand>
+                    <Link to={"/"} className={`nav-link`}>
+                        <Image src="/TalentTitanLogo.png" width={"100px"}></Image>
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle />
+                    <Row >
+                        <Col md={"auto"} >
+                            <Navbar.Toggle aria-controls="employer-resources" />
+                            <Navbar.Collapse id="employer-resources">
+                            <Nav>
+                                <NavDropdown
+                                id="employer-resources"
+                                className="text-light"
+                                title="Employer Resources"
+                                >
+                                    <NavDropdown.Item href="/job-posting">
+                                        Post New Job
                                     </NavDropdown.Item>
-                                    <NavDropdown.Item href="/professional-requests">
-                                        Professional Requests
-                                    </NavDropdown.Item>
-                                    </NavDropdown>
-                                </Nav>
-                                </Navbar.Collapse>
-                            </Col> */}
 
-                            <Col md={"auto"} >
-                                <Navbar.Toggle aria-controls="employeer-resources" />
-                                <Navbar.Collapse id="employeer-resources">
-                                <Nav>
-                                    <NavDropdown
-                                    id="employeer-resources"
-                                    className="text-light"
-                                    title="Employeer Resources"
-                                    >
-                                    <NavDropdown.Item href="/employeer-requests">
-                                        Employeer Requests
+                                    <NavDropdown.Item href="/job-search">
+                                        View Posted Jobs
                                     </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="/professional-request">
-                                        Request Professional
-                                    </NavDropdown.Item>
-                                    </NavDropdown>
-                                </Nav>
-                                </Navbar.Collapse>
-                            </Col>
+                                </NavDropdown>
+                            </Nav>
+                            </Navbar.Collapse>
+                        </Col>
 
-                            <Col md={"auto"} >
-                                <Navbar.Toggle aria-controls="professional-resources" />
-                                <Navbar.Collapse id="professional-resources">
-                                <Nav>
-                                    <NavDropdown
-                                    id="professional-resources"
-                                    className="text-light"
-                                    title="Professional Resources"
-                                    >
-                                    <NavDropdown.Item href="/professional-requests">
-                                        Employeer Requests
+                        <Col md={"auto"} >
+                            <Navbar.Toggle aria-controls="professional-resources" />
+                            <Navbar.Collapse id="professional-resources">
+                            <Nav>
+                                <NavDropdown
+                                id="professional-resources"
+                                className="text-light"
+                                title="Professional Resources"
+                                >
+                                    <NavDropdown.Item href="/job-search">
+                                        View Posted Jobs
                                     </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="/professional-employeer-requests">
-                                        Request Employeer
+                                </NavDropdown>
+                            </Nav>
+                            </Navbar.Collapse>
+                        </Col>
+                        
+                        <Col md={"auto"} >
+                            <Navbar.Toggle aria-controls="staff-resources" />
+                            <Navbar.Collapse id="staff-resources">
+                            <Nav>
+                                <NavDropdown
+                                id="professional-resources"
+                                className="text-light"
+                                title="Staff Resources"
+                                >
+                                    <NavDropdown.Item href="/account-requests">
+                                        View Account Requests
                                     </NavDropdown.Item>
-                                    </NavDropdown>
-                                </Nav>
-                                </Navbar.Collapse>
-                            </Col>
-                            
-                            <Col md={"auto"} >
-                                <Navbar.Toggle aria-controls="staff-resources" />
-                                <Navbar.Collapse id="staff-resources">
-                                <Nav>
-                                    <NavDropdown
-                                    id="professional-resources"
-                                    className="text-light"
-                                    title="Staff Resources"
-                                    >
-                                    <NavDropdown.Item href="/employeer-requests">
-                                        Employeer Requests
+                                    <NavDropdown.Item href="/account-search">
+                                        View Accounts
                                     </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="/professional-requests">
-                                        Professional Requests
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="/employeer-list">
-                                        View All Employeers
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="/professionals-list">
-                                        View All Professionals
-                                    </NavDropdown.Item>
-                                    </NavDropdown>
-                                </Nav>
-                                </Navbar.Collapse>
-                            </Col>
 
-                            {/* <Col md={"auto"} >
-                                <NavLink to={"/employeer-list"} className="text-dark">
-                                    View All Employeers
-                                </NavLink>
-                            </Col>
-                            <Col md={"auto"} >
-                                <NavLink to={"/professionals-list"} className="text-dark">
-                                    View All Professionals
-                                </NavLink>
-                            </Col> */}
-                        </Row>
-                    <NavbarCollapse className="fs-5">
-                    <Link to={"/profile"} className={`ms-auto nav-link`}>
-                            Temp Profile
-                        </Link>
-                        <Link to={"/signIn"} className={`ms-auto nav-link`}>
-                            Sign up/Sign In
-                        </Link>
-                    </NavbarCollapse>
-                    </Container>
-                </Navbar>
-    
-                <hr className="no-margin"/>
-            </>
-        );
-    } else {
-        return (
-            <>
-                <Navbar sticky="top" expand="sm" collapseOnSelect>
-                    <Container fluid className="m-0">
-                    <Navbar.Brand>
-                        <Link to={"/"} className={`nav-link`}>
-                            Logo
-                        </Link>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                    <NavbarCollapse className="fs-5">
+                                    <NavDropdown.Item href="/add-staff">
+                                        Add New Staff Account
+                                    </NavDropdown.Item>
+                                </NavDropdown>
+                            </Nav>
+                            </Navbar.Collapse>
+                        </Col>
+                    </Row>
+                    
+                <NavbarCollapse className="fs-5">
+                    {!currentUser && (<>
+                        <div className={`ms-auto nav-link`}>
+                            <Link to={"/signIn"} className="inherit-color">Sign In</Link> / <Link to={"/signUp"} className="inherit-color">Sign Up</Link>
+                        </div>
+                    </>)}
 
+                    {currentUser && (<>
                         <div className="ms-auto">
                             Hello {currentUser}!
 
@@ -165,14 +107,10 @@ export const CustomNavbar = () => {
                             Sign Out
                             </Link>
                         </div>
-                    </NavbarCollapse>
-                    </Container>
-                </Navbar>
-    
-                <hr className="no-margin"/>
-            </>
-        );
-    }
-
-    
+                    </>)}
+                </NavbarCollapse>
+                </Container>
+            </Navbar>
+        </>
+    );
 }

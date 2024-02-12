@@ -29,7 +29,8 @@ export const JobPostingPage = () => {
     const [category, setCategory] = useState("");
     const [keywords, setKeywords] = useState("");
 
-    const [disableButton, setDisableButton] = useState(true);
+    const [disableAdd, setDisableAdd] = useState(true);
+    const [disablePost, setDisablePost] = useState(true);
 
     const postJob = () => {
         console.log("Posting job!");
@@ -49,13 +50,21 @@ export const JobPostingPage = () => {
 
     useEffect(() => {
         if (positionName && positionId && contactFirstName && contactLastName
-         && contactPhoneNumber && contactEmail && startDate && endDate && hourlyRate) {
-        setDisableButton(false);
+         && contactPhoneNumber && contactEmail && startDate && endDate && startTime && endTime && hourlyRate) {
+            setDisablePost(false);
         } else {
-        setDisableButton(true);
+            setDisablePost(true);
         }
     }, [positionName, positionId, contactFirstName, contactLastName, 
-        contactPhoneNumber, contactEmail, startDate, endDate, hourlyRate]);
+        contactPhoneNumber, contactEmail, startDate, endDate, startTime, endTime, hourlyRate]);
+
+    useEffect(() => {
+        if (category && keywords) {
+            setDisableAdd(false);
+        } else {
+            setDisableAdd(true);
+        }
+    }, [category, keywords]);
 
     return (
         <>      
@@ -268,6 +277,7 @@ export const JobPostingPage = () => {
                     <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6} className="mt-2">
                     <Form.Group controlId="amount_requested">
                         <Button
+                        disabled={disableAdd}
                         onClick={() => {
                             addQualification();
                         }}>
@@ -308,7 +318,7 @@ export const JobPostingPage = () => {
                 </Form>
 
                 <Button
-                disabled={disableButton}
+                disabled={disablePost}
                 type="button"
                 onClick={() => {
                     postJob();

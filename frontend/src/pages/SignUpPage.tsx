@@ -89,7 +89,7 @@ export const SignUpPage = () => {
   return (
     <>
     <div>
-      <div className="pt-4 mx-0 px-0">
+      <div className="pt-5">
         <div className="bg-light rounded p-3 mx-auto p-md-5 pb-md-3 col-lg-6 col-sm-8">
           {error !== "" && (
             <Alert key={"danger"} variant={"danger"}>

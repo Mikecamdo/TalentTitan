@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
+import { Link } from "react-router-dom";
 
 export const ViewAccountsPage = () => {
 
@@ -42,17 +43,17 @@ export const ViewAccountsPage = () => {
                                 ))} */}
                                 {/*The following is dummy data:*/}
                                 <tr>
-                                    <td>Bob Smith</td>
+                                    <td><Link to={"/profile"} className="inherit-color">Bob Smith</Link></td>
                                     <td>fake@gmail.com</td>
                                     <td>000-000-0000</td>
                                 </tr>
                                 <tr>
-                                    <td>Frank Ocean</td>
+                                    <td><Link to={"/profile"} className="inherit-color">Frank Ocean</Link></td>
                                     <td>focean@outlook.com</td>
                                     <td>510-741-9003</td>
                                 </tr>
                                 <tr>
-                                    <td>Bob the Builder</td>
+                                    <td><Link to={"/profile"} className="inherit-color">Bob the Builder</Link></td>
                                     <td>bbuilder@gmail.com</td>
                                     <td>832-234-9463</td>
                                 </tr>

@@ -21,9 +21,9 @@ export const ViewAccountsPage = () => {
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
+                                    <th className="button-bg text-light">Name</th>
+                                    <th className="button-bg text-light">Email</th>
+                                    <th className="button-bg text-light">Phone</th>
                                 </tr>
                             </thead>
                             <tbody>

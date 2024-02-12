@@ -17,8 +17,7 @@ export const CustomNavbar = () => {
         return <div>Loading...</div>;
     }
 
-    if (!currentUser) {
-        return (
+    return (
         <>
             <Navbar sticky="top" className="nav-main" collapseOnSelect>
                 <Container fluid className="m-0">
@@ -112,6 +111,5 @@ export const CustomNavbar = () => {
                 </Container>
             </Navbar>
         </>
-        );
-    }
+    );
 }

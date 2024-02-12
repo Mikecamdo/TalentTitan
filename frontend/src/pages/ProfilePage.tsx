@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, CardHeader, Col, Container, Image, Row } from "react-bootstrap";
+import { Button, Card, CardHeader, Col, Container, Image, Row, Table } from "react-bootstrap";
 
 export const ProfilePage = () => {
     return (
@@ -61,7 +61,7 @@ export const ProfilePage = () => {
                                 <Card.Text>B.S. Computer Science</Card.Text>
                             </Row>
                             <Row className="sub-header">
-                                <Card.Text> <strong>Date of Completion(MM/YY):</strong></Card.Text>
+                                <Card.Text> <strong>Date of Completion:</strong></Card.Text>
                             </Row>
                             <Row>
                                 <Card.Text>May 2025</Card.Text>
@@ -91,14 +91,51 @@ export const ProfilePage = () => {
             </Card>
         </Container>
 
-        <Container className="d-flex rounded text-light">
-            <Col className="d-flex justify-content-center bg-alt">
-                <Row> <strong>Qualifications:</strong> </Row>
-            </Col>
+        <Container className="rounded text-light">
+            <Card.Body className="bg-alt">
+            <Row>
+                <Col className="text-center">
+                    <strong>Qualifications:</strong>
+                </Col>
 
-            <Col className="d-flex justify-content-center bg-alt">
-                <Row> <strong>Transaction History:</strong> </Row>
-            </Col>
+                <Col className="text-center">
+                    <strong>Transaction History:</strong>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col className="pe-0">
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Keywords/Key phrases</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Languages</td>
+                                <td>C, C++, C#, Java, JavaScript</td>
+                            </tr>
+
+                            <tr>
+                                <td>Frameworks</td>
+                                <td>React, Angular, Vue, Node.js, .NET</td>
+                            </tr>
+
+                            <tr>
+                                <td>Database</td>
+                                <td>PostgreSQL, SQL Server</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Col>
+                <Col>
+                    <Row className="mx-auto my-2">February 11, 2024: Received $50 from Walmart</Row>
+                    <Row className="mx-auto my-2">February 1, 2024: Paid $10 to Talent Titan (subscription fee)</Row>
+                </Col>
+            </Row>
+            </Card.Body>
         </Container>
         </>
     );

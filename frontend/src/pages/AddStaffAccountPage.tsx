@@ -119,10 +119,8 @@ export const AddStaffAccountPage = () => {
                 </Form>
 
                 <Button
-                className="submitButton fs-5"
                 disabled={disableButton}
                 type="button"
-                id="small-header"
                 onClick={() => {
                     addAccount();
                 }}

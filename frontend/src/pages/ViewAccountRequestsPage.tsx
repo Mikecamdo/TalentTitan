@@ -46,7 +46,7 @@ export const ViewAccountRequestsPage = () => {
             <Tab eventKey="employers" title="Employers">
                 <Container fluid>
                   <Row>
-                        <Col className="d-flex mb-4" xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                        <Col className="d-flex mb-4 mx-auto" xs={12} sm={12} md={10} lg={10} xl={10} xxl={10}>
                           <Card className="flex-fill">
                             <Card.Header className="pb-0 pt-3">
                               <Row>
@@ -156,7 +156,7 @@ export const ViewAccountRequestsPage = () => {
               <Tab eventKey="professionals" title="Professionals">
                 <Container fluid>
                   <Row>
-                        <Col className="d-flex mb-4" xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                        <Col className="d-flex mb-4 mx-auto" xs={12} sm={12} md={10} lg={10} xl={10} xxl={10}>
                           <Card className="flex-fill">
                             <Card.Header className="pb-0 pt-3">
                               <Row>

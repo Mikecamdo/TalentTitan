@@ -112,5 +112,6 @@ export const CustomNavbar = () => {
                 </Container>
             </Navbar>
         </>
-    );
+        );
+    }
 }

@@ -40,7 +40,7 @@ export const ViewAccountRequestsPage = () => {
           <Tabs
             defaultActiveKey="employers"
             id="account-request-tabs"
-            className="mb-3"
+            className="mb-3 "
             fill
           >
             <Tab eventKey="employers" title="Employers">
@@ -48,7 +48,7 @@ export const ViewAccountRequestsPage = () => {
                   <Row>
                         <Col className="d-flex mb-4" xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
                           <Card className="flex-fill">
-                            <Card.Header className="pb-0 pt-3">
+                            <Card.Header className="pb-0 pt-3 button-bg text-light">
                               <Row>
                                 <Col>
                                   <h5>Applicant: Google</h5>
@@ -158,7 +158,7 @@ export const ViewAccountRequestsPage = () => {
                   <Row>
                         <Col className="d-flex mb-4" xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
                           <Card className="flex-fill">
-                            <Card.Header className="pb-0 pt-3">
+                            <Card.Header className="pb-0 pt-3 button-bg text-light">
                               <Row>
                                 <Col>
                                   <h5>Applicant: Bob Smith</h5>

@@ -36,8 +36,8 @@ export const AddStaffAccountPage = () => {
         <>      
         <Container className="mt-3 mb-3">
             <div className="card">
-            <div className="card-header py-3">
-                <h1 className="fs-2 p-0 my-2" id="header">Add a New Staff Account</h1>
+            <div className="card-header py-3 button-bg text-light">
+                <h1 className="fs-2 p-0 my-2 button-bg text-light" id="header">Add a New Staff Account</h1>
             </div>
             <div className="card-body">
                 <Form>

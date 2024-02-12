@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card, CardHeader, Col, Container, Image, Row, Table } from "react-bootstrap";
 
-export const ProfilePage = () => {
+export const EditProfilePage = () => {
     return (
         <>
         <Container className="rounded mt-3">

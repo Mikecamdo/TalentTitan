@@ -460,7 +460,7 @@ export const SignUpPage = () => {
             )}
             
             <Button
-              className="col-12 mt-3"
+              className="col-12 mt-3 button-bg"
               disabled={disableButton}
               onClick={() => {
                 createAccount();

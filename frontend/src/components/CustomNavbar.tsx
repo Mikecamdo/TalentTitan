@@ -22,8 +22,11 @@ export const CustomNavbar = () => {
                 <Container fluid className="m-0">
                 <Navbar.Brand>
                     <Link to={"/"} className={`nav-link`}>
-                        <Image src="/TalentTitanLogo.png" width={"100px"}></Image>
+                        Talent Titan Logo
                     </Link>
+                    {/* <Link to={"/"} className={`nav-link`}>
+                        <Image src="/TalentTitanLogo.png" width={"100px"}></Image>
+                    </Link> */}
                 </Navbar.Brand>
                 <Navbar.Toggle />
                     <Row >

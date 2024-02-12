@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
-import { Row, Col, Nav, NavDropdown } from "react-bootstrap";
+import { Row, Col, Nav, NavDropdown, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
 import { useContext } from "react";
@@ -22,7 +22,7 @@ export const CustomNavbar = () => {
                 <Container fluid className="m-0">
                 <Navbar.Brand>
                     <Link to={"/"} className={`nav-link`}>
-                        Talent Titan Logo
+                        <Image src="/TalentTitanLogo.png" width={"100px"}></Image>
                     </Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />

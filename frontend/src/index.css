@@ -21,15 +21,15 @@ color-scheme {
   color: #FC6736 100%;
   color: #FFB0B0 100%;
   color: #EFECEC 100%;
-
 }
+
 .nav-bg {
   background: #0C2D57;
   background: linear-gradient(90deg,#FC6736 50%, #FFB0B0 80%, #EFECEC 100%);
 }
 
 .nav-main {
-  background: #FC6736;
+  background: #163143;
 }
 
 .bg-main {

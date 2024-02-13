@@ -46,7 +46,7 @@ export const ProfilePage = () => {
                             <Row className="header text-bold">
                                 <strong>Degree Information:</strong>
                             </Row>
-                            <Row className="sub-header" class="font-weight-bold">
+                            <Row className="sub-header font-weight-bold">
                                 <Card.Text>
                                     <strong>Name of the Institution:</strong>
                                 </Card.Text>

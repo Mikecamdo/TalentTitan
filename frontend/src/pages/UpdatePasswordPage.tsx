@@ -15,6 +15,8 @@ const formValues = {
 };
 
 export const UpdatePasswordPage = () => {
+  //TODO: This entire file needs to be redone
+
   const navigate = useNavigate();
 
   const [disableButton, setDisableButton] = useState(true);
@@ -48,7 +50,6 @@ export const UpdatePasswordPage = () => {
   };
 
   const login = () => {
-    setCurrentUser(values.username);
     navigate("/job-search");
   };
 

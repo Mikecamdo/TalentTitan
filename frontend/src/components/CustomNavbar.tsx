@@ -18,11 +18,12 @@ export const CustomNavbar = () => {
 
     return (
         <>
-            <Navbar sticky="top" className="nav-main" collapseOnSelect>
+            <Navbar sticky="top" className="nav-main text-light" collapseOnSelect>
                 <Container fluid className="m-0">
                 <Navbar.Brand>
                     <Link to={"/"} className={`nav-link`}>
-                        <Image src="/TalentTitanLogo.png" width={"75px"}></Image>
+                        <Image src="/TalentTitanLogoOnly.png" width={"75px"}></Image>
+                        
                     </Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />

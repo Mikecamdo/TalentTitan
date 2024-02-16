@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -8,6 +8,8 @@ import Alert from "react-bootstrap/Alert";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
+
+import { Button } from '@mantine/core';
 
 const formValues = {
   username: "",
@@ -96,7 +98,7 @@ export const SignInPage = () => {
             </Form.Group>
 
             <Button
-              className="col-12 mt-2 button-bg"
+              fullWidth
               disabled={disableButton}
               onClick={() => {
                 login();

@@ -1,31 +1,32 @@
 import React from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Alert from "react-bootstrap/Alert";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
+import {
+  TextInput,
+  Anchor,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Button,
+} from '@mantine/core';
+import classes from '../css_modules/SignInPage.module.css';
 
 const formValues = {
-  username: "",
-  password: "",
+  newPassword: "",
+  confirmPassword: "",
 };
 
 export const UpdatePasswordPage = () => {
-  //TODO: This entire file needs to be redone
 
   const navigate = useNavigate();
 
   const [disableButton, setDisableButton] = useState(true);
-  const [validated, setValidated] = useState(false);
   const [values, setValues] = useState(formValues);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (values.username && values.password) {
+    if (values.newPassword && values.confirmPassword) {
       setDisableButton(false);
     } else {
       setDisableButton(true);
@@ -39,76 +40,53 @@ export const UpdatePasswordPage = () => {
     return <div>Loading...</div>;
   }
 
-  const handleSubmit = (event: any) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-  };
-
-  const login = () => {
+  const updatePassword = () => {
+    // Call backend and update password
     navigate("/job-search");
   };
 
   return (
-    <>
-    <div>
-      <div className="pt-5">
-        <div className="bg-light rounded p-3 mx-auto p-md-5 pb-md-3 col-lg-6 col-sm-8">
-          {error !== "" && (
-            <Alert key={"danger"} variant={"danger"}>
-              {error}
-            </Alert>
-          )}
+    <Container size={500} my={40}>
+      <Title ta="center" className={classes.title}>
+        You need to update your password!
+      </Title>
 
-          <Form
-            noValidate
-            validated={validated}
-            onSubmit={handleSubmit}
-            className="rounded p-4 p-sm-3"
-          >
-            <Form.Group className="mb-3" controlId="username">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Enter password"
-                value={values.username}
-                onChange={(delta) => {
-                  setValues({ ...values, username: delta.target.value });
+      <Text c="dimmed" size="sm" ta="center" mt={5}>
+        Since this is your first time logging in, we ask that you reset your password for security purposes
+      </Text>
+
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <TextInput required
+                   type="password"
+                   label="New Password"
+                   placeholder="Enter new password"
+                   value={values.newPassword}
+                   onChange={(delta) => {
+                    setValues({ ...values, newPassword: delta.target.value });
+                   }}
+        />
+
+        <TextInput required
+                   type="password"
+                   mt="md"
+                   label="Confirm Password"
+                   placeholder="Confirm new password"
+                   value={values.confirmPassword}
+                   onChange={(delta) => {
+                    setValues({ ...values, confirmPassword: delta.target.value });
+                   }}
+        />
+
+        <Button fullWidth 
+                mt="xl"
+                disabled={disableButton}
+                onClick={() => {
+                  updatePassword();
                 }}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="password">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Confirm password"
-                value={values.password}
-                onChange={(delta) => {
-                  setValues({ ...values, password: delta.target.value });
-                }}
-              />
-            </Form.Group>
-
-            <Button
-              className="col-12 mt-2 button-bg"
-              disabled={disableButton}
-              onClick={() => {
-                login();
-              }}
-            >
-              Update Password
-            </Button>
-          </Form>
-        </div>
-      </div>
-    </div>
-    </>
+                >
+          Update password
+        </Button>
+      </Paper>
+    </Container>
   );
-};
+}

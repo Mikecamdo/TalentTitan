@@ -53,7 +53,7 @@ export const SignInPage = () => {
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Don't have an account?{' '}
         <Anchor size="sm" component="button">
-          <Link to="/signUp">Sign Up</Link>
+          <Link to="/signUp">Sign up</Link>
         </Anchor>
       </Text>
 

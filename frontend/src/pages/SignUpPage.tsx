@@ -1,518 +1,849 @@
 import React from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
-import Alert from "react-bootstrap/Alert";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../App";
+import {
+  TextInput,
+  Anchor,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Button,
+  Stepper,
+  Group,
+  Table,
+} from "@mantine/core";
+import classes from "../css_modules/SignInPage.module.css";
 import Qualification from "../types/Qualification";
-import Table from "react-bootstrap/Table";
 
 const professionalValues = {
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    phoneNumber: "",
-    email: "",
-    userName: "",
-    schoolName: "",
-    degreeName: "",
-    completionDate: "",
-    qualifications: []
+  firstName: "",
+  lastName: "",
+  address: "",
+  city: "",
+  state: "",
+  zipCode: "",
+  phoneNumber: "",
+  email: "",
+  userName: "",
+  schoolName: "",
+  degreeName: "",
+  completionDate: "",
+  qualifications: [],
 };
 
 const employerValues = {
-    companyName: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    contactFirstName: "",
-    contactLastName: "",
-    contactPhoneNumber: "",
-    contactEmail: "",
-    userName: ""
-}
+  companyName: "",
+  address: "",
+  city: "",
+  state: "",
+  zipCode: "",
+  contactFirstName: "",
+  contactLastName: "",
+  contactPhoneNumber: "",
+  contactEmail: "",
+  userName: "",
+};
 
 export const SignUpPage = () => {
+  const navigate = useNavigate();
+
+  const [accountType, setAccountType] = useState("");
   const [professional, setProfessional] = useState(professionalValues);
   const [employer, setEmployer] = useState(employerValues);
 
-  const [accountType, setAccountType] = useState("Select-Account-Type");
-  const [error, setError] = useState("");
+  const [currentStep, setCurrentStep] = useState(0);
 
-  const [qualifications, setQualifications] = useState<Qualification[]>([]);
-  const [category, setCategory] = useState("");
-  const [keywords, setKeywords] = useState("");
+  const userContext = useContext(UserContext);
+  const setCurrentUser = userContext?.setCurrentUser;
 
-  const [disableAdd, setDisableAdd] = useState(true);
-  const [disableSignUp, setDisableSignUp] = useState(true);
-
-  useEffect(() => {
-    console.log("Changing!!")
-    if (accountType == "Employer") {
-      console.log(employer);
-      if (employer.companyName && employer.address && employer.city && employer.state && employer.zipCode
-       && employer.contactFirstName && employer.contactLastName && employer.contactPhoneNumber && employer.contactEmail
-       && employer.userName) {
-        console.log("Oh boy")
-        setDisableSignUp(false);
-      } else {
-        setDisableSignUp(true);
-      }
-    } else { // accountType == "Professional"
-      console.log(professional)
-      if (professional.firstName && professional.lastName && professional.address && professional.city
-       && professional.state && professional.zipCode && professional.phoneNumber && professional.email
-       && professional.userName && professional.schoolName && professional.degreeName && professional.completionDate
-       && professional.qualifications) {
-         setDisableSignUp(false);
-      } else {
-        setDisableSignUp(true);
-      }
-    }
-  }, [professional, employer]);
-
-  useEffect(() => {
-    if (category && keywords) {
-        setDisableAdd(false);
-    } else {
-        setDisableAdd(true);
-    }
-  }, [category, keywords]);
-  
-  const addQualification = () => {
-      setQualifications([...qualifications, {category, keywords}]);
-      setCategory("");
-      setKeywords("");
+  if (!setCurrentUser) {
+    return <div>Loading...</div>;
   }
 
-  const removeQualification = (index: number) => {
-    const updatedQualifications = [...qualifications];
-    updatedQualifications.splice(index, 1);
-    setQualifications(updatedQualifications);
-  }
-
-  const handleAccountTypeSelect = (e: any) => {
-    setAccountType(e);
+  const signUp = () => {
+    console.log("Signing up!");
   };
-
-  const createAccount = () => {
-    // if (!validEmail(values.email)) {
-    //   setError('Invalid email address. Please enter a valid email address.');
-    //   return;
-    // }
-  };
-
-  //the following function was inspired by code found at https://mailtrap.io/blog/validate-emails-in-react/
-  const validEmail = (email: any) => {
-    return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
-  }
 
   return (
     <>
-    <div>
-      <div className="pt-5">
-        <div className="bg-light rounded p-3 mx-auto p-md-5 pb-md-3 col-lg-6 col-sm-8">
-          {error !== "" && (
-            <Alert key={"danger"} variant={"danger"}>
-              {error}
-            </Alert>
+      <Container size={750} my={40}>
+        <Title ta="center" className={classes.title}>
+          Join us today!
+        </Title>
+        <Text c="dimmed" size="sm" ta="center" mt={5}>
+          Already have an account?{" "}
+          <Anchor size="sm" component="button">
+            <Link to="/signIn">Sign in</Link>
+          </Anchor>
+        </Text>
+
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          {currentStep == 0 && (
+            <Step0
+              setAccountType={setAccountType}
+              setCurrentStep={setCurrentStep}
+            />
           )}
 
-          <Dropdown className="mt-4" onSelect={handleAccountTypeSelect}>
-            <Form.Label>Account Type</Form.Label>
+          {accountType === "Professional" && currentStep == 1 && (
+            <ProfessionalStep1
+              professional={professional}
+              setProfessional={setProfessional}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
 
-            <Dropdown.Toggle
-            className="col-12 text-white button-bg"
-            variant="info"
-            id="dropdown-menu"
-            >
-                {accountType}
-            </Dropdown.Toggle>
+          {accountType === "Professional" && currentStep == 2 && (
+            <ProfessionalStep2
+              professional={professional}
+              setProfessional={setProfessional}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
 
-            <Dropdown.Menu className="col-12">
-                <Dropdown.Item eventKey="Employer">Employer</Dropdown.Item>
-                <Dropdown.Item eventKey="Professional">Professional</Dropdown.Item>
-            </Dropdown.Menu>
-           </Dropdown>
+          {accountType === "Professional" && currentStep == 3 && (
+            <ProfessionalStep3
+              professional={professional}
+              setProfessional={setProfessional}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
 
-          <Form>
-            {accountType === "Professional" && (
-                <>
-                    <Form.Group className="mb-3" controlId="firstName">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter first name"
-                        value={professional.firstName}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, firstName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          {accountType === "Professional" && currentStep == 4 && (
+            <ProfessionalStep4
+              professional={professional}
+              setProfessional={setProfessional}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
 
-                    <Form.Group className="mb-3" controlId="lastName">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter last name"
-                        value={professional.lastName}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, lastName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          {accountType === "Employer" && currentStep == 1 && (
+            <EmployerStep1
+              employer={employer}
+              setEmployer={setEmployer}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
 
-                    <Form.Group className="mb-3" controlId="address">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter address"
-                        value={professional.address}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, address: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          {accountType === "Employer" && currentStep == 2 && (
+            <EmployerStep2
+              employer={employer}
+              setEmployer={setEmployer}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
 
-                    <Form.Group className="mb-3" controlId="city">
-                    <Form.Label>City</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter city"
-                        value={professional.city}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, city: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          {accountType === "Employer" && currentStep == 3 && (
+            <EmployerStep3
+              employer={employer}
+              setEmployer={setEmployer}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
+        </Paper>
+      </Container>
+    </>
+  );
+};
 
-                    <Form.Group className="mb-3" controlId="state">
-                    <Form.Label>State</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter state"
-                        value={professional.state}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, state: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+interface Step0Components {
+  setAccountType: any;
+  setCurrentStep: any;
+}
 
-                    <Form.Group className="mb-3" controlId="zipCode">
-                    <Form.Label>Zip Code</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter zip code"
-                        value={professional.zipCode}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, zipCode: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+const Step0: React.FC<Step0Components> = ({
+  setAccountType,
+  setCurrentStep,
+}) => {
+  return (
+    <>
+      <Title ta="center" className={classes.title} order={3}>
+        Choose Account Type
+      </Title>
 
-                    <Form.Group className="mb-3" controlId="phoneNumber">
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter phone number"
-                        value={professional.phoneNumber}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, phoneNumber: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+      <Group grow justify="center">
+        <Paper withBorder shadow="none" p={10} mt={15} radius="md" ta="center">
+          <Title className={classes.title} order={4}>
+            Professional
+          </Title>
 
-                    <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter email"
-                        value={professional.email}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, email: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          <Text mt="sm">For those looking to get hired.</Text>
 
-                    <Form.Group className="mb-3" controlId="userName">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter username"
-                        value={professional.userName}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, userName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          <Button
+            mt="sm"
+            onClick={() => {
+              setAccountType("Professional");
+              setCurrentStep(1);
+            }}
+          >
+            Sign up as Professional
+          </Button>
+        </Paper>
 
-                    <Form.Group className="mb-3" controlId="schoolName">
-                    <Form.Label>School Name</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter school name"
-                        value={professional.schoolName}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, schoolName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+        <Paper withBorder shadow="none" p={10} mt={15} radius="md" ta="center">
+          <Title className={classes.title} order={4}>
+            Employer
+          </Title>
 
-                    <Form.Group className="mb-3" controlId="degreeName">
-                    <Form.Label>Degree Name</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter degree name"
-                        value={professional.degreeName}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, degreeName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          <Text mt="sm">For those looking to hire others.</Text>
 
-                    <Form.Group className="mb-3" controlId="completionDate">
-                    <Form.Label>Completion Date</Form.Label>
-                    <Form.Control
-                        type="date"
-                        placeholder="Enter completion date"
-                        value={professional.completionDate}
-                        onChange={(delta) => {
-                          setProfessional({ ...professional, completionDate: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+          <Button
+            mt="sm"
+            onClick={() => {
+              setAccountType("Employer");
+              setCurrentStep(1);
+            }}
+          >
+            Sign up as Employer
+          </Button>
+        </Paper>
+      </Group>
+    </>
+  );
+};
 
-                    <Form.Label id="header">Qualifications</Form.Label>
-                    <Row className="mb-3">
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
-                    
-                      <Form.Group controlId="amount_requested">
-                        <Form.Label id="header">Category</Form.Label>
-                        <Form.Control
-                        type="text"
-                        placeholder="Enter category"
-                        value={category}
-                        onChange={(delta) => {
-                            setCategory(delta.target.value);
-                        }}
-                        />
-                      </Form.Group>
-                      </Col>
+interface ProfessionalComponents {
+  professional: any;
+  setProfessional: any;
+  setCurrentStep: any;
+}
 
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
-                      <Form.Group controlId="amount_requested">
-                          <Form.Label id="header">Keyword(s)</Form.Label>
-                          <Form.Control
-                          type="text"
-                          placeholder="Enter keyword(s)"
-                          value={keywords}
-                          onChange={(delta) => {
-                              setKeywords(delta.target.value);
-                          }}
-                          />
-                      </Form.Group>
-                      </Col>
+const ProfessionalStep1: React.FC<ProfessionalComponents> = ({
+  professional,
+  setProfessional,
+  setCurrentStep,
+}) => {
+  const [disableNext, setDisableNext] = useState(true);
 
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6} className="mt-3">
-                        <Form.Group controlId="amount_requested">
-                            <Button
-                            disabled={disableAdd}
-                            onClick={() => {
-                                addQualification();
-                            }}>
-                                Add Qualification
-                            </Button>
-                        </Form.Group>
-                      </Col>
-                  </Row>
+  useEffect(() => {
+    if (
+      professional.firstName &&
+      professional.lastName &&
+      professional.phoneNumber &&
+      professional.email
+    ) {
+      setDisableNext(false);
+    } else {
+      setDisableNext(true);
+    }
+  }, [professional]);
 
-                  <Row className="mb-3">
-                      <Form.Group controlId="claim_description">
-                      
-                      <Table striped bordered hover>
-                          <thead>
-                              <tr>
-                                  <th>Category</th>
-                                  <th>Keywords/Key phrases</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              {qualifications.map((qualification, index) => (
-                                  <tr key={index}>
-                                      <td>{qualification.category}</td>
-                                      <td>{qualification.keywords}</td>
-                                      <td>
-                                        <Button onClick={() => {
-                                          removeQualification(index);
-                                        }}>
-                                          Remove
-                                        </Button>
-                                      </td>
-                                  </tr>
-                              ))}
-                          </tbody>
-                      </Table>
-                      </Form.Group>
-                  </Row>
-                </>
-            )}
+  return (
+    <>
+      <TextInput
+        label="First Name"
+        placeholder="Enter first name"
+        value={professional.firstName}
+        onChange={(delta) => {
+          setProfessional({ ...professional, firstName: delta.target.value });
+        }}
+        required
+      />
 
-            {accountType === "Employer" && (
-                <>
-                    <Form.Group className="mb-3" controlId="companyName">
-                    <Form.Label>Company Name</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter company name"
-                        value={employer.companyName}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, companyName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+      <TextInput
+        mt="md"
+        label="Last Name"
+        placeholder="Enter last name"
+        value={professional.lastName}
+        onChange={(delta) => {
+          setProfessional({ ...professional, lastName: delta.target.value });
+        }}
+        required
+      />
 
-                    <Form.Group className="mb-3" controlId="address">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter address"
-                        value={employer.address}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, address: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+      <TextInput
+        mt="md"
+        label="Phone"
+        placeholder="Enter phone number"
+        value={professional.phoneNumber}
+        onChange={(delta) => {
+          setProfessional({ ...professional, phoneNumber: delta.target.value });
+        }}
+        required
+      />
 
-                    <Form.Group className="mb-3" controlId="city">
-                    <Form.Label>City</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter city"
-                        value={employer.city}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, city: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+      <TextInput
+        mt="md"
+        label="Email"
+        placeholder="Enter email"
+        value={professional.email}
+        onChange={(delta) => {
+          setProfessional({ ...professional, email: delta.target.value });
+        }}
+        required
+      />
 
-                    <Form.Group className="mb-3" controlId="state">
-                    <Form.Label>State</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter state"
-                        value={employer.state}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, state: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(0);
+          }}
+        >
+          Back
+        </Button>
 
-                    <Form.Group className="mb-3" controlId="zipCode">
-                    <Form.Label>Zip Code</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter zip code"
-                        value={employer.zipCode}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, zipCode: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+        <Button
+          mt="xl"
+          disabled={disableNext}
+          onClick={() => {
+            setCurrentStep(2);
+          }}
+        >
+          Next
+        </Button>
+      </Group>
+    </>
+  );
+};
 
-                    <Form.Group className="mb-3" controlId="firstName">
-                    <Form.Label>Contact's First Name</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter first name"
-                        value={employer.contactFirstName}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, contactFirstName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+const ProfessionalStep2: React.FC<ProfessionalComponents> = ({
+  professional,
+  setProfessional,
+  setCurrentStep,
+}) => {
+  const [disableNext, setDisableNext] = useState(true);
 
-                    <Form.Group className="mb-3" controlId="lastName">
-                    <Form.Label>Contact's Last Name</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter last name"
-                        value={employer.contactLastName}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, contactLastName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+  useEffect(() => {
+    if (
+      professional.address &&
+      professional.city &&
+      professional.state &&
+      professional.zipCode
+    ) {
+      setDisableNext(false);
+    } else {
+      setDisableNext(true);
+    }
+  }, [professional]);
 
-                    <Form.Group className="mb-3" controlId="phoneNumber">
-                    <Form.Label>Contact's Phone Number</Form.Label>
-                    <Form.Control
-                        type="name"
-                        placeholder="Enter phone number"
-                        value={employer.contactPhoneNumber}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, contactPhoneNumber: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+  return (
+    <>
+      <TextInput
+        label="Address Line"
+        placeholder="Enter address line"
+        value={professional.address}
+        onChange={(delta) => {
+          setProfessional({ ...professional, address: delta.target.value });
+        }}
+        required
+      />
 
-                    <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Contact's Email</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter email"
-                        value={employer.contactEmail}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, contactEmail: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
+      <TextInput
+        mt="md"
+        label="City"
+        placeholder="Enter city"
+        value={professional.city}
+        onChange={(delta) => {
+          setProfessional({ ...professional, city: delta.target.value });
+        }}
+        required
+      />
 
-                    <Form.Group className="mb-3" controlId="userName">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter username"
-                        value={employer.userName}
-                        onChange={(delta) => {
-                          setEmployer({ ...employer, userName: delta.target.value });
-                        }}
-                    />
-                    </Form.Group>
-                </>
-            )}
-            
-            <Button
-              className="col-12 mt-3 button-bg"
-              disabled={disableSignUp}
-              onClick={() => {
-                createAccount();
-              }}
-            >
-              Sign up
-            </Button>
+      <TextInput
+        mt="md"
+        label="State"
+        placeholder="Enter state"
+        value={professional.state}
+        onChange={(delta) => {
+          setProfessional({ ...professional, state: delta.target.value });
+        }}
+        required
+      />
 
-            <Container fluid>
-              <Row className="text-center mt-4">
-                <Col>
-                  <p className="text-muted mb-0">Already have an account?</p>
-                  <NavLink to={"/signIn"}>
-                    Sign in
-                  </NavLink>
-                </Col>
-              </Row>
-            </Container>
-          </Form>
-        </div>
-      </div>
-    </div>
+      <TextInput
+        mt="md"
+        label="Zip Code"
+        placeholder="Enter zip code"
+        value={professional.zipCode}
+        onChange={(delta) => {
+          setProfessional({ ...professional, zipCode: delta.target.value });
+        }}
+        required
+      />
+
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(1);
+          }}
+        >
+          Back
+        </Button>
+
+        <Button
+          mt="xl"
+          disabled={disableNext}
+          onClick={() => {
+            setCurrentStep(3);
+          }}
+        >
+          Next
+        </Button>
+      </Group>
+    </>
+  );
+};
+
+const ProfessionalStep3: React.FC<ProfessionalComponents> = ({
+  professional,
+  setProfessional,
+  setCurrentStep,
+}) => {
+  const [disableNext, setDisableNext] = useState(true);
+
+  useEffect(() => {
+    if (
+      professional.userName &&
+      professional.schoolName &&
+      professional.degreeName &&
+      professional.completionDate
+    ) {
+      setDisableNext(false);
+    } else {
+      setDisableNext(true);
+    }
+  }, [professional]);
+
+  return (
+    <>
+      <TextInput
+        label="Username"
+        placeholder="Enter username"
+        value={professional.userName}
+        onChange={(delta) => {
+          setProfessional({ ...professional, userName: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="School Name"
+        placeholder="Enter school name"
+        value={professional.schoolName}
+        onChange={(delta) => {
+          setProfessional({ ...professional, schoolName: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Degree Name"
+        placeholder="Enter degree name"
+        value={professional.degreeName}
+        onChange={(delta) => {
+          setProfessional({ ...professional, degreeName: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Completion Date"
+        placeholder="Enter completion date"
+        value={professional.completionDate}
+        onChange={(delta) => {
+          setProfessional({
+            ...professional,
+            completionDate: delta.target.value,
+          });
+        }}
+        required
+      />
+
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(2);
+          }}
+        >
+          Back
+        </Button>
+
+        <Button
+          mt="xl"
+          disabled={disableNext}
+          onClick={() => {
+            setCurrentStep(4);
+          }}
+        >
+          Next
+        </Button>
+      </Group>
+    </>
+  );
+};
+
+const ProfessionalStep4: React.FC<ProfessionalComponents> = ({
+  professional,
+  setProfessional,
+  setCurrentStep,
+}) => {
+  const [disableAdd, setDisableAdd] = useState(true);
+  const [disableSignUp, setDisableSignUp] = useState(true);
+  const [category, setCategory] = useState("");
+  const [keywords, setKeywords] = useState("");
+
+  const rows = professional.qualifications.map(
+    (qualification: Qualification) => (
+      <Table.Tr>
+        <Table.Td>{qualification.category}</Table.Td>
+        <Table.Td>{qualification.keywords}</Table.Td>
+      </Table.Tr>
+    )
+  );
+
+  useEffect(() => {
+    if (professional.qualifications.length > 1) {
+      setDisableSignUp(false);
+    } else {
+      setDisableSignUp(true);
+    }
+  }, [professional]);
+
+  useEffect(() => {
+    if (category && keywords) {
+      setDisableAdd(false);
+    } else {
+      setDisableAdd(true);
+    }
+  }, [category, keywords]);
+
+  const signUp = () => {
+    console.log("Signing up!");
+  };
+
+  return (
+    <>
+      <TextInput
+        label="Category"
+        placeholder="Enter category"
+        value={category}
+        onChange={(delta) => {
+          setCategory(delta.target.value);
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Keyword(s)"
+        placeholder="Enter keyword(s)"
+        value={keywords}
+        onChange={(delta) => {
+          setKeywords(delta.target.value);
+        }}
+        required
+      />
+
+      <Button
+        disabled={disableAdd}
+        onClick={() => {
+          setProfessional({
+            ...professional,
+            qualifications: [
+              ...professional.qualifications,
+              { category, keywords },
+            ],
+          });
+          setCategory("");
+          setKeywords("");
+        }}
+      >
+        Add Qualification
+      </Button>
+
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>Category</Table.Th>
+            <Table.Th>Keywords/Key phrases</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>{rows}</Table.Tbody>
+      </Table>
+
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(3);
+          }}
+        >
+          Back
+        </Button>
+
+        <Button
+          fullWidth
+          mt="xl"
+          disabled={disableSignUp}
+          onClick={() => {
+            signUp();
+          }}
+        >
+          Sign up
+        </Button>
+      </Group>
+    </>
+  );
+};
+
+interface EmployerComponents {
+  employer: any;
+  setEmployer: any;
+  setCurrentStep: any;
+}
+
+const EmployerStep1: React.FC<EmployerComponents> = ({
+  employer,
+  setEmployer,
+  setCurrentStep,
+}) => {
+  const [disableNext, setDisableNext] = useState(true);
+
+  useEffect(() => {
+    if (employer.companyName && employer.userName) {
+      setDisableNext(false);
+    } else {
+      setDisableNext(true);
+    }
+  }, [employer]);
+
+  return (
+    <>
+      <TextInput
+        label="Company Name"
+        placeholder="Enter company name"
+        value={employer.companyName}
+        onChange={(delta) => {
+          setEmployer({ ...employer, companyName: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Username"
+        placeholder="Enter username"
+        value={employer.userName}
+        onChange={(delta) => {
+          setEmployer({ ...employer, userName: delta.target.value });
+        }}
+        required
+      />
+
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(0);
+          }}
+        >
+          Back
+        </Button>
+
+        <Button
+          mt="xl"
+          disabled={disableNext}
+          onClick={() => {
+            setCurrentStep(2);
+          }}
+        >
+          Next
+        </Button>
+      </Group>
+    </>
+  );
+};
+
+const EmployerStep2: React.FC<EmployerComponents> = ({
+  employer,
+  setEmployer,
+  setCurrentStep,
+}) => {
+  const [disableNext, setDisableNext] = useState(true);
+
+  useEffect(() => {
+    if (
+      employer.address &&
+      employer.city &&
+      employer.state &&
+      employer.zipCode
+    ) {
+      setDisableNext(false);
+    } else {
+      setDisableNext(true);
+    }
+  }, [employer]);
+
+  return (
+    <>
+      <TextInput
+        label="Address Line"
+        placeholder="Enter address line"
+        value={employer.address}
+        onChange={(delta) => {
+          setEmployer({ ...employer, address: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="City"
+        placeholder="Enter city"
+        value={employer.city}
+        onChange={(delta) => {
+          setEmployer({ ...employer, city: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="State"
+        placeholder="Enter state"
+        value={employer.state}
+        onChange={(delta) => {
+          setEmployer({ ...employer, state: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Zip Code"
+        placeholder="Enter zip code"
+        value={employer.zipCode}
+        onChange={(delta) => {
+          setEmployer({ ...employer, zipCode: delta.target.value });
+        }}
+        required
+      />
+
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(1);
+          }}
+        >
+          Back
+        </Button>
+
+        <Button
+          mt="xl"
+          disabled={disableNext}
+          onClick={() => {
+            setCurrentStep(3);
+          }}
+        >
+          Next
+        </Button>
+      </Group>
+    </>
+  );
+};
+
+const EmployerStep3: React.FC<EmployerComponents> = ({
+  employer,
+  setEmployer,
+  setCurrentStep,
+}) => {
+  const [disableSignUp, setDisableSignUp] = useState(true);
+
+  useEffect(() => {
+    if (
+      employer.contactFirstName &&
+      employer.contactLastName &&
+      employer.contactPhoneNumber &&
+      employer.contactEmail
+    ) {
+      setDisableSignUp(false);
+    } else {
+      setDisableSignUp(true);
+    }
+  }, [employer]);
+
+  const signUp = () => {
+    console.log("Signing up!");
+  };
+
+  return (
+    <>
+      <TextInput
+        label="Contact First Name"
+        placeholder="Enter contact first name"
+        value={employer.contactFirstName}
+        onChange={(delta) => {
+          setEmployer({ ...employer, contactFirstName: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Contact Last Name"
+        placeholder="Enter contact last name"
+        value={employer.contactLastName}
+        onChange={(delta) => {
+          setEmployer({ ...employer, contactLastName: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Contact Phone Number"
+        placeholder="Enter contact phone number"
+        value={employer.contactPhoneNumber}
+        onChange={(delta) => {
+          setEmployer({ ...employer, contactPhoneNumber: delta.target.value });
+        }}
+        required
+      />
+
+      <TextInput
+        mt="md"
+        label="Contact Email"
+        placeholder="Enter contact email"
+        value={employer.contactEmail}
+        onChange={(delta) => {
+          setEmployer({
+            ...employer,
+            contactEmail: delta.target.value,
+          });
+        }}
+        required
+      />
+
+      <Group grow justify="center">
+        <Button
+          mt="xl"
+          onClick={() => {
+            setCurrentStep(2);
+          }}
+        >
+          Back
+        </Button>
+
+        <Button
+          fullWidth
+          mt="xl"
+          disabled={disableSignUp}
+          onClick={() => {
+            signUp();
+          }}
+        >
+          Sign up
+        </Button>
+      </Group>
     </>
   );
 };

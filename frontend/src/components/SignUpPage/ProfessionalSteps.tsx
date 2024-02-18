@@ -1,5 +1,6 @@
 import { Button, Group, Table, TextInput } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { DateInput } from "@mantine/dates";
+import { useEffect, useRef, useState } from "react";
 import Qualification from "../../types/Qualification";
 import Professional from "../../types/Professional";
 
@@ -9,25 +10,109 @@ interface ProfessionalProps {
   setCurrentStep: any;
 }
 
+const STARTS_WITH_ALPHABET_REGEX = /^[a-zA-Z]/;
+const LENGTH_REGEX = /^.{8,}$/;
+const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
 export const ProfessionalStep1: React.FC<ProfessionalProps> = ({
   professional,
   setProfessional,
   setCurrentStep,
 }) => {
   const [disableNext, setDisableNext] = useState(true);
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [cursorPosition, setCursorPosition] = useState(0);
+
+  const inputRef = useRef<any>(null);
 
   useEffect(() => {
     if (
       professional.firstName &&
       professional.lastName &&
       professional.phoneNumber &&
-      professional.email
+      professional.email &&
+      !phoneError &&
+      !emailError
     ) {
       setDisableNext(false);
     } else {
       setDisableNext(true);
     }
-  }, [professional]);
+  }, [professional, phoneError, emailError]);
+
+  useEffect(() => {
+    if (professional.email) {
+      if (!EMAIL_REGEX.test(professional.email)) {
+        setEmailError("Invalid email");
+      } else {
+        setEmailError("");
+      }
+    } else {
+      setEmailError("");
+    }
+  }, [professional.email]);
+
+  useEffect(() => {
+    if (cursorPosition === 1) {
+      inputRef.current.setSelectionRange(2, 2);
+    } else if (cursorPosition === 5) {
+      inputRef.current.setSelectionRange(7, 7);
+    } else if (cursorPosition === 6) {
+      inputRef.current.setSelectionRange(4, 4);
+    } else if (cursorPosition === 10) {
+      inputRef.current.setSelectionRange(11, 11);
+    } else {
+      inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
+    if (professional.phoneNumber.length === 14 || !professional.phoneNumber) {
+      setPhoneError("");
+    } else {
+      setPhoneError("Invalid phone number");
+    }
+  }, [professional.phoneNumber]);
+
+  const formatPhoneNumber = (textInput: string) => {
+    // Regular expression to match digits
+    const regex = /\d+/g;
+
+    // Use match() to extract numbers from the string
+    const numbersArray = textInput.match(regex);
+
+    // Join the extracted numbers into a single string
+    const numbersString = numbersArray ? numbersArray.join("") : "";
+
+    let formattedString = "";
+
+    if (!numbersString) {
+      // return empty string
+      return formattedString;
+    }
+
+    if (numbersString.length <= 3) {
+      formattedString = "(" + numbersString + ")";
+    } else if (numbersString.length <= 6) {
+      formattedString =
+        "(" + numbersString.slice(0, 3) + ") " + numbersString.slice(3);
+    } else {
+      formattedString =
+        "(" +
+        numbersString.slice(0, 3) +
+        ") " +
+        numbersString.slice(3, 6) +
+        "-" +
+        numbersString.slice(6, 10);
+    }
+
+    return formattedString;
+  };
+
+  const setPhoneNumber = (input: string) => {
+    setCursorPosition(inputRef.current.selectionStart);
+
+    setProfessional({ ...professional, phoneNumber: formatPhoneNumber(input) });
+  };
 
   return (
     <>
@@ -58,9 +143,14 @@ export const ProfessionalStep1: React.FC<ProfessionalProps> = ({
         placeholder="Enter phone number"
         value={professional.phoneNumber}
         onChange={(delta) => {
-          setProfessional({ ...professional, phoneNumber: delta.target.value });
+          if (delta.target.selectionStart) {
+            setCursorPosition(delta.target.selectionStart);
+          }
+          setPhoneNumber(delta.target.value);
         }}
         required
+        error={phoneError}
+        ref={inputRef}
       />
 
       <TextInput
@@ -72,6 +162,7 @@ export const ProfessionalStep1: React.FC<ProfessionalProps> = ({
           setProfessional({ ...professional, email: delta.target.value });
         }}
         required
+        error={emailError}
       />
 
       <Group grow justify="center">
@@ -153,6 +244,7 @@ export const ProfessionalStep2: React.FC<ProfessionalProps> = ({
       />
 
       <TextInput
+        type="number"
         mt="md"
         label="Zip Code"
         placeholder="Enter zip code"
@@ -193,19 +285,35 @@ export const ProfessionalStep3: React.FC<ProfessionalProps> = ({
   setCurrentStep,
 }) => {
   const [disableNext, setDisableNext] = useState(true);
+  const [usernameError, setUsernameError] = useState("");
 
   useEffect(() => {
     if (
       professional.username &&
       professional.schoolName &&
       professional.degreeName &&
-      professional.completionDate
+      professional.completionDate &&
+      !usernameError
     ) {
       setDisableNext(false);
     } else {
       setDisableNext(true);
     }
-  }, [professional]);
+  }, [professional, usernameError]);
+
+  useEffect(() => {
+    if (professional.username) {
+      if (!STARTS_WITH_ALPHABET_REGEX.test(professional.username)) {
+        setUsernameError("Username must start with an alphabet character");
+      } else if (!LENGTH_REGEX.test(professional.username)) {
+        setUsernameError("Username must be at least 8 characters long");
+      } else {
+        setUsernameError("");
+      }
+    } else {
+      setUsernameError("");
+    }
+  }, [professional.username]);
 
   return (
     <>
@@ -217,6 +325,7 @@ export const ProfessionalStep3: React.FC<ProfessionalProps> = ({
           setProfessional({ ...professional, username: delta.target.value });
         }}
         required
+        error={usernameError}
       />
 
       <TextInput
@@ -241,15 +350,15 @@ export const ProfessionalStep3: React.FC<ProfessionalProps> = ({
         required
       />
 
-      <TextInput
+      <DateInput
         mt="md"
         label="Completion Date"
         placeholder="Enter completion date"
         value={professional.completionDate}
-        onChange={(delta) => {
+        onChange={(date) => {
           setProfessional({
             ...professional,
-            completionDate: delta.target.value,
+            completionDate: date,
           });
         }}
         required

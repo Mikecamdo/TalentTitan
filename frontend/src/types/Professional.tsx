@@ -12,7 +12,7 @@ interface Professional {
     username: string;
     schoolName: string;
     degreeName: string;
-    completionDate: string;
+    completionDate: Date;
     qualifications: Qualification[];
 }
 

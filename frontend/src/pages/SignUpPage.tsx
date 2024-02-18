@@ -1,21 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "../App";
 import {
-  TextInput,
   Anchor,
   Paper,
   Title,
   Text,
   Container,
-  Button,
-  Stepper,
-  Group,
-  Table,
 } from "@mantine/core";
 import classes from "../css_modules/SignInPage.module.css";
-import Qualification from "../types/Qualification";
 import { ProfessionalStep1, ProfessionalStep2, ProfessionalStep3, ProfessionalStep4 } from "../components/SignUpPage/ProfessionalSteps";
 import { EmployerStep1, EmployerStep2, EmployerStep3 } from "../components/SignUpPage/EmployerSteps";
 import { Step0 } from "../components/SignUpPage/Step0";
@@ -34,7 +28,7 @@ const professionalValues = {
   username: "",
   schoolName: "",
   degreeName: "",
-  completionDate: "",
+  completionDate: new Date(),
   qualifications: [],
 };
 
@@ -66,10 +60,6 @@ export const SignUpPage = () => {
   if (!setCurrentUser) {
     return <div>Loading...</div>;
   }
-
-  const signUp = () => {
-    console.log("Signing up!");
-  };
 
   return (
     <>

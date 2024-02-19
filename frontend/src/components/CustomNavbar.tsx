@@ -1,97 +1,107 @@
-import React, { useEffect } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import { Row, Col, Nav, NavDropdown, Image } from "react-bootstrap";
+import { Group, Box, Image } from "@mantine/core";
 import { Link } from "react-router-dom";
-import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
-import { useContext } from "react";
+import classes from "../css_modules/CustomNavbar.module.css";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../App";
 
 export const CustomNavbar = () => {
-    const userContext = useContext(UserContext);
-    const currentUser = userContext?.currentUser;
-    const setCurrentUser = userContext?.setCurrentUser;
+  const userContext = useContext(UserContext);
+  const currentUser = userContext?.currentUser;
+  const setCurrentUser = userContext?.setCurrentUser;
 
-    useEffect(() => {
-        console.log(currentUser);
-    }, [currentUser]);
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
 
-    if (!setCurrentUser) {
-        return <div>Loading...</div>;
-    }
+  if (!setCurrentUser) {
+    return <div>Loading...</div>;
+  }
 
-    return (
-        <>
-            <Navbar sticky="top" className="nav-main text-light fs-5" collapseOnSelect>
-                <Container fluid className="m-0">
-                    <Navbar.Brand>
-                        <Link to={"/"} className={`nav-link`}>
-                            <Image src="/TalentTitanLogo.png" width={"75px"}></Image>
-                        </Link>
-                    </Navbar.Brand>
+  return (
+    <Box pb={120} mt="md">
+      <header className={classes.header}>
+        <Group justify="space-between" h="100%">
+          <Link to={"/"}>
+            <Image src="/TalentTitanLogo.png" h={70} w="auto" fit="contain" />
+          </Link>
 
-                    <Navbar.Toggle />
-                    
-                    <Row>
-                        {currentUser && currentUser != "Employer" && currentUser != "Staff" && (<>
-                            <Col>
-                                <Link to={"/job-search"} className={`nav-link`}>
-                                    View Posted Jobs
-                                </Link>
-                            </Col>
-                        </>)}
+          {currentUser &&
+            currentUser != "Employer" &&
+            currentUser != "Staff" && (
+              <>
+                <Group h="100%">
+                  <Link to={"/job-search"} className={classes.link}>
+                    View Posted Jobs
+                  </Link>
+                </Group>
+              </>
+            )}
 
-                        {currentUser == "Employer" && (<>
-                            <Col md={"auto"} >
-                                <Link to={"/job-posting"} className={`nav-link`}>
-                                    Post New Job
-                                </Link>
-                            </Col>
-                            <Col md={"auto"}>
-                                <Link to={"/job-search"} className={`nav-link`}>
-                                    View Posted Jobs
-                                </Link>
-                            </Col>
-                        </>)}
+          {currentUser == "Employer" && (
+            <>
+              <Group h="100%">
+                <Link to={"/job-posting"} className={classes.link}>
+                  Post New Job
+                </Link>
 
-                        {currentUser == "Staff" && (<>
-                            <Col md={"auto"}>
-                                <Link to={"/account-requests"} className={`nav-link`}>
-                                    View Account Requests
-                                </Link>
-                            </Col>
-                            <Col md={"auto"}>
-                                <Link to={"/account-search"} className={`nav-link`}>
-                                    View Accounts
-                                </Link>
-                            </Col>
-                            <Col md={"auto"}>
-                                <Link to={"/add-staff"} className={`nav-link`}>
-                                    Add New Staff Account
-                                </Link>
-                            </Col>
-                        </>)}
-                    </Row>
-                    
-                    <NavbarCollapse className="fs-5">
-                        {!currentUser && (<>
-                            <div className={`nav-link ms-auto`}>
-                                <Link to={"/signIn"} className="inherit-color">Sign In</Link> / <Link to={"/signUp"} className="inherit-color">Sign Up</Link>
-                            </div>
-                        </>)}
+                <Link to={"/job-search"} className={classes.link}>
+                  View Posted Jobs
+                </Link>
+              </Group>
+            </>
+          )}
 
-                        {currentUser && (<>
-                            <div className="ms-auto">
-                                <Link to={"/profile"} className="inherit-color">{currentUser} </Link>
-                                /
-                                <Link to={"/"} className={`ms-2 inherit-color`} onClick={() => {setCurrentUser(undefined)}}>
-                                Sign Out
-                                </Link>
-                            </div>
-                        </>)}
-                    </NavbarCollapse>
-                </Container>
-            </Navbar>
-        </>
-    );
-}
+          {currentUser == "Staff" && (
+            <>
+              <Group h="100%">
+                <Link to={"/account-requests"} className={classes.link}>
+                  View Account Requests
+                </Link>
+
+                <Link to={"/account-search"} className={classes.link}>
+                  View Accounts
+                </Link>
+
+                <Link to={"/add-staff"} className={classes.link}>
+                  Add New Staff Account
+                </Link>
+              </Group>
+            </>
+          )}
+
+          {!currentUser && (
+            <Group>
+              <Link to={"/signIn"} className={classes.link}>
+                Sign In
+              </Link>
+              /
+              <Link to={"/signUp"} className={classes.link}>
+                Sign Up
+              </Link>
+            </Group>
+          )}
+
+          {currentUser && (
+            <>
+              <Group>
+                <Link to={"/profile"} className={classes.link}>
+                  {currentUser}
+                </Link>
+                /
+                <Link
+                  to={"/"}
+                  className={classes.link}
+                  onClick={() => {
+                    setCurrentUser(undefined);
+                  }}
+                >
+                  Sign Out
+                </Link>
+              </Group>
+            </>
+          )}
+        </Group>
+      </header>
+    </Box>
+  );
+};

@@ -9,8 +9,10 @@ import {
   Grid,
   TextInput,
   CloseButton,
+  Modal,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconPhoneCall,
   IconAt,
@@ -26,6 +28,11 @@ import { useState, useEffect, useRef } from "react";
 import Professional from "../types/Professional";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
+const ALPHABET_REGEX = /[a-zA-Z]/;
+const NUMERIC_REGEX = /\d/;
+const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
+const LENGTH_REGEX = /^.{8,}$/;
 
 export const ProfilePage = () => {
   const [editProfile, setEditProfile] = useState(false);
@@ -61,7 +68,15 @@ export const ProfilePage = () => {
   });
 
   const [cursorPosition, setCursorPosition] = useState(0);
+  const [opened, { open, close }] = useDisclosure(false);
   const inputRef = useRef<any>(null);
+
+  const [disableButton, setDisableButton] = useState(true);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   useEffect(() => {
     if (category && keywords) {
@@ -126,6 +141,40 @@ export const ProfilePage = () => {
     }
   }, [professional.phoneNumber]);
 
+  useEffect(() => {
+    if (!newPassword || !confirmPassword || !oldPassword) {
+      setDisableButton(true);
+    } else if (newPasswordError || confirmPasswordError) {
+      setDisableButton(true);
+    } else {
+      setDisableButton(false);
+    }
+  }, [newPasswordError, confirmPasswordError, oldPassword]);
+
+  useEffect(() => {
+    if (newPassword) {
+      if (!ALPHABET_REGEX.test(newPassword)) {
+        setNewPasswordError("Password must contain an alphabet character");
+      } else if (!NUMERIC_REGEX.test(newPassword)) {
+        setNewPasswordError("Password must contain a numeric character");
+      } else if (!SPECIAL_REGEX.test(newPassword)) {
+        setNewPasswordError("Password must contain a special character");
+      } else if (!LENGTH_REGEX.test(newPassword)) {
+        setNewPasswordError("Password must be at least 8 characters long");
+      } else {
+        setNewPasswordError("");
+      }
+    } else {
+      setNewPasswordError("");
+    }
+
+    if (confirmPassword === newPassword || !confirmPassword) {
+      setConfirmPasswordError("");
+    } else {
+      setConfirmPasswordError("Passwords don't match");
+    }
+  }, [newPassword, confirmPassword]);
+
   const formatPhoneNumber = (textInput: string) => {
     // Regular expression to match digits
     const regex = /\d+/g;
@@ -165,6 +214,11 @@ export const ProfilePage = () => {
     setCursorPosition(inputRef.current.selectionStart);
 
     setProfessional({ ...professional, phoneNumber: formatPhoneNumber(input) });
+  };
+
+  const updatePassword = () => {
+    // Call backend and update password
+    close();
   };
 
   if (!professional) {
@@ -555,7 +609,7 @@ export const ProfilePage = () => {
             <Group justify="center" mt="md">
               <Button>Request Account Deletion</Button>
               <Button>Payment Options</Button>
-              <Button>Change Password</Button>
+              <Button onClick={open}>Update Password</Button>
               <Button
                 onClick={() => {
                   setEditProfile(true);
@@ -567,6 +621,54 @@ export const ProfilePage = () => {
           )}
         </Card>
       </Container>
+      <Modal opened={opened} onClose={close} title="Update Password" centered>
+        <TextInput
+          required
+          type="password"
+          label="Old Password"
+          placeholder="Enter old password"
+          value={oldPassword}
+          onChange={(delta) => {
+            setOldPassword(delta.target.value);
+          }}
+        />
+
+        <TextInput
+          required
+          type="password"
+          label="New Password"
+          placeholder="Enter new password"
+          value={newPassword}
+          onChange={(delta) => {
+            setNewPassword(delta.target.value);
+          }}
+          error={newPasswordError}
+        />
+
+        <TextInput
+          required
+          type="password"
+          mt="md"
+          label="Confirm New Password"
+          placeholder="Confirm new password"
+          value={confirmPassword}
+          onChange={(delta) => {
+            setConfirmPassword(delta.target.value);
+          }}
+          error={confirmPasswordError}
+        />
+
+        <Button
+          fullWidth
+          mt="xl"
+          disabled={disableButton}
+          onClick={() => {
+            updatePassword();
+          }}
+        >
+          Update password
+        </Button>
+      </Modal>
     </>
   );
 };

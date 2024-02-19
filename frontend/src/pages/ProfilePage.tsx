@@ -1,148 +1,190 @@
-import React from "react";
-import { Button, Card, CardHeader, Col, Container, Image, Row, Table } from "react-bootstrap";
+import {
+  Avatar,
+  Text,
+  Group,
+  Card,
+  Container,
+  Button,
+  Table,
+  Grid,
+} from "@mantine/core";
+import {
+  IconPhoneCall,
+  IconAt,
+  IconUser,
+  IconHome,
+  IconCertificate,
+  IconSchool,
+  IconCalendar,
+} from "@tabler/icons-react";
+import classes from "../css_modules/ProfilePage.module.css";
+import Qualification from "../types/Qualification";
 
 export const ProfilePage = () => {
-    return (
-        <>
-        <Container className="rounded mt-3">
-            <Card className="bg-main rounded">
-                <CardHeader className="button-bg">
-                    <Card.Title className="my-auto">
-                        Professional (Role)
-                    </Card.Title>
-                </CardHeader>
+  const qualifications: Qualification[] = [
+    { category: "Languages", keywords: "C, C++, C#, Java, JavaScript" },
+    { category: "Frameworks", keywords: "React, Angular, Vue, Node.js, .NET" },
+    { category: "Databases", keywords: "PostgreSQL, SQL Server" },
+  ];
 
-                <Card.Body className="bg-main">
-                    <Row className="d-flex">
-                        <Col className="d-flexjustify-content-center" sm="auto">
-                            <Image src="./default-avatar.png" width={"150px"} height={"150px"} className="d-flex justify-content-center"></Image>
-                            <Card.Title className="text-center">
-                                 {"\t"}Username
-                            </Card.Title>
-                        </Col>
-                        <Col>
-                        {/* Username, Name, Mailing address, Contact Info (phone and email),qualifications,
-                        details of degree completion (name of the institution, name of the degree, month and year of completion) */}
-                            <Row className="sub-header">
-                                <Card.Text> <strong>Name:</strong> </Card.Text>
-                            </Row>
-                            <Row>
-                                <Card.Text>First Last</Card.Text>
-                            </Row>
-                            <Row className="sub-header">
-                                <Card.Text> <strong>Contact Info:</strong> </Card.Text>
-                            </Row>
-                            <Row>
-                                <Card.Text>
-                                    <strong>Phone:</strong> (123) 456-7890 {"\t"} 
-                                    <br/> 
-                                    <strong>Email:</strong> profile@gmail.com
-                                    <br/>
-                                    <strong>Mailing Address:</strong> 123 Easy St.
-                                </Card.Text>
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row className="header text-bold">
-                                <strong>Degree Information:</strong>
-                            </Row>
-                            <Row className="sub-header font-weight-bold">
-                                <Card.Text>
-                                    <strong>Name of the Institution:</strong>
-                                </Card.Text>
-                            </Row>
-                            <Row>
-                                <Card.Text>Southern Methodist University</Card.Text>
-                            </Row>
-                            <Row className="sub-header">
-                                <Card.Text> <strong>Degree Name:</strong> </Card.Text>
-                            </Row>
-                            <Row>
-                                <Card.Text>B.S. Computer Science</Card.Text>
-                            </Row>
-                            <Row className="sub-header">
-                                <Card.Text> <strong>Date of Completion:</strong></Card.Text>
-                            </Row>
-                            <Row>
-                                <Card.Text>May 2025</Card.Text>
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row>
-                                <Button className="button-bg">
-                                    Request Account Deletion
-                                </Button>
-                            </Row>
-                            <br/>
-                            <Row>
-                                <Button className="button-bg">
-                                    Payment Options
-                                </Button>
-                            </Row>
-                            <br/>
-                            <Row>
-                                <Button className="button-bg">
-                                    Change Password
-                                </Button>
-                            </Row>
-                            <br/>
-                            <Row>
-                                <Button className="button-bg">
-                                    Edit Profile
-                                </Button>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
-        </Container>
+  const rows = qualifications.map((qualification: Qualification) => (
+    <Table.Tr>
+      <Table.Td>{qualification.category}</Table.Td>
+      <Table.Td>{qualification.keywords}</Table.Td>
+    </Table.Tr>
+  ));
 
-        <Container className="rounded text-light">
-            <Card.Body className="bg-alt">
-            <Row>
-                <Col className="text-center">
-                    <strong>Qualifications:</strong>
-                </Col>
+  return (
+    <>
+      <Container size="md">
+        <Card shadow="md" padding="lg" radius="md" withBorder>
+          <Group justify="center">
+            <div>
+              <Avatar
+                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png"
+                size={125}
+                radius="md"
+              />
 
-                <Col className="text-center">
-                    <strong>Transaction History:</strong>
-                </Col>
-            </Row>
+              <Text
+                ta="center"
+                fz="md"
+                fw={500}
+                mt={5}
+                className={classes.name}
+              >
+                BSmith7
+              </Text>
+            </div>
 
-            <Row>
-                <Col className="pe-0">
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Keywords/Key phrases</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Languages</td>
-                                <td>C, C++, C#, Java, JavaScript</td>
-                            </tr>
+            <div>
+              <Text fz="lg" fw={500} className={classes.name}>
+                Personal Info
+              </Text>
 
-                            <tr>
-                                <td>Frameworks</td>
-                                <td>React, Angular, Vue, Node.js, .NET</td>
-                            </tr>
+              <Group wrap="nowrap" gap={10} mt={3}>
+                <IconUser stroke={1.5} size="1rem" className={classes.icon} />
+                <Text fz="sm" c="dimmed">
+                  Bob Smith
+                </Text>
+              </Group>
 
-                            <tr>
-                                <td>Database</td>
-                                <td>PostgreSQL, SQL Server</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Col>
-                <Col>
-                    <Row className="mx-auto my-2">February 11, 2024: Received $50 from Walmart</Row>
-                    <Row className="mx-auto my-2">February 1, 2024: Paid $10 to Talent Titan (subscription fee)</Row>
-                </Col>
-            </Row>
-            </Card.Body>
-        </Container>
-        </>
-    );
-}
+              <Group wrap="nowrap" gap={10} mt={3}>
+                <IconAt stroke={1.5} size="1rem" className={classes.icon} />
+                <Text fz="sm" c="dimmed">
+                  robert_smith@gmail.com
+                </Text>
+              </Group>
+
+              <Group wrap="nowrap" gap={10} mt={5}>
+                <IconPhoneCall
+                  stroke={1.5}
+                  size="1rem"
+                  className={classes.icon}
+                />
+                <Text fz="sm" c="dimmed">
+                  (123) 456-7890
+                </Text>
+              </Group>
+            </div>
+
+            <div>
+              <Text fz="lg" fw={500} className={classes.name}>
+                Address
+              </Text>
+
+              <Group wrap="nowrap" gap={10} mt={3}>
+                <IconHome stroke={1.5} size="1rem" className={classes.icon} />
+                <Text fz="sm" c="dimmed">
+                  6425 Boaz Lane
+                </Text>
+              </Group>
+
+              <Group wrap="nowrap" gap={10} mt={3}>
+                <IconHome stroke={1.5} size="1rem" className={classes.hidden} />
+                <Text fz="sm" c="dimmed">
+                  Dallas, Texas
+                </Text>
+              </Group>
+
+              <Group wrap="nowrap" gap={10} mt={5}>
+                <IconHome stroke={1.5} size="1rem" className={classes.hidden} />
+                <Text fz="sm" c="dimmed">
+                  75205
+                </Text>
+              </Group>
+            </div>
+
+            <div>
+              <Text fz="lg" fw={500} className={classes.name}>
+                Degree Info
+              </Text>
+
+              <Group wrap="nowrap" gap={10} mt={3}>
+                <IconSchool stroke={1.5} size="1rem" className={classes.icon} />
+                <Text fz="sm" c="dimmed">
+                  Southern Methodist University
+                </Text>
+              </Group>
+
+              <Group wrap="nowrap" gap={10} mt={3}>
+                <IconCertificate
+                  stroke={1.5}
+                  size="1rem"
+                  className={classes.icon}
+                />
+                <Text fz="sm" c="dimmed">
+                  B.S. Computer Science
+                </Text>
+              </Group>
+
+              <Group wrap="nowrap" gap={10} mt={5}>
+                <IconCalendar
+                  stroke={1.5}
+                  size="1rem"
+                  className={classes.icon}
+                />
+                <Text fz="sm" c="dimmed">
+                  May 2025
+                </Text>
+              </Group>
+            </div>
+          </Group>
+
+          <Group justify="center" mt="md">
+            <Button>Request Account Deletion</Button>
+            <Button>Payment Options</Button>
+            <Button>Change Password</Button>
+            <Button>Edit Profile</Button>
+          </Group>
+
+          <Card.Section>
+            <Grid px="xs" pb="lg" pt="xs">
+              <Grid.Col span={6}>
+                <Text fz="lg" fw={500} className={classes.name} ta="center">
+                  Qualifications
+                </Text>
+                <Table highlightOnHover withTableBorder>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>Category</Table.Th>
+                      <Table.Th>Keywords/Key phrases</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>{rows}</Table.Tbody>
+                </Table>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Text fz="lg" fw={500} className={classes.name} ta="center">
+                  Transaction History
+                </Text>
+                <Text fz="sm">February 11, 2024: Received $50 from Walmart</Text>
+                <Text fz="sm" mt="xs">February 1, 2024: Paid $10 to Talent Titan (subscription fee)</Text>
+              </Grid.Col>
+            </Grid>
+          </Card.Section>
+        </Card>
+      </Container>
+    </>
+  );
+};

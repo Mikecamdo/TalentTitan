@@ -10,6 +10,7 @@ import {
   TextInput,
   CloseButton,
   Modal,
+  Title,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
@@ -68,8 +69,10 @@ export const ProfilePage = () => {
   });
 
   const [cursorPosition, setCursorPosition] = useState(0);
-  const [opened, { open, close }] = useDisclosure(false);
   const inputRef = useRef<any>(null);
+
+  const [updatePasswordOpened, handlePasswordOpened] = useDisclosure(false);
+  const [requestDeletionOpened, handleDeletionOpened] = useDisclosure(false);
 
   const [disableButton, setDisableButton] = useState(true);
   const [oldPassword, setOldPassword] = useState("");
@@ -218,7 +221,10 @@ export const ProfilePage = () => {
 
   const updatePassword = () => {
     // Call backend and update password
-    close();
+    handlePasswordOpened.close();
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   if (!professional) {
@@ -607,9 +613,13 @@ export const ProfilePage = () => {
             </Group>
           ) : (
             <Group justify="center" mt="md">
-              <Button>Request Account Deletion</Button>
+              <Button onClick={handleDeletionOpened.open}>
+                Request Account Deletion
+              </Button>
               <Button>Payment Options</Button>
-              <Button onClick={open}>Update Password</Button>
+              <Button onClick={handlePasswordOpened.open}>
+                Update Password
+              </Button>
               <Button
                 onClick={() => {
                   setEditProfile(true);
@@ -621,7 +631,13 @@ export const ProfilePage = () => {
           )}
         </Card>
       </Container>
-      <Modal opened={opened} onClose={close} title="Update Password" centered>
+
+      <Modal
+        opened={updatePasswordOpened}
+        onClose={handlePasswordOpened.close}
+        title="Update Password"
+        centered
+      >
         <TextInput
           required
           type="password"
@@ -668,6 +684,46 @@ export const ProfilePage = () => {
         >
           Update password
         </Button>
+      </Modal>
+
+      <Modal
+        opened={requestDeletionOpened}
+        onClose={handleDeletionOpened.close}
+        title="Delete Account"
+        centered
+      >
+        <Title order={3} className={classes.name} ta="center">
+          Are you sure you want to delete your account?
+        </Title>
+
+        <Text c="dimmed" size="sm" ta="center" mt="xs">
+          Please note that your account won't be deleted until our staff
+          approves your request
+        </Text>
+
+        <Grid mt="lg">
+          <Grid.Col span={6}>
+            <Button
+              fullWidth
+              onClick={() => {
+                handleDeletionOpened.close();
+              }}
+            >
+              No, keep my account
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Button
+              fullWidth
+              onClick={() => {
+                //request to delete account in backend
+                handleDeletionOpened.close();
+              }}
+            >
+              Yes, delete my account
+            </Button>
+          </Grid.Col>
+        </Grid>
       </Modal>
     </>
   );

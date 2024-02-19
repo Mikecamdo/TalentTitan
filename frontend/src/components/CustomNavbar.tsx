@@ -84,7 +84,7 @@ export const CustomNavbar = () => {
           {currentUser && (
             <>
               <Group>
-                <Link to={"/profile"} className={classes.link}>
+                <Link to={`/profile/${currentUser}`} className={classes.link}>
                   {currentUser}
                 </Link>
                 /

@@ -72,7 +72,7 @@ function App() {
                 {currentUser && (
                   <>{/* Add routes for only when logged in here */}</>
                 )}
-                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile/:username" element={<ProfilePage />} />
                 <Route path="/job-posting" element={<JobPostingPage />} />
                 <Route path="/job-search" element={<ViewPostedJobsPage />} />
                 <Route path="/account-search" element={<ViewAccountsPage />} />

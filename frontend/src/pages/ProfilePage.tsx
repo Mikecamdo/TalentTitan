@@ -5,9 +5,17 @@ import { ProfessionalProfile } from "../components/ProfilePage/ProfessionalProfi
 export const ProfilePage = () => {
   const { username } = useParams();
 
+  if (!username) {
+    return <div>Loading...</div>;
+  }
+
   if (username === "Employer") {
-    return <EmployerProfile/>;
+    return <EmployerProfile currentlyViewing={username}/>;
   } else {
-    return <ProfessionalProfile />;
+    return <ProfessionalProfile currentlyViewing={username}/>;
   }
 };
+
+export interface ProfileProps {
+    currentlyViewing: string;
+}

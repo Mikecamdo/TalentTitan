@@ -1,40 +1,44 @@
 import {
-    Avatar,
-    Text,
-    Group,
-    Card,
-    Container,
-    Button,
-    Table,
-    Grid,
-    TextInput,
-    CloseButton,
-    Modal,
-    Title,
-  } from "@mantine/core";
-  import { DateInput } from "@mantine/dates";
-  import { useDisclosure } from "@mantine/hooks";
-  import {
-    IconPhoneCall,
-    IconAt,
-    IconUser,
-    IconHome,
-    IconCertificate,
-    IconSchool,
-    IconCalendar,
-  } from "@tabler/icons-react";
-  import classes from "../../css_modules/ProfilePage.module.css";
-  import Qualification from "../../types/Qualification";
-  import { useState, useEffect, useRef } from "react";
-  import Professional from "../../types/Professional";
-  
-  const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-  const ALPHABET_REGEX = /[a-zA-Z]/;
-  const NUMERIC_REGEX = /\d/;
-  const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
-  const LENGTH_REGEX = /^.{8,}$/;
+  Avatar,
+  Text,
+  Group,
+  Card,
+  Container,
+  Button,
+  Table,
+  Grid,
+  TextInput,
+  CloseButton,
+  Modal,
+  Title,
+} from "@mantine/core";
+import { DateInput } from "@mantine/dates";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  IconPhoneCall,
+  IconAt,
+  IconUser,
+  IconHome,
+  IconCertificate,
+  IconSchool,
+  IconCalendar,
+} from "@tabler/icons-react";
+import classes from "../../css_modules/ProfilePage.module.css";
+import Qualification from "../../types/Qualification";
+import { useState, useEffect, useRef, useContext } from "react";
+import Professional from "../../types/Professional";
+import { ProfileProps } from "../../pages/ProfilePage";
+import { UserContext } from "../../App";
 
-export const ProfessionalProfile = () => {
+const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+const ALPHABET_REGEX = /[a-zA-Z]/;
+const NUMERIC_REGEX = /\d/;
+const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
+const LENGTH_REGEX = /^.{8,}$/;
+
+export const ProfessionalProfile: React.FC<ProfileProps> = ({
+  currentlyViewing,
+}) => {
   const [editProfile, setEditProfile] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -226,7 +230,14 @@ export const ProfessionalProfile = () => {
     setConfirmPassword("");
   };
 
-  if (!professional) {
+  const userContext = useContext(UserContext);
+  const currentUser = userContext?.currentUser;
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
+
+  if (!currentUser || !professional) {
     return <div>Loading...</div>;
   }
 
@@ -612,20 +623,27 @@ export const ProfessionalProfile = () => {
             </Group>
           ) : (
             <Group justify="center" mt="md">
-              <Button onClick={handleDeletionOpened.open}>
-                Request Account Deletion
-              </Button>
-              <Button>Payment Options</Button>
-              <Button onClick={handlePasswordOpened.open}>
-                Update Password
-              </Button>
-              <Button
-                onClick={() => {
-                  setEditProfile(true);
-                }}
-              >
-                Edit Profile
-              </Button>
+              {currentUser === currentlyViewing && (
+                <>
+                  <Button onClick={handleDeletionOpened.open}>
+                    Request Account Deletion
+                  </Button>
+                  <Button>Payment Options</Button>
+                  <Button onClick={handlePasswordOpened.open}>
+                    Update Password
+                  </Button>
+                </>
+              )}
+              {(currentUser === currentlyViewing ||
+                currentUser === "Staff") && (
+                <Button
+                  onClick={() => {
+                    setEditProfile(true);
+                  }}
+                >
+                  Edit Profile
+                </Button>
+              )}
             </Group>
           )}
         </Card>

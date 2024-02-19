@@ -13,8 +13,10 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconPhoneCall, IconAt, IconUser, IconHome } from "@tabler/icons-react";
 import classes from "../../css_modules/ProfilePage.module.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Employer from "../../types/Employer";
+import { ProfileProps } from "../../pages/ProfilePage";
+import { UserContext } from "../../App";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -22,7 +24,9 @@ const NUMERIC_REGEX = /\d/;
 const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
 const LENGTH_REGEX = /^.{8,}$/;
 
-export const EmployerProfile = () => {
+export const EmployerProfile: React.FC<ProfileProps> = ({
+  currentlyViewing,
+}) => {
   const [editProfile, setEditProfile] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -193,7 +197,14 @@ export const EmployerProfile = () => {
     setConfirmPassword("");
   };
 
-  if (!employer) {
+  const userContext = useContext(UserContext);
+  const currentUser = userContext?.currentUser;
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
+
+  if (!currentUser || !employer) {
     return <div>Loading...</div>;
   }
 
@@ -449,20 +460,27 @@ export const EmployerProfile = () => {
             </Group>
           ) : (
             <Group justify="center" mt="md">
-              <Button onClick={handleDeletionOpened.open}>
-                Request Account Deletion
-              </Button>
-              <Button>Payment Options</Button>
-              <Button onClick={handlePasswordOpened.open}>
-                Update Password
-              </Button>
-              <Button
-                onClick={() => {
-                  setEditProfile(true);
-                }}
-              >
-                Edit Profile
-              </Button>
+              {currentUser === currentlyViewing && (
+                <>
+                  <Button onClick={handleDeletionOpened.open}>
+                    Request Account Deletion
+                  </Button>
+                  <Button>Payment Options</Button>
+                  <Button onClick={handlePasswordOpened.open}>
+                    Update Password
+                  </Button>
+                </>
+              )}
+              {(currentUser === currentlyViewing ||
+                currentUser === "Staff") && (
+                  <Button
+                    onClick={() => {
+                      setEditProfile(true);
+                    }}
+                  >
+                    Edit Profile
+                  </Button>
+                )}
             </Group>
           )}
         </Card>

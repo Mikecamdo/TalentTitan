@@ -220,7 +220,7 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
 
             <Grid.Col span={4}>
               <Text fz="lg" fw={500} className={classes.name}>
-                Contact Info
+                Personal Info
               </Text>
 
               <Group wrap="nowrap" gap={10} mt={3}>

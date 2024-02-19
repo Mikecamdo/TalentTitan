@@ -27,7 +27,8 @@ export const CustomNavbar = () => {
 
           {currentUser &&
             currentUser != "Employer" &&
-            currentUser != "Staff" && (
+            currentUser != "Staff" &&
+            currentUser != "root" && (
               <>
                 <Group h="100%">
                   <Link to={"/job-search"} className={classes.link}>
@@ -61,11 +62,15 @@ export const CustomNavbar = () => {
                 <Link to={"/account-search"} className={classes.link}>
                   View Accounts
                 </Link>
-
-                <Link to={"/add-staff"} className={classes.link}>
-                  Add New Staff Account
-                </Link>
               </Group>
+            </>
+          )}
+
+          {currentUser == "root" && (
+            <>
+              <Link to={"/add-staff"} className={classes.link}>
+                Add New Staff Account
+              </Link>
             </>
           )}
 

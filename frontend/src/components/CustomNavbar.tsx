@@ -1,10 +1,7 @@
-import React from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import { Row, Col, Nav, NavDropdown, Image } from "react-bootstrap";
+import { Group, Box, Image } from "@mantine/core";
 import { Link } from "react-router-dom";
-import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
-import { useContext } from "react";
+import classes from "../css_modules/CustomNavbar.module.css";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../App";
 
 export const CustomNavbar = () => {
@@ -12,104 +9,97 @@ export const CustomNavbar = () => {
     const currentUser = userContext?.currentUser;
     const setCurrentUser = userContext?.setCurrentUser;
 
-    if (!setCurrentUser) {
-        return <div>Loading...</div>;
-    }
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
 
-    return (
-        <>
-            <Navbar sticky="top" className="nav-main text-light" collapseOnSelect>
-                <Container fluid className="m-0">
-                <Navbar.Brand>
-                    <Link to={"/"} className={`nav-link`}>
-                        <Image src="/TalentTitanLogoOnly.png" width={"75px"}></Image>
-                        
-                    </Link>
-                </Navbar.Brand>
-                <Navbar.Toggle />
-                    <Row >
-                        <Col md={"auto"} >
-                            <Navbar.Toggle aria-controls="employer-resources" />
-                            <Navbar.Collapse id="employer-resources">
-                            <Nav>
-                                <NavDropdown
-                                id="employer-resources"
-                                className="text-light"
-                                title="Employer Resources"
-                                >
-                                    <NavDropdown.Item href="/job-posting">
-                                        Post New Job
-                                    </NavDropdown.Item>
 
-                                    <NavDropdown.Item href="/job-search">
+
+  return (
+    <Box pb={120} mt="md">
+      <header className={classes.header}>
+        <Group justify="space-between" h="100%">
+          <Link to={"/"}>
+            <Image src="/TalentTitanLogo.png" h={70} w="auto" fit="contain" />
+          </Link>
+
+          {currentUser &&
+            currentUser != "Employer" &&
+            currentUser != "Staff" && (
+              <>
+                <Group h="100%">
+                  <Link to={"/job-search"} className={classes.link}>
                                         View Posted Jobs
-                                    </NavDropdown.Item>
-                                </NavDropdown>
-                            </Nav>
-                            </Navbar.Collapse>
-                        </Col>
+                  </Link>
+                </Group>
+              </>
+            )}
 
-                        <Col md={"auto"} >
-                            <Navbar.Toggle aria-controls="professional-resources" />
-                            <Navbar.Collapse id="professional-resources">
-                            <Nav>
-                                <NavDropdown
-                                id="professional-resources"
-                                className="text-light"
-                                title="Professional Resources"
-                                >
-                                    <NavDropdown.Item href="/job-search">
+          {currentUser == "Employer" && (
+            <>
+              <Group h="100%">
+                <Link to={"/job-posting"} className={classes.link}>
+                  Post New Job
+                </Link>
+
+                <Link to={"/job-search"} className={classes.link}>
                                         View Posted Jobs
-                                    </NavDropdown.Item>
-                                </NavDropdown>
-                            </Nav>
-                            </Navbar.Collapse>
-                        </Col>
+                </Link>
+              </Group>
+            </>
+          )}
                         
-                        <Col md={"auto"} >
-                            <Navbar.Toggle aria-controls="staff-resources" />
-                            <Navbar.Collapse id="staff-resources">
-                            <Nav>
-                                <NavDropdown
-                                id="professional-resources"
-                                className="text-light"
-                                title="Staff Resources"
-                                >
-                                    <NavDropdown.Item href="/account-requests">
+          {currentUser == "Staff" && (
+            <>
+              <Group h="100%">
+                <Link to={"/account-requests"} className={classes.link}>
                                         View Account Requests
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item href="/account-search">
+                </Link>
+
+                <Link to={"/account-search"} className={classes.link}>
                                         View Accounts
-                                    </NavDropdown.Item>
+                </Link>
 
-                                    <NavDropdown.Item href="/add-staff">
+                <Link to={"/add-staff"} className={classes.link}>
                                         Add New Staff Account
-                                    </NavDropdown.Item>
-                                </NavDropdown>
-                            </Nav>
-                            </Navbar.Collapse>
-                        </Col>
-                    </Row>
+                </Link>
+              </Group>
+            </>
+          )}
                     
-                <NavbarCollapse className="fs-5">
-                    {!currentUser && (<>
-                        <div className={`ms-auto nav-link`}>
-                            <Link to={"/signIn"} className="inherit-color">Sign In</Link> / <Link to={"/signUp"} className="inherit-color">Sign Up</Link>
-                        </div>
-                    </>)}
+          {!currentUser && (
+            <Group>
+              <Link to={"/signIn"} className={classes.link}>
+                Sign In
+              </Link>
+              /
+              <Link to={"/signUp"} className={classes.link}>
+                Sign Up
+              </Link>
+            </Group>
+          )}
 
-                    {currentUser && (<>
-                        <div className="ms-auto">
-                            <Link to={"/profile"} className="inherit-color">{currentUser} </Link>
+          {currentUser && (
+            <>
+              <Group>
+                <Link to={"/profile"} className={classes.link}>
+                  {currentUser}
+                </Link>
                             /
-                            <Link to={"/"} className={`ms-2 inherit-color`} onClick={() => {setCurrentUser(undefined)}}>
+                <Link
+                  to={"/"}
+                  className={classes.link}
+                  onClick={() => {
+                    setCurrentUser(undefined);
+                  }}
+                >
                             Sign Out
                             </Link>
-                        </div>
-                    </>)}
-                </NavbarCollapse>
-                </Container>
-            </Navbar>
+              </Group>
         </>
+          )}
+        </Group>
+      </header>
+    </Box>
     );
-}
+};

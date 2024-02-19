@@ -26,6 +26,7 @@ color-scheme {
   color: #FC6736 100%;
   color: #FFB0B0 100%;
   color: #EFECEC 100%;
+  
   /* \|/ From Logo: \|/ */
   color: #5accf3 100%;
   color: #13222a 100%;
@@ -41,6 +42,7 @@ color-scheme {
 
 .nav-main {
   background: linear-gradient(180deg,#1d3e55, #13222a);
+  background: #163143;
 }
 
 .bg-main {

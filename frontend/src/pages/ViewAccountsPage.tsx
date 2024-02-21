@@ -42,7 +42,7 @@ export const ViewAccountsPage = () => {
 
   const rows = dummyData.map(
     (data: any, index: number) =>
-      data.name.includes(searchValue) && (
+      data.name.toLowerCase().includes(searchValue.toLowerCase()) && (
         <Table.Tr>
           {data.accountType === "Professional" ? (
             <Link to={`/profile/${data.name}`} className={classes.link}>

@@ -360,9 +360,33 @@ export const JobPage = () => {
 
               <Group wrap="nowrap" gap={10} mt={3}>
                 <IconUser stroke={1.5} size="1rem" className={classes.icon} />
-                <Text fz="sm" c="dimmed">
-                  {contactFirstName} {contactLastName}
-                </Text>
+                {editJob ? (<>
+                  <TextInput
+                    label="First Name"
+                    placeholder="Enter first name"
+                    value={contactFirstName}
+                    onChange={(delta) => {
+                      setContactFirstName(delta.target.value);
+                    }}
+                    required
+                    size="xs"
+                  />
+
+                  <TextInput
+                    label="Last Name"
+                    placeholder="Enter last name"
+                    value={contactLastName}
+                    onChange={(delta) => {
+                      setContactLastName(delta.target.value);
+                    }}
+                    required
+                    size="xs"
+                  />
+                </>) : (
+                  <Text fz="sm" c="dimmed">
+                    {contactFirstName} {contactLastName}
+                  </Text>
+                )}
               </Group>
 
               <Group wrap="nowrap" gap={10} mt={3}>

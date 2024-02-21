@@ -49,8 +49,10 @@ export const SignInPage = () => {
   useEffect(() => {
     if (values.username) {
       if (
-        !STARTS_WITH_ALPHABET_REGEX.test(values.username) ||
-        !LENGTH_REGEX.test(values.username)
+        (!STARTS_WITH_ALPHABET_REGEX.test(values.username) ||
+          !LENGTH_REGEX.test(values.username)) &&
+        values.username !== "root" &&
+        values.username !== "Staff"
       ) {
         setUsernameError("Invalid username");
       } else {

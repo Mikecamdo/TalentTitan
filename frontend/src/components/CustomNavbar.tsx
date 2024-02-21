@@ -18,7 +18,7 @@ export const CustomNavbar = () => {
   }
 
   return (
-    <Box pb={120} mt="md">
+    <Box mt="md">
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
           <Link to={"/"}>

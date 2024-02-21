@@ -14,7 +14,7 @@ import classes from "../css_modules/SignInPage.module.css";
 
 const ALPHABET_REGEX = /[a-zA-Z]/;
 const NUMERIC_REGEX = /\d/;
-const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
+const SPECIAL_REGEX = /[!@#$%^&*()_+?]/;
 const LENGTH_REGEX = /^.{8,}$/;
 
 export const UpdatePasswordPage = () => {

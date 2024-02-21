@@ -21,7 +21,7 @@ import Staff from "../../types/Staff";
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
 const NUMERIC_REGEX = /\d/;
-const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
+const SPECIAL_REGEX = /[!@#$%^&*()_+?]/;
 const LENGTH_REGEX = /^.{8,}$/;
 
 export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {

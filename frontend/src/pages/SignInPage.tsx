@@ -23,7 +23,7 @@ const LENGTH_REGEX = /^.{8,}$/;
 
 const ALPHABET_REGEX = /[a-zA-Z]/;
 const NUMERIC_REGEX = /\d/;
-const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
+const SPECIAL_REGEX = /[!@#$%^&*()_+?]/;
 
 export const SignInPage = () => {
   const navigate = useNavigate();

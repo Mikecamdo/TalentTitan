@@ -1,10 +1,10 @@
 import { Group, Box, Image } from "@mantine/core";
 import { Link } from "react-router-dom";
-import classes from "../css_modules/CustomNavbar.module.css";
+import classes from "../css_modules/CustomHeader.module.css";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../App";
 
-export const CustomNavbar = () => {
+export const CustomHeader = () => {
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
   const setCurrentUser = userContext?.setCurrentUser;

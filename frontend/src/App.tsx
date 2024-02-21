@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
 import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
-import { CustomNavbar } from "./components/CustomNavbar";
+import { CustomHeader } from "./components/CustomHeader";
 import User from "./types/User";
 import { ProfilePage } from "./pages/ProfilePage";
 import { JobPostingPage } from "./pages/JobPostingPage";
@@ -58,7 +58,7 @@ function App() {
             padding="md"
           >
             <AppShell.Header>
-              <CustomNavbar />
+              <CustomHeader />
             </AppShell.Header>
             <AppShell.Main>
               <Routes>

@@ -42,7 +42,11 @@ export const SignInPage = () => {
 
   const login = () => {
     setCurrentUser(values.username);
-    navigate("/update-password");
+    if (values.username === "root") {
+      navigate("/add-staff");
+    } else {
+      navigate("/update-password");
+    }
   };
 
   return (

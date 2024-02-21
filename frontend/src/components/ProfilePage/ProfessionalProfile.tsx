@@ -36,6 +36,12 @@ const NUMERIC_REGEX = /\d/;
 const SPECIAL_REGEX = /[!@#$%^&*()_+]/;
 const LENGTH_REGEX = /^.{8,}$/;
 
+// Credit Card Regex:
+const VISA_REGEX = /^4\d{12}(?:\d{3})?$/;
+const MASTERCARD_REGEX = /^5\d{15}$/;
+const AMEX_REGEX = /^3[47]\d{13}$/;
+const DISCOVER_REGEX = /^6\d{15}$/;
+
 export const ProfessionalProfile: React.FC<ProfileProps> = ({
   currentlyViewing,
 }) => {
@@ -76,6 +82,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
 
   const [updatePasswordOpened, handlePasswordOpened] = useDisclosure(false);
   const [requestDeletionOpened, handleDeletionOpened] = useDisclosure(false);
+  const [paymentOpened, handlePaymentOpened] = useDisclosure(false);
 
   const [disableButton, setDisableButton] = useState(true);
   const [oldPassword, setOldPassword] = useState("");
@@ -83,6 +90,12 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const [disablePay, setDisablePay] = useState(true);
+  const [creditCard, setCreditCard] = useState("");
+  const [payAmount, setPayAmount] = useState("");
+
+  const [creditCardError, setCreditCardError] = useState("");
 
   useEffect(() => {
     if (category && keywords) {
@@ -216,10 +229,57 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     return formattedString;
   };
 
+  const formatCreditCard = (textInput: string) => {
+    // Regular expression to match digits
+    const regex = /\d+/g;
+
+    // Use match() to extract numbers from the string
+    const numbersArray = textInput.match(regex);
+
+    // Join the extracted numbers into a single string
+    const numbersString = numbersArray ? numbersArray.join("") : "";
+
+    let formattedString = "";
+
+    if (!numbersString) {
+      // return empty string
+      return formattedString;
+    }
+
+    if (numbersString[0] === "3") {
+      // Mastercard
+      formattedString = numbersString.slice(0, 4);
+      if (numbersString[4]) {
+        formattedString += "-" + numbersString.slice(4, 10);
+        if (numbersString[10]) {
+          formattedString += "-" + numbersString.slice(10, 15);
+        }
+      }
+    } else {
+      // Everything else
+      formattedString = numbersString.slice(0, 4);
+      if (numbersString[4]) {
+        formattedString += "-" + numbersString.slice(4, 8);
+        if (numbersString[8]) {
+          formattedString += "-" + numbersString.slice(8, 12);
+          if (numbersString[12]) {
+            formattedString += "-" + numbersString.slice(12, 16);
+          }
+        }
+      }
+    }
+
+    return formattedString;
+  };
+
   const setPhoneNumber = (input: string) => {
     setCursorPosition(inputRef.current.selectionStart);
 
     setProfessional({ ...professional, phoneNumber: formatPhoneNumber(input) });
+  };
+
+  const setCreditCardNumber = (input: string) => {
+    setCreditCard(formatCreditCard(input));
   };
 
   const updatePassword = () => {
@@ -230,12 +290,44 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     setConfirmPassword("");
   };
 
+  const submitPayment = () => {
+    // Call backend and submit payment
+    handlePaymentOpened.close();
+    setCreditCard("");
+    setPayAmount("");
+  };
+
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
 
   useEffect(() => {
     console.log(currentUser);
   }, [currentUser]);
+
+  useEffect(() => {
+    if (!creditCard || !payAmount || creditCardError) {
+      setDisablePay(true);
+    } else {
+      setDisablePay(false);
+    }
+  }, [creditCardError, payAmount]);
+
+  useEffect(() => {
+    const numbersArray = creditCard.match(/\d+/g);
+    const creditCardNumbers = numbersArray ? numbersArray.join("") : "";
+
+    if (
+      creditCard &&
+      !VISA_REGEX.test(creditCardNumbers) &&
+      !MASTERCARD_REGEX.test(creditCardNumbers) &&
+      !AMEX_REGEX.test(creditCardNumbers) &&
+      !DISCOVER_REGEX.test(creditCardNumbers)
+    ) {
+      setCreditCardError("Invalid credit card");
+    } else {
+      setCreditCardError("");
+    }
+  }, [creditCard]);
 
   if (!currentUser || !professional) {
     return <div>Loading...</div>;
@@ -628,7 +720,9 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                   <Button onClick={handleDeletionOpened.open}>
                     Request Account Deletion
                   </Button>
-                  <Button>Payment Options</Button>
+                  <Button onClick={handlePaymentOpened.open}>
+                    Payment Options
+                  </Button>
                   <Button onClick={handlePasswordOpened.open}>
                     Update Password
                   </Button>
@@ -741,6 +835,57 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
             </Button>
           </Grid.Col>
         </Grid>
+      </Modal>
+
+      <Modal
+        opened={paymentOpened}
+        onClose={handlePaymentOpened.close}
+        title="Make a Payment"
+        centered
+      >
+        <Title order={3} className={classes.name} ta="center">
+          Amount due: $40
+        </Title>
+
+        <TextInput
+          required
+          label="Credit Card"
+          placeholder="Enter credit card details"
+          value={creditCard}
+          onChange={(delta) => {
+            //setCreditCard(delta.target.value);
+            setCreditCardNumber(delta.target.value);
+          }}
+          error={creditCardError}
+        />
+
+        <TextInput
+          type="number"
+          required
+          mt="md"
+          label="Payment Amount"
+          placeholder="Enter payment amount"
+          value={payAmount}
+          onChange={(delta) => {
+            // TODO: change this to make it dynamic (can't pay more than the total amount due)
+            if (parseInt(delta.target.value) > 40) {
+              setPayAmount("40");
+            } else {
+              setPayAmount(delta.target.value);
+            }
+          }}
+        />
+
+        <Button
+          fullWidth
+          mt="xl"
+          disabled={disablePay}
+          onClick={() => {
+            submitPayment();
+          }}
+        >
+          Submit Payment
+        </Button>
       </Modal>
     </>
   );

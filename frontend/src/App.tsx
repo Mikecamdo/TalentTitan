@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
 import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
-import { CustomNavbar } from "./components/CustomNavbar";
+import { CustomHeader } from "./components/CustomHeader";
 import User from "./types/User";
 import { ProfilePage } from "./pages/ProfilePage";
 import { JobPostingPage } from "./pages/JobPostingPage";
@@ -17,6 +17,7 @@ import { UpdatePasswordPage } from "./pages/UpdatePasswordPage";
 
 import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { _404Page } from "./pages/_404Page";
 
 interface UserContextProps {
   //TODO might need to move this to its own file
@@ -57,7 +58,7 @@ function App() {
             padding="md"
           >
             <AppShell.Header>
-              <CustomNavbar />
+              <CustomHeader />
             </AppShell.Header>
             <AppShell.Main>
               <Routes>
@@ -70,9 +71,9 @@ function App() {
                 )}
 
                 {currentUser && (
-                  <>{/* Add routes for only when logged in here */}</>
+                  <><Route path="/profile/:username" element={<ProfilePage />} /></>
                 )}
-                <Route path="/profile/:username" element={<ProfilePage />} />
+                
                 <Route path="/job-posting" element={<JobPostingPage />} />
                 <Route path="/job-search" element={<ViewPostedJobsPage />} />
                 <Route path="/account-search" element={<ViewAccountsPage />} />
@@ -86,6 +87,8 @@ function App() {
                   path="/update-password"
                   element={<UpdatePasswordPage />}
                 />
+
+                <Route path="*" element={<_404Page/>}/>
               </Routes>
             </AppShell.Main>
           </AppShell>

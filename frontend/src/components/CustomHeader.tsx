@@ -1,13 +1,14 @@
 import { Group, Box, Image } from "@mantine/core";
 import { Link } from "react-router-dom";
-import classes from "../css_modules/CustomNavbar.module.css";
+import classes from "../css_modules/CustomHeader.module.css";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../App";
 
-export const CustomNavbar = () => {
-    const userContext = useContext(UserContext);
-    const currentUser = userContext?.currentUser;
-    const setCurrentUser = userContext?.setCurrentUser;
+export const CustomHeader = () => {
+  const userContext = useContext(UserContext);
+  const currentUser = userContext?.currentUser;
+  const setCurrentUser = userContext?.setCurrentUser;
+
 
   useEffect(() => {
     console.log(currentUser);
@@ -16,7 +17,7 @@ export const CustomNavbar = () => {
 
 
   return (
-    <Box pb={120} mt="md">
+    <Box mt="md">
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
           <Link to={"/"}>

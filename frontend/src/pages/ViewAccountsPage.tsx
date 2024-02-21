@@ -1,68 +1,85 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { CustomSearchBar } from "../components/CustomSearchBar";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
 import { Link } from "react-router-dom";
+import { Container, Table } from "@mantine/core";
+import classes from "../css_modules/ViewAccountsPage.module.css";
 
 export const ViewAccountsPage = () => {
+  const [searchValue, setSearchValue] = useState<string>("");
 
-    const [searchValue, setSearchValue] = useState<string>("");
+  const dummyData = [
+    {
+      name: "Bob Smith",
+      email: "fake@gmail.com",
+      phone: "(000) 000-0000",
+      accountType: "Professional",
+    },
+    {
+      name: "Frank Ocean",
+      email: "focean@outlook.com",
+      phone: "(510) 741-9003",
+      accountType: "Professional",
+    },
+    {
+      name: "Bob the Builder",
+      email: "bbuilder@gmail.com",
+      phone: "(832) 234-9463",
+      accountType: "Employer",
+    },
+    {
+      name: "Jerry Smith",
+      email: "jdawg@gmail.com",
+      phone: "(123) 456-7890",
+      accountType: "Professional",
+    },
+    {
+      name: "Walmart",
+      email: "dmcmillon@walmart.com",
+      phone: "(479) 273-4000",
+      accountType: "Employer",
+    },
+  ];
 
-    return (
-        <>
-            <Form>
-                <Row className="w-100">
-                    <Col xs={9} sm={9} md={9} lg={9} xl={9} xxl={9} className="mx-auto">
-                        <CustomSearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
+  const rows = dummyData.map(
+    (data: any, index: number) =>
+      data.name.toLowerCase().includes(searchValue.toLowerCase()) && (
+        <Table.Tr>
+          {data.accountType === "Professional" ? (
+            <Link to={`/profile/${data.name}`} className={classes.link}>
+              <Table.Td>{data.name}</Table.Td>
+            </Link>
+          ) : (
+            <Link to={`/profile/Employer`} className={classes.link}>
+              <Table.Td>{data.name}</Table.Td>
+            </Link>
+          )}
+          <Table.Td>{data.email}</Table.Td>
+          <Table.Td>{data.phone}</Table.Td>
+          <Table.Td>{data.accountType}</Table.Td>
+        </Table.Tr>
+      )
+  );
 
-                        <Form.Group controlId="claim_description">
-                        
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th className="button-bg text-light">Name</th>
-                                    <th className="button-bg text-light">Email</th>
-                                    <th className="button-bg text-light">Phone</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* {qualifications.map((qualification, index) => (
-                                    <tr key={index}>
-                                        <td>{qualification.category}</td>
-                                        <td>{qualification.keywords}</td>
-                                        <td>
-                                            <Button onClick={() => {
-                                            removeQualification(index);
-                                            }}>
-                                            Remove
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))} */}
-                                {/*The following is dummy data:*/}
-                                <tr>
-                                    <td><Link to={"/profile"} className="inherit-color">Bob Smith</Link></td>
-                                    <td>fake@gmail.com</td>
-                                    <td>000-000-0000</td>
-                                </tr>
-                                <tr>
-                                    <td><Link to={"/profile"} className="inherit-color">Frank Ocean</Link></td>
-                                    <td>focean@outlook.com</td>
-                                    <td>510-741-9003</td>
-                                </tr>
-                                <tr>
-                                    <td><Link to={"/profile"} className="inherit-color">Bob the Builder</Link></td>
-                                    <td>bbuilder@gmail.com</td>
-                                    <td>832-234-9463</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        </Form.Group>
-                    </Col>
-                </Row>
-            </Form>
-        </>
-    );
-}
+  return (
+    <>
+      <Container size={600} my={20}>
+        <CustomSearchBar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
+
+        <Table highlightOnHover withTableBorder mt="xl">
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Email</Table.Th>
+              <Table.Th>Phone</Table.Th>
+              <Table.Th>Account Type</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </Container>
+    </>
+  );
+};

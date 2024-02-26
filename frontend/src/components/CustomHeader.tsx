@@ -14,7 +14,9 @@ export const CustomHeader = () => {
     console.log(currentUser);
   }, [currentUser]);
 
-
+  if (!setCurrentUser) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Box mt="md">

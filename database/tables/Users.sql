@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS Users;
+
+CREATE TABLE Users (
+    Username NVARCHAR(50) PRIMARY KEY,
+    Password NVARCHAR(50) NOT NULL,
+    UserType NVARCHAR(50) NOT NULL,
+    IsActive BIT NOT NULL,
+    FirstTimeLogin BIT NOT NULL
+);

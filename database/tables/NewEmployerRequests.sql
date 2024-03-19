@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS NewEmployerRequests;
+
+CREATE TABLE NewEmployerRequests (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL,
+    CompanyName NVARCHAR(50) NOT NULL,
+    AddressLine NVARCHAR(50) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    State NVARCHAR(50) NOT NULL,
+    ZipCode NVARCHAR(50) NOT NULL,
+    ContactFirstName NVARCHAR(50) NOT NULL,
+    ContactLastName NVARCHAR(50) NOT NULL,
+    ContactPhone NVARCHAR(50) NOT NULL,
+    ContactEmail NVARCHAR(50) NOT NULL
+);

@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS Professionals;
+
+CREATE TABLE Professionals (
+    Username NVARCHAR(50) PRIMARY KEY,
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Phone NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(50) NOT NULL,
+    AddressLine NVARCHAR(50) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    State NVARCHAR(50) NOT NULL,
+    ZipCode NVARCHAR(50) NOT NULL,
+    SchoolName NVARCHAR(50) NOT NULL,
+    DegreeName NVARCHAR(50) NOT NULL,
+    CompletionDate NVARCHAR(50) NOT NULL
+);

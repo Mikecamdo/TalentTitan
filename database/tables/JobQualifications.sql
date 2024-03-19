@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS JobQualifications;
+
+CREATE TABLE JobQualifications (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    JobPostID INT NOT NULL,
+    Category NVARCHAR(50) NOT NULL,
+    Keywords NVARCHAR(150) NOT NULL
+);

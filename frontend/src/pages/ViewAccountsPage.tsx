@@ -10,8 +10,8 @@ export const ViewAccountsPage = () => {
   const dummyData = [
     {
       name: "Bob Smith",
-      email: "fake@gmail.com",
-      phone: "(000) 000-0000",
+      email: "bsmith@gmail.com",
+      phone: "(123) 456-7890",
       accountType: "Professional",
     },
     {

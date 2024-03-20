@@ -21,7 +21,7 @@ export const CustomSearchBar: React.FC<SearchComponents> = ({
     <TextInput
       radius="xl"
       size="md"
-      placeholder="Search questions"
+      placeholder="Search..."
       rightSectionWidth={42}
       leftSection={
         <IconSearch style={{ width: rem(18), height: rem(18) }} stroke={1.5} />

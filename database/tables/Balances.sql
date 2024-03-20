@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS Balances;
+
+CREATE TABLE Balances (
+    Username NVARCHAR(50) PRIMARY KEY,
+    DueDate NVARCHAR(50) NOT NULL,
+    AmountDue NVARCHAR(10) NOT NULL
+);

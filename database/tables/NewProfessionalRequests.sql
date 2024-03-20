@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS NewProfessionalRequests;
+
+CREATE TABLE NewProfessionalRequests (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL,
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Phone NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(50) NOT NULL,
+    AddressLine NVARCHAR(50) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    State NVARCHAR(50) NOT NULL,
+    ZipCode NVARCHAR(50) NOT NULL,
+    SchoolName NVARCHAR(50) NOT NULL,
+    DegreeName NVARCHAR(50) NOT NULL,
+    CompletionDate NVARCHAR(50) NOT NULL
+);

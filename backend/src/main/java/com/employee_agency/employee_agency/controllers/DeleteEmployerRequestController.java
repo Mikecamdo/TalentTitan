@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.employee_agency.employee_agency.services.DeleteEmployerRequestService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,4 +23,9 @@ public class DeleteEmployerRequestController {
         return ResponseEntity.ok("Employer Deletion Request successful");
     }
     
+    @DeleteMapping("/approve")
+    public ResponseEntity<String> approveDeletionRequest(@RequestBody String employerId) {
+        deleteEmployerRequestService.approveRequest(employerId);
+        return ResponseEntity.ok("Employer successfully deleted");
+    }
 }

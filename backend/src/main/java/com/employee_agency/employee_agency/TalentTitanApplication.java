@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
-public class EmployeeAgencyApplication {
+public class TalentTitanApplication {
 
 	public static void main(String[] args) {
 		Dotenv dotenv = Dotenv.configure().load();
@@ -19,7 +19,7 @@ public class EmployeeAgencyApplication {
         System.setProperty("spring.datasource.username", dbUsername);
         System.setProperty("spring.datasource.password", dbPassword);
 
-		SpringApplication.run(EmployeeAgencyApplication.class, args);
+		SpringApplication.run(TalentTitanApplication.class, args);
 	}
 
 }

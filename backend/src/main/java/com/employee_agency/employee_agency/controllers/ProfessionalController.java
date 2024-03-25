@@ -1,6 +1,8 @@
 package com.employee_agency.employee_agency.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.employee_agency.employee_agency.dto.ToggleJobMatchingRequest;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.services.ProfessionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,11 @@ public class ProfessionalController {
         return ResponseEntity.ok("Professional updated successfully");
     }
 
-    @PatchMapping("/initiate-job-matching")
-    public ResponseEntity<String> initiateJobMatching(@RequestBody String professionalUsername, @RequestBody Boolean jobMatching) {
-        professionalService.initiateJobMatching(professionalUsername, jobMatching);
+    @PatchMapping("/toggle-job-matching")
+    public ResponseEntity<String> toggleJobMatching(@RequestBody ToggleJobMatchingRequest request) {
+        professionalService.toggleJobMatching(request.getProfessionalUsername(), request.getJobMatching());
 
-        if (jobMatching == true) {
+        if (request.getJobMatching() == true) {
             return ResponseEntity.ok("Started Job Matching");
         } else {
             return ResponseEntity.ok("Ended Job Matching");

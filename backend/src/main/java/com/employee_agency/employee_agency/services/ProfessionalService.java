@@ -32,4 +32,13 @@ public class ProfessionalService {
 
         professionalRepository.save(currentProfessional);
     }
+
+    public void initiateJobMatching(String professionalUsername, Boolean jobMatching) {
+        Professional currentProfessional = professionalRepository.findById(professionalUsername)
+            .orElseThrow(() -> new RuntimeException("Professional not found"));
+
+        currentProfessional.setJobMatching(jobMatching);
+
+        professionalRepository.save(currentProfessional);
+    }
 }

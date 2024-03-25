@@ -21,6 +21,7 @@ public class Professional {
     private String schoolName;
     private String degreeName;
     private String completionDate;
+    private Boolean jobMatching;
 
     public String getUsername() {
         return username;
@@ -104,5 +105,12 @@ public class Professional {
     }
     public void setCompletionDate(String completionDate) {
         this.completionDate = completionDate;
+    }
+
+    public Boolean getJobMatching() {
+        return jobMatching;
+    }
+    public void setJobMatching(Boolean jobMatching) {
+        this.jobMatching = jobMatching;
     }
 }

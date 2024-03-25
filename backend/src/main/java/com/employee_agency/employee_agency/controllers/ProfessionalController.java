@@ -6,6 +6,7 @@ import com.employee_agency.employee_agency.services.ProfessionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,5 +28,16 @@ public class ProfessionalController {
     public ResponseEntity<String> updateProfessional(@RequestBody Professional professional) {
         professionalService.updateProfessional(professional);
         return ResponseEntity.ok("Professional updated successfully");
+    }
+
+    @PatchMapping("/initiate-job-matching")
+    public ResponseEntity<String> initiateJobMatching(@RequestBody String professionalUsername, @RequestBody Boolean jobMatching) {
+        professionalService.initiateJobMatching(professionalUsername, jobMatching);
+
+        if (jobMatching == true) {
+            return ResponseEntity.ok("Started Job Matching");
+        } else {
+            return ResponseEntity.ok("Ended Job Matching");
+        }
     }
 }

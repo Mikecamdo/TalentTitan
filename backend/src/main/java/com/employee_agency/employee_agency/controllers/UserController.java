@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -24,6 +25,12 @@ public class UserController {
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         userService.createUser(user);
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        return ResponseEntity.ok("User updated successfully");
     }
     
 }

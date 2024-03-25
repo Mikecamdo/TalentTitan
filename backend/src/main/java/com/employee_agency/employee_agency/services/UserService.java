@@ -15,4 +15,16 @@ public class UserService {
     public void createUser(User user) {
         userRepository.save(user);
     }
+
+    public void updateUser(User user) {
+        User currentUser = userRepository.findById(user.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        currentUser.setPassword(user.getPassword());
+        currentUser.setUserType(user.getUserType());
+        currentUser.setFirstLogin(user.getFirstLogin());
+
+        userRepository.save(currentUser);
+    }
+
 }

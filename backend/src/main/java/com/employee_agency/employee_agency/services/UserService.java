@@ -16,6 +16,17 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void updateUser(User user) {
+        User currentUser = userRepository.findById(user.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        currentUser.setPassword(user.getPassword());
+        currentUser.setUserType(user.getUserType());
+        currentUser.setFirstLogin(user.getFirstLogin());
+
+        userRepository.save(currentUser);
+    }
+
     public void updatePassword(String username, String oldPassword, String newPassword) {
         //TODO: Eventually need to hash password + check if old password is correct
         User currentUser = userRepository.findById(username)

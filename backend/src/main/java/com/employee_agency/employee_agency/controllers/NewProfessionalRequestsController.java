@@ -20,12 +20,12 @@ public class NewProfessionalRequestsController {
     @PostMapping("/register")
     public ResponseEntity<String> registerNewProfessionalRequests(@RequestBody NewProfessionalRequests newProfessionalRequests) {
         newProfessionalRequestsService.createNewProfessionalRequests(newProfessionalRequests);
-        return ResponseEntity.ok("NewProfessionalRequests registered successfully");
+        return ResponseEntity.ok("New Professional Request registered successfully");
     }
 
     @PutMapping("/update")
     public ResponseEntity<String> updateNewProfessionalRequests(@RequestBody NewProfessionalRequests newProfessionalRequests) {
         newProfessionalRequestsService.updateNewProfessionalRequests(newProfessionalRequests);
-        return ResponseEntity.ok("Professional account requested successfully");
+        return ResponseEntity.ok("New Professional Account updated successfully");
     }
 }

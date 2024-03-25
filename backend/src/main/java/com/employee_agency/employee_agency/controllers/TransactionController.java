@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerTransaction(@RequestBody Transaction transaction) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addTransaction(@RequestBody Transaction transaction) {
         transactionService.createTransaction(transaction);
         return ResponseEntity.ok("Transaction registered successfully");
     }

@@ -1,39 +1,48 @@
 package com.employee_agency.employee_agency.entities;
 
 import java.sql.Date;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
-    private String customerID;
-    private int amountPaid;
-    private Date transactionDate;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+	private String username;
+	private String amountPaid;
+	private String transactionDate;
 
-    public String getCustomerID() {
-        return customerID;
-    }
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
-    }
-    
-    public int getAmuntPaid() {
-        return amountPaid;
-    }
-    public void setAmountPaid(int amountPaid) {
-        this.amountPaid = amountPaid;
-    }
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
-    public void setTransactionDate(Date transactionDate) {
-        this.transactionDate = transactionDate;
-    }
+    public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
+    public String getAmountPaid() {
+		return amountPaid;
+	}
+	public void setAmountPaid(String amountPaid) {
+		this.amountPaid = amountPaid;
+	}
+
+    public String getTransactionDate() {
+		return transactionDate;
+	}
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 }

@@ -17,11 +17,11 @@ public class TransactionService {
     }
 
     public void updateTransaction(Transaction transaction) {
-        Transaction currentTransaction = transactionRepository.findById(transaction.getCustomerID())
+        Transaction currentTransaction = transactionRepository.findById(transaction.getId())
             .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
-        currentTransaction.setCustomerID(transaction.getCustomerID());
-        currentTransaction.setAmountPaid(transaction.getAmuntPaid());
+        currentTransaction.setUsername(transaction.getUsername());
+        currentTransaction.setAmountPaid(transaction.getAmountPaid());
         currentTransaction.setTransactionDate(transaction.getTransactionDate());
 
         transactionRepository.save(currentTransaction);

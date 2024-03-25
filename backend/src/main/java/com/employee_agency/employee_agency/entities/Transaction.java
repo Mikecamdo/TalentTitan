@@ -1,6 +1,5 @@
 package com.employee_agency.employee_agency.entities;
 
-import java.sql.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "newProfessionalRequests")
+@Table(name = "new-professional-requests")
 public class NewProfessionalRequests {
     @Id
     private String username;

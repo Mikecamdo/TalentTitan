@@ -1,16 +1,30 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.employee_agency.employee_agency.entities.NewProfessionalRequests;
+import com.employee_agency.employee_agency.entities.Professional;
+import com.employee_agency.employee_agency.entities.User;
 import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
+import com.employee_agency.employee_agency.repositories.ProfessionalRepository;
+import com.employee_agency.employee_agency.repositories.UserRepository;
 
 @Service
 public class NewProfessionalRequestsService {
     
     @Autowired
     private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProfessionalRepository professionalRepository;
+
+    public List<NewProfessionalRequests> getAllRequests() {
+        return newProfessionalRequestsRepository.findAll();
+    }
 
     public void createNewProfessionalRequests(NewProfessionalRequests newProfessionalRequests) {
         newProfessionalRequestsRepository.save(newProfessionalRequests);
@@ -31,5 +45,38 @@ public class NewProfessionalRequestsService {
         currentNewProfessionalRequests.setCompletionDate(newProfessionalRequests.getCompletionDate());
 
         newProfessionalRequestsRepository.save(currentNewProfessionalRequests);
+    }
+
+    public void approveRequest(String username) {
+        NewProfessionalRequests currentRequest = newProfessionalRequestsRepository.findById(username)
+            .orElseThrow(() -> new RuntimeException("Professional Request not found"));
+
+        newProfessionalRequestsRepository.deleteById(username);
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword("random"); //TODO: make it actually generate something random
+        newUser.setIsActive(true);
+        newUser.setFirstLogin(true);
+        newUser.setUserType("professional");
+
+        userRepository.save(newUser);
+
+        Professional newProfessional = new Professional();
+        newProfessional.setUsername(username);
+        newProfessional.setFirstName(currentRequest.getFirstName());
+        newProfessional.setLastName(currentRequest.getLastName());
+        newProfessional.setPhone(currentRequest.getPhone());
+        newProfessional.setEmail(currentRequest.getEmail());
+        newProfessional.setAddressLine(currentRequest.getAddressLine());
+        newProfessional.setCity(currentRequest.getCity());
+        newProfessional.setState(currentRequest.getState());
+        newProfessional.setZipCode(currentRequest.getZipCode());
+        newProfessional.setSchoolName(currentRequest.getSchoolName());
+        newProfessional.setDegreeName(currentRequest.getDegreeName());
+        newProfessional.setCompletionDate(currentRequest.getCompletionDate());
+        newProfessional.setJobMatching(false);
+
+        professionalRepository.save(newProfessional);
     }
 }

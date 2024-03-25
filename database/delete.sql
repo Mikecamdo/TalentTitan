@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS balances;
+DROP TABLE IF EXISTS `delete-employer-requests`;
+DROP TABLE IF EXISTS `delete-professional-requests`;
+DROP TABLE IF EXISTS employers;
+DROP TABLE IF EXISTS `job-matchings`;
+DROP TABLE IF EXISTS `job-posts`;
+DROP TABLE IF EXISTS `new-employer-requests`;
+DROP TABLE IF EXISTS `new-professional-requests`;
+DROP TABLE IF EXISTS professionals;
+DROP TABLE IF EXISTS staff;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS users;

@@ -2,16 +2,24 @@ package com.employee_agency.employee_agency.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.employee_agency.employee_agency.entities.Employer;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
-import com.employee_agency.employee_agency.entities.Professional;
+import com.employee_agency.employee_agency.entities.User;
+import com.employee_agency.employee_agency.repositories.EmployerRepository;
 import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
+import com.employee_agency.employee_agency.repositories.UserRepository;
 
 @Service
 public class NewEmployerRequestsService {
     
     @Autowired
     private NewEmployerRequestsRepository newEmployerRequestsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmployerRepository employerRepository;
 
     public void createNewEmployerRequests(NewEmployerRequests newEmployerRequests) {
         newEmployerRequestsRepository.save(newEmployerRequests);
@@ -31,5 +39,35 @@ public class NewEmployerRequestsService {
         currentNewEmployerRequests.setContactEmail(newEmployerRequests.getContactEmail());
 
         newEmployerRequestsRepository.save(currentNewEmployerRequests);
+    }
+
+    public void approveRequest(String username) {
+        NewEmployerRequests currentRequest = newEmployerRequestsRepository.findById(username)
+            .orElseThrow(() -> new RuntimeException("Employer Request not found"));
+
+        newEmployerRequestsRepository.deleteById(username);
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword("random"); //TODO: make it actually generate something random
+        newUser.setIsActive(true);
+        newUser.setFirstLogin(true);
+        newUser.setUserType("employer");
+
+        userRepository.save(newUser);
+
+        Employer newEmployer = new Employer();
+        newEmployer.setUsername(username);
+        newEmployer.setCompanyName(currentRequest.getCompanyName());
+        newEmployer.setAddressLine(currentRequest.getAddressLine());
+        newEmployer.setCity(currentRequest.getCity());
+        newEmployer.setState(currentRequest.getState());
+        newEmployer.setZipCode(currentRequest.getZipCode());
+        newEmployer.setContactFirstName(currentRequest.getContactFirstName());
+        newEmployer.setContactLastName(currentRequest.getContactLastName());
+        newEmployer.setContactPhone(currentRequest.getContactPhone());
+        newEmployer.setContactEmail(currentRequest.getContactEmail());
+
+        employerRepository.save(newEmployer);
     }
 }

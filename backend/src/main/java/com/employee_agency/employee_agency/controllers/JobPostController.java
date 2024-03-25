@@ -3,6 +3,7 @@ package com.employee_agency.employee_agency.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,5 +21,11 @@ public class JobPostController {
     public ResponseEntity<String> addJobPost(@RequestBody JobPost jobPost) {
         jobPostService.addJobPost(jobPost);
         return ResponseEntity.ok("Added Job Post");
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateJobPost(@RequestBody JobPost jobPost) {
+        jobPostService.updateJobPost(jobPost);
+        return ResponseEntity.ok("Updated Job Post");
     }
 }

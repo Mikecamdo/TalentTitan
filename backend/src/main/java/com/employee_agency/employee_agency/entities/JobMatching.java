@@ -12,12 +12,12 @@ import jakarta.persistence.Table;
 public class JobMatching {
     @Id
     private String professionalUsername;
-    @Id
+    // @Id
     private long jobId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professional_username")
-    private Professional professional;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "professional_username")
+    // private Professional professional;
 
     public String getProfessionalUsername() {
         return professionalUsername;
@@ -35,7 +35,7 @@ public class JobMatching {
         this.jobId = jobId;
     }
 
-    public Professional getProfessional() {
-        return professional;
-    }
+    // public Professional getProfessional() {
+    //     return professional;
+    // }
 }

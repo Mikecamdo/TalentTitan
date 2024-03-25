@@ -15,4 +15,14 @@ public class UserService {
     public void createUser(User user) {
         userRepository.save(user);
     }
+
+    public void updatePassword(String username, String oldPassword, String newPassword) {
+        //TODO: Eventually need to hash password + check if old password is correct
+        User currentUser = userRepository.findById(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        currentUser.setPassword(newPassword);
+
+        userRepository.save(currentUser);
+    }
 }

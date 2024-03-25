@@ -2,7 +2,6 @@ package com.employee_agency.employee_agency.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
-import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.services.NewEmployerRequestsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

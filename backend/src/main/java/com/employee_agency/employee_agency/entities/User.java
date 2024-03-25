@@ -37,10 +37,10 @@ public class User {
         this.userType = userType;
     }
 
-    public Boolean getState() {
+    public Boolean getIsActive() {
         return isActive;
     }
-    public void setPhone(Boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 

@@ -8,7 +8,9 @@ import com.employee_agency.employee_agency.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -26,4 +28,9 @@ public class StaffController {
         return ResponseEntity.ok("Staff member registered successfully");
     }
     
+    @PutMapping("/update")
+    public ResponseEntity<String> updateStaff(@RequestBody Staff staff) {
+        staffService.updateStaff(staff);
+        return ResponseEntity.ok("Staff updated successfully");
+    }
 }

@@ -15,4 +15,15 @@ public class StaffService {
     public void createStaff(Staff staff) {
         staffRepository.save(staff);
     }
+
+    public void updateStaff(Staff staff) {
+        Staff currentStaff = staffRepository.findById(staff.getUsername())
+            .orElseThrow(() -> new RuntimeException("Staff not found"));
+
+        currentStaff.setPhone(staff.getPhone());
+        currentStaff.setEmail(staff.getEmail());
+
+        staffRepository.save(currentStaff);
+    }
+
 }

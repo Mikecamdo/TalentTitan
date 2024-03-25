@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee_agency.employee_agency.entities.Employer;
-import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.repositories.EmployerRepository;
 
 @Service

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -21,5 +22,10 @@ public class ProfessionalController {
         professionalService.createProfessional(professional);
         return ResponseEntity.ok("Professional registered successfully");
     }
-    
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateProfessional(@RequestBody Professional professional) {
+        professionalService.updateProfessional(professional);
+        return ResponseEntity.ok("Professional updated successfully");
+    }
 }

@@ -15,4 +15,21 @@ public class ProfessionalService {
     public void createProfessional(Professional professional) {
         professionalRepository.save(professional);
     }
+
+    public void updateProfessional(Professional professional) {
+        Professional currentProfessional = professionalRepository.findById(professional.getUsername())
+            .orElseThrow(() -> new RuntimeException("Professional not found"));
+
+        currentProfessional.setPhone(professional.getPhone());
+        currentProfessional.setEmail(professional.getEmail());
+        currentProfessional.setAddressLine(professional.getAddressLine());
+        currentProfessional.setCity(professional.getCity());
+        currentProfessional.setState(professional.getState());
+        currentProfessional.setZipCode(professional.getZipCode());
+        currentProfessional.setSchoolName(professional.getSchoolName());
+        currentProfessional.setDegreeName(professional.getDegreeName());
+        currentProfessional.setCompletionDate(professional.getCompletionDate());
+
+        professionalRepository.save(currentProfessional);
+    }
 }

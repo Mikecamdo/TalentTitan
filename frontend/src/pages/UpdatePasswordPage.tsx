@@ -63,16 +63,20 @@ export const UpdatePasswordPage = () => {
   }, [newPassword, confirmPassword]);
 
   const userContext = useContext(UserContext);
+
   const currentUser = userContext?.currentUser;
+  const userType = userContext?.userType;
+
   const setCurrentUser = userContext?.setCurrentUser;
+  const setUserType = userContext?.setUserType;
 
   if (!setCurrentUser) {
     return <div>Loading...</div>;
   }
 
   const updatePassword = () => {
-    // Call backend and update password
-    if (currentUser == "Staff") {
+    // TODO: Call backend and update password
+    if (userType === "staff") {
       navigate("/account-search");
     } else {
       navigate("/job-search");

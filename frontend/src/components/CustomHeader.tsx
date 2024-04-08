@@ -7,14 +7,16 @@ import { UserContext } from "../App";
 export const CustomHeader = () => {
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
-  const setCurrentUser = userContext?.setCurrentUser;
+  const userType = userContext?.userType;
 
+  const setCurrentUser = userContext?.setCurrentUser;
+  const setUserType = userContext?.setUserType;
 
   useEffect(() => {
     console.log(currentUser);
   }, [currentUser]);
 
-  if (!setCurrentUser) {
+  if (!setCurrentUser || !setUserType) {
     return <div>Loading...</div>;
   }
 
@@ -99,6 +101,7 @@ export const CustomHeader = () => {
                   className={classes.link}
                   onClick={() => {
                     setCurrentUser(undefined);
+                    setUserType(undefined);
                   }}
                 >
                             Sign Out

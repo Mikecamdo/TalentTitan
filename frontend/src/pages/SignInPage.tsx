@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mantine/core";
 import classes from "../css_modules/SignInPage.module.css";
+import { attemptSignIn } from "../api/userApi";
 
 const formValues = {
   username: "",
@@ -71,7 +72,7 @@ export const SignInPage = () => {
         !SPECIAL_REGEX.test(values.password) ||
         !LENGTH_REGEX.test(values.password)
       ) {
-        setPasswordError("Invalid password");
+        //!setPasswordError("Invalid password");
       } else {
         setPasswordError("");
       }
@@ -82,18 +83,45 @@ export const SignInPage = () => {
 
   const userContext = useContext(UserContext);
   const setCurrentUser = userContext?.setCurrentUser;
+  const setUserType = userContext?.setUserType;
 
-  if (!setCurrentUser) {
+  if (!setCurrentUser || !setUserType) {
     return <div>Loading...</div>;
   }
 
   const login = () => {
-    setCurrentUser(values.username);
-    if (values.username === "root") {
-      navigate("/add-staff");
-    } else {
-      navigate("/update-password");
-    }
+    attemptSignIn({
+      username: values.username,
+      password: values.password,
+    }).then((response: any) => {
+      if (typeof response === "string") {
+        console.log(response);
+      } else {
+        setCurrentUser(response.username);
+        setUserType(response.userType);
+
+        if (response.firstLogin) {
+          navigate("/update-password");
+        } else if (response.userType == "staff") {
+          if (response.username === "root") {
+            navigate("/add-staff");
+          } else {
+            navigate("/account-search");
+          }
+        } else {
+          navigate("/job-search");
+        }
+
+        console.log(response);
+      }
+    });
+
+    // setCurrentUser(values.username);
+    // if (values.username === "root") {
+    //   navigate("/add-staff");
+    // } else {
+    //   navigate("/update-password");
+    // }
   };
 
   return (

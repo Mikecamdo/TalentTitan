@@ -22,7 +22,10 @@ import { _404Page } from "./pages/_404Page";
 interface UserContextProps {
   //TODO might need to move this to its own file
   currentUser: string | undefined;
+  userType: string | undefined;
+
   setCurrentUser: (user: string | undefined) => void;
+  setUserType: (userType: string | undefined) => void;
 }
 
 export const UserContext = createContext<UserContextProps | undefined>(
@@ -31,14 +34,18 @@ export const UserContext = createContext<UserContextProps | undefined>(
 
 function App() {
   const [currentUser, setCurrentUser] = useState<string | undefined>(undefined);
+  const [userType, setUserType] = useState<string | undefined>(undefined);
   const [opened, { toggle }] = useDisclosure();
   //const _setCurrentUser = (user: string | undefined) => setCurrentUser(user);
 
   //TODO probably will update this in the future
   //the following useEffects allow for user persistence (so if the page is reloaded, you aren't logged out)
   useEffect(() => {
-    const temp: string | null = window.localStorage.getItem("CURRENT_USER");
+    let temp: string | null = window.localStorage.getItem("CURRENT_USER");
     if (temp !== "undefined" && temp !== null) setCurrentUser(JSON.parse(temp));
+
+    temp = window.localStorage.getItem("USER_TYPE");
+    if (temp !== "undefined" && temp !== null) setUserType(JSON.parse(temp));
   }, []);
 
   useEffect(() => {
@@ -49,9 +56,17 @@ function App() {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    if (userType) {
+      window.localStorage.setItem("USER_TYPE", JSON.stringify(userType));
+    } else {
+      window.localStorage.removeItem("USER_TYPE");
+    }
+  }, [userType]);
+
   return (
     <>
-      <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+      <UserContext.Provider value={{ currentUser, userType, setCurrentUser, setUserType }}>
         <Router>
           <AppShell
             header={{ height: 100 }}

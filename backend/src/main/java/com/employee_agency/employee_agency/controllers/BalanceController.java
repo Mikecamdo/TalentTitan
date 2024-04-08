@@ -12,12 +12,26 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/balances")
 public class BalanceController {
     @Autowired
     private BalanceService balanceService;
+
+    @GetMapping("/get-by-user")
+    public ResponseEntity<Balance> getBalanceByUser(@RequestParam String username) {
+        Balance balance = balanceService.getBalanceByUser(username);
+
+        if (balance == null) {
+            return ResponseEntity.ok(balance);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addBalance(@RequestBody Balance balance) {

@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,10 @@ public class EmployerService {
     
     @Autowired
     private EmployerRepository employerRepository;
+
+    public List<Employer> getAllEmployers() {
+        return employerRepository.findAll();
+    }
 
     public void createEmployer(Employer employer) {
         employerRepository.save(employer);

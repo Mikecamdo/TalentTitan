@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,10 @@ public class ProfessionalService {
     
     @Autowired
     private ProfessionalRepository professionalRepository;
+
+    public List<Professional> getAllProfessionals() {
+        return professionalRepository.findAll();
+    }
 
     public void createProfessional(Professional professional) {
         professionalRepository.save(professional);

@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.employee_agency.employee_agency.dto.ToggleJobMatchingRequest;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.services.ProfessionalService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/professionals")
@@ -19,6 +25,12 @@ public class ProfessionalController {
 
     @Autowired
     private ProfessionalService professionalService;
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<Professional>> getAllProfessionals() {
+        return ResponseEntity.ok(professionalService.getAllProfessionals());
+    }
+    
 
     @PostMapping("/register")
     public ResponseEntity<String> registerProfessional(@RequestBody Professional professional) {

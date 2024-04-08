@@ -2,6 +2,7 @@ package com.employee_agency.employee_agency.services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,16 @@ public class BalanceService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    public Balance getBalanceByUser(String username) {
+        Optional<Balance> balance = balanceRepository.findById(username);
+
+        if (balance.isPresent()) {
+            return balance.get();
+        } else {
+            return null;
+        }
+    }
 
     public void createBalance(Balance balance) {
         balanceRepository.save(balance);

@@ -1,10 +1,12 @@
 package com.employee_agency.employee_agency.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee_agency.employee_agency.dto.UpdateProfessionalDto;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.repositories.ProfessionalRepository;
 
@@ -18,25 +20,42 @@ public class ProfessionalService {
         return professionalRepository.findAll();
     }
 
+    public Professional getProfessionalByUsername(String username) {
+        Optional<Professional> professional = professionalRepository.findById(username);
+        
+        if (professional.isPresent()) {
+            return professional.get();
+        }
+
+        return null;
+    }
+
     public void createProfessional(Professional professional) {
         professionalRepository.save(professional);
     }
 
-    public void updateProfessional(Professional professional) {
-        Professional currentProfessional = professionalRepository.findById(professional.getUsername())
-            .orElseThrow(() -> new RuntimeException("Professional not found"));
+    public Professional updateProfessional(String username, UpdateProfessionalDto professional) {
+        Optional<Professional> currentProfessional = professionalRepository.findById(username);
 
-        currentProfessional.setPhone(professional.getPhone());
-        currentProfessional.setEmail(professional.getEmail());
-        currentProfessional.setAddressLine(professional.getAddressLine());
-        currentProfessional.setCity(professional.getCity());
-        currentProfessional.setState(professional.getState());
-        currentProfessional.setZipCode(professional.getZipCode());
-        currentProfessional.setSchoolName(professional.getSchoolName());
-        currentProfessional.setDegreeName(professional.getDegreeName());
-        currentProfessional.setCompletionDate(professional.getCompletionDate());
+        if (currentProfessional.isPresent()) {
+            Professional toBeUpdated = currentProfessional.get();
 
-        professionalRepository.save(currentProfessional);
+            toBeUpdated.setPhone(professional.getPhone());
+            toBeUpdated.setEmail(professional.getEmail());
+            toBeUpdated.setAddressLine(professional.getAddressLine());
+            toBeUpdated.setCity(professional.getCity());
+            toBeUpdated.setState(professional.getState());
+            toBeUpdated.setZipCode(professional.getZipCode());
+            toBeUpdated.setSchoolName(professional.getSchoolName());
+            toBeUpdated.setDegreeName(professional.getDegreeName());
+            toBeUpdated.setCompletionDate(professional.getCompletionDate());
+
+            professionalRepository.save(toBeUpdated);
+
+            return toBeUpdated;
+        }
+
+        return null;
     }
 
     public void toggleJobMatching(String professionalUsername, Boolean jobMatching) {

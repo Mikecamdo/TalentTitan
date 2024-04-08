@@ -1,10 +1,12 @@
 package com.employee_agency.employee_agency.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee_agency.employee_agency.dto.UpdateEmployerDto;
 import com.employee_agency.employee_agency.entities.Employer;
 import com.employee_agency.employee_agency.repositories.EmployerRepository;
 
@@ -18,23 +20,40 @@ public class EmployerService {
         return employerRepository.findAll();
     }
 
+    public Employer getEmployerByUsername(String username) {
+        Optional<Employer> employer = employerRepository.findById(username);
+
+        if (employer.isPresent()) {
+            return employer.get();
+        }
+
+        return null;
+    }
+
     public void createEmployer(Employer employer) {
         employerRepository.save(employer);
     }
 
-    public void updateEmployer(Employer employer) {
-        Employer currentEmployer = employerRepository.findById(employer.getUsername())
-            .orElseThrow(() -> new RuntimeException("Employer not found"));
+    public Employer updateEmployer(String username, UpdateEmployerDto employer) {
+        Optional<Employer> currentEmployer = employerRepository.findById(username);
 
-        currentEmployer.setAddressLine(employer.getAddressLine());
-        currentEmployer.setCity(employer.getCity());
-        currentEmployer.setState(employer.getState());
-        currentEmployer.setZipCode(employer.getZipCode());
-        currentEmployer.setContactFirstName(employer.getContactFirstName());
-        currentEmployer.setContactLastName(employer.getContactLastName());
-        currentEmployer.setContactPhone(employer.getContactPhone());
-        currentEmployer.setContactEmail(employer.getContactEmail());
+        if (currentEmployer.isPresent()) {
+            Employer toBeUpdated = currentEmployer.get();
 
-        employerRepository.save(currentEmployer);
+            toBeUpdated.setAddressLine(employer.getAddressLine());
+            toBeUpdated.setCity(employer.getCity());
+            toBeUpdated.setState(employer.getState());
+            toBeUpdated.setZipCode(employer.getZipCode());
+            toBeUpdated.setContactFirstName(employer.getContactFirstName());
+            toBeUpdated.setContactLastName(employer.getContactLastName());
+            toBeUpdated.setContactPhone(employer.getContactPhone());
+            toBeUpdated.setContactEmail(employer.getContactEmail());
+
+            employerRepository.save(toBeUpdated);
+
+            return toBeUpdated;
+        }
+
+        return null;        
     }
 }

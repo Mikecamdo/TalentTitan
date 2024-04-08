@@ -3,6 +3,7 @@ package com.employee_agency.employee_agency.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employee_agency.employee_agency.dto.ToggleJobMatchingRequest;
+import com.employee_agency.employee_agency.dto.UpdateProfessionalDto;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.services.ProfessionalService;
 
@@ -31,6 +32,16 @@ public class ProfessionalController {
         return ResponseEntity.ok(professionalService.getAllProfessionals());
     }
     
+    @GetMapping("/get-by-username")
+    public ResponseEntity<Professional> getProfessionalByUsername(@RequestParam String username) {
+        Professional professional = professionalService.getProfessionalByUsername(username);
+
+        if (professional == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(professional);
+        }
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerProfessional(@RequestBody Professional professional) {
@@ -39,9 +50,14 @@ public class ProfessionalController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateProfessional(@RequestBody Professional professional) {
-        professionalService.updateProfessional(professional);
-        return ResponseEntity.ok("Professional updated successfully");
+    public ResponseEntity<Professional> updateProfessional(@RequestParam String username, @RequestBody UpdateProfessionalDto professional) {
+        Professional updatedProfessional = professionalService.updateProfessional(username, professional);
+
+        if (updatedProfessional == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(updatedProfessional);
+        }
     }
 
     @PatchMapping("/toggle-job-matching")

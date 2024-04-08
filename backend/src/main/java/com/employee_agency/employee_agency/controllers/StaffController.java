@@ -19,8 +19,13 @@ public class StaffController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerStaff(@RequestBody Staff staff) {
-        staffService.createStaff(staff);
-        return ResponseEntity.ok("Staff member registered successfully");
+        boolean success = staffService.createStaff(staff);
+
+        if (success) {
+            return ResponseEntity.ok("Staff member registered successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Username is already in use");
+        }
     }
     
     @PutMapping("/update")

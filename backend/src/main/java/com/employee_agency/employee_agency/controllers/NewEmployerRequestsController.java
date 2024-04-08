@@ -20,8 +20,13 @@ public class NewEmployerRequestsController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerNewEmployerRequests(@RequestBody NewEmployerRequests newEmployerRequests) {
-        newEmployerRequestsService.createNewEmployerRequests(newEmployerRequests);
-        return ResponseEntity.ok("New Employer Requests registered successfully");
+        boolean success = newEmployerRequestsService.createNewEmployerRequests(newEmployerRequests);
+        
+        if (success) {
+            return ResponseEntity.ok("New Employer Requests registered successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Username is already in use");
+        }        
     }
     
     @PutMapping("/update")

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.employee_agency.employee_agency.entities.NewProfessionalRequests;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.entities.User;
+import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
 import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
 import com.employee_agency.employee_agency.repositories.ProfessionalRepository;
 import com.employee_agency.employee_agency.repositories.UserRepository;
@@ -22,12 +23,34 @@ public class NewProfessionalRequestsService {
     @Autowired
     private ProfessionalRepository professionalRepository;
 
+    @Autowired
+    private NewEmployerRequestsRepository newEmployerRequestsRepository;
+
     public List<NewProfessionalRequests> getAllRequests() {
         return newProfessionalRequestsRepository.findAll();
     }
 
-    public void createNewProfessionalRequests(NewProfessionalRequests newProfessionalRequests) {
+    public boolean createNewProfessionalRequests(NewProfessionalRequests newProfessionalRequests) {
+        // check if username is already used by a registered user
+        boolean invalidUsername = userRepository.existsByUsername(newProfessionalRequests.getUsername());
+        
+        // check if username is already in an employer request
+        if (!invalidUsername) {
+            invalidUsername = newEmployerRequestsRepository.existsById(newProfessionalRequests.getUsername());
+        }
+
+        // check if username is already in a professional request
+        if (!invalidUsername) {
+            invalidUsername = newProfessionalRequestsRepository.existsById(newProfessionalRequests.getUsername());
+        }
+
+        if (invalidUsername) {
+            return false;
+        }
+
         newProfessionalRequestsRepository.save(newProfessionalRequests);
+
+        return true;
     }
 
     public void updateNewProfessionalRequests(NewProfessionalRequests newProfessionalRequests) {

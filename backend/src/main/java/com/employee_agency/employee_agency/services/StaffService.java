@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.employee_agency.employee_agency.entities.Staff;
 import com.employee_agency.employee_agency.entities.User;
+import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
+import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
 import com.employee_agency.employee_agency.repositories.StaffRepository;
 import com.employee_agency.employee_agency.repositories.UserRepository;
 
@@ -16,7 +18,31 @@ public class StaffService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createStaff(Staff staff) {
+    @Autowired
+    private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
+
+    @Autowired
+    private NewEmployerRequestsRepository newEmployerRequestsRepository;
+
+
+    public boolean createStaff(Staff staff) {
+        // check if username is already used by a registered user
+        boolean invalidUsername = userRepository.existsByUsername(staff.getUsername());
+        
+        // check if username is already in an employer request
+        if (!invalidUsername) {
+            invalidUsername = newEmployerRequestsRepository.existsById(staff.getUsername());
+        }
+
+        // check if username is already in a professional request
+        if (!invalidUsername) {
+            invalidUsername = newProfessionalRequestsRepository.existsById(staff.getUsername());
+        }
+
+        if (invalidUsername) {
+            return false;
+        }
+
         User newUser = new User();
         newUser.setUsername(staff.getUsername());
         newUser.setPassword("random"); //TODO: make this actually random
@@ -27,6 +53,8 @@ public class StaffService {
         userRepository.save(newUser);
 
         staffRepository.save(staff);
+
+        return true;
     }
 
     public void updateStaff(Staff staff) {

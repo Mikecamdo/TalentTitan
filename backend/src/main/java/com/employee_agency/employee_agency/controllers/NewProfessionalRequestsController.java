@@ -29,8 +29,13 @@ public class NewProfessionalRequestsController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerNewProfessionalRequests(@RequestBody NewProfessionalRequests newProfessionalRequests) {
-        newProfessionalRequestsService.createNewProfessionalRequests(newProfessionalRequests);
-        return ResponseEntity.ok("New Professional Request registered successfully");
+        boolean success = newProfessionalRequestsService.createNewProfessionalRequests(newProfessionalRequests);
+        
+        if (success) {
+            return ResponseEntity.ok("New Professional Request registered successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Username is already in use");
+        }
     }
 
     @PutMapping("/update")

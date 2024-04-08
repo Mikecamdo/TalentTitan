@@ -7,6 +7,7 @@ import com.employee_agency.employee_agency.entities.NewEmployerRequests;
 import com.employee_agency.employee_agency.entities.User;
 import com.employee_agency.employee_agency.repositories.EmployerRepository;
 import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
+import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
 import com.employee_agency.employee_agency.repositories.UserRepository;
 
 @Service
@@ -21,8 +22,30 @@ public class NewEmployerRequestsService {
     @Autowired
     private EmployerRepository employerRepository;
 
-    public void createNewEmployerRequests(NewEmployerRequests newEmployerRequests) {
+    @Autowired
+    private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
+
+    public boolean createNewEmployerRequests(NewEmployerRequests newEmployerRequests) {
+        // check if username is already used by a registered user
+        boolean invalidUsername = userRepository.existsByUsername(newEmployerRequests.getUsername());
+        
+        // check if username is already in an employer request
+        if (!invalidUsername) {
+            invalidUsername = newEmployerRequestsRepository.existsById(newEmployerRequests.getUsername());
+        }
+
+        // check if username is already in a professional request
+        if (!invalidUsername) {
+            invalidUsername = newProfessionalRequestsRepository.existsById(newEmployerRequests.getUsername());
+        }
+
+        if (invalidUsername) {
+            return false;
+        }
+
         newEmployerRequestsRepository.save(newEmployerRequests);
+
+        return true;
     }
 
     public void updateNewEmployerRequests(NewEmployerRequests newEmployerRequests) {

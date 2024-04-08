@@ -9,9 +9,10 @@ export const ViewPostedJobsPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
 
   const userContext = useContext(UserContext);
-  const currentUser = userContext?.currentUser;
+  
+  const userType = userContext?.userType;
 
-  if (!currentUser) {
+  if (!userType) {
     return <div>Loading...</div>;
   }
 
@@ -46,7 +47,7 @@ export const ViewPostedJobsPage = () => {
       },
       index: number
     ) =>
-      currentUser === "Employer"
+      userType === "employer"
         ? data.positionTitle
             .toLowerCase()
             .includes(searchValue.toLowerCase()) &&
@@ -86,7 +87,7 @@ export const ViewPostedJobsPage = () => {
           setSearchValue={setSearchValue}
         />
 
-        {currentUser !== "Employer" && (
+        {userType !== "employer" && (
           <Group justify="center" mt="lg">
             <Checkbox label="Only Matched Jobs" />
           </Group>

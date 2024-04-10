@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.employee_agency.employee_agency.entities.Employer;
@@ -24,6 +26,10 @@ public class NewEmployerRequestsService {
 
     @Autowired
     private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
+
+    public List<NewEmployerRequests> getAllRequests() {
+        return newEmployerRequestsRepository.findAll();
+    }
 
     public boolean createNewEmployerRequests(NewEmployerRequests newEmployerRequests) {
         // check if username is already used by a registered user

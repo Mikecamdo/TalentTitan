@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +13,20 @@ public class JobPostService {
     @Autowired
     private JobPostRepository jobPostRepository;
 
-    public void addJobPost(JobPost jobPost) {
-        jobPostRepository.save(jobPost);
+    public List<JobPost> getJobsByCompany(String employerUsername) {
+        return jobPostRepository.findAllByEmployerId(employerUsername);
+    }
+
+    public boolean addJobPost(JobPost jobPost) {
+        JobPost existingJob = jobPostRepository.findByEmployerIdAndCompanyJobId(jobPost.getEmployerId(), jobPost.getCompanyJobId());
+
+        if (existingJob == null) {
+            jobPostRepository.save(jobPost);
+            return true;
+        }
+
+        return false;
+        
     }
 
     public void updateJobPost(JobPost jobPost) {

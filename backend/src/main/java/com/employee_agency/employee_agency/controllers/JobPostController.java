@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.employee_agency.employee_agency.entities.JobPost;
 import com.employee_agency.employee_agency.services.JobPostService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/job-posts")
@@ -17,10 +22,28 @@ public class JobPostController {
     @Autowired
     private JobPostService jobPostService;
 
+    @GetMapping("/get-by-company")
+    public ResponseEntity<List<JobPost>> getJobsByCompany(@RequestParam String employerUsername) {
+        List<JobPost> jobs = jobPostService.getJobsByCompany(employerUsername);
+
+        if (jobs == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(jobs);
+        }
+    }
+    
+
     @PostMapping("/add")
     public ResponseEntity<String> addJobPost(@RequestBody JobPost jobPost) {
-        jobPostService.addJobPost(jobPost);
-        return ResponseEntity.ok("Added Job Post");
+        boolean success = jobPostService.addJobPost(jobPost);
+
+        if (success) {
+            return ResponseEntity.ok("Added Job Post");
+        } else {
+            return ResponseEntity.badRequest().body("CompanyJobId " + jobPost.getCompanyJobId() + " is already in use by " + jobPost.getEmployerId());
+        }
+        
     }
 
     @PutMapping("/update")

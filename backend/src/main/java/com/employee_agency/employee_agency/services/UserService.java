@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public UserDto login(LoginRequest loginRequest) {
-        User user = userRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+        User user = userRepository.findByUsernameAndPasswordAndIsActive(loginRequest.getUsername(), loginRequest.getPassword(), true);
 
         if (user != null) {
             UserDto userDto = new UserDto();

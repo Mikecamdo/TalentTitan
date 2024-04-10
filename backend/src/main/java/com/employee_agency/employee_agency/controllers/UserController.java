@@ -48,7 +48,18 @@ public class UserController {
     
     @PatchMapping("/update-password")
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordRequest request) {
-        userService.updatePassword(request.getUsername(), request.getOldPassword(), request.getNewPassword());
-        return ResponseEntity.ok("Updated password");
+        int status = userService.updatePassword(request.getUsername(), request.getOldPassword(), request.getNewPassword());
+        
+        switch (status) {
+            case 200:
+                return ResponseEntity.ok("Updated password");
+        
+            case 400:
+                return ResponseEntity.badRequest().body("Incorrect old password");
+
+            case 404:
+            default:
+                return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +47,25 @@ public class UserService {
         userRepository.save(currentUser);
     }
 
-    public void updatePassword(String username, String oldPassword, String newPassword) {
-        //TODO: Eventually need to hash password + check if old password is correct
-        User currentUser = userRepository.findById(username)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+    public int updatePassword(String username, String oldPassword, String newPassword) {
+        //TODO: Eventually need to hash password
 
-        currentUser.setPassword(newPassword);
+        Optional<User> currentUser = userRepository.findById(username);
 
-        userRepository.save(currentUser);
+        if (currentUser.isPresent()) {
+            User user = currentUser.get();
+
+            if (user.getPassword().equals(oldPassword)) {
+                user.setPassword(newPassword);
+
+                userRepository.save(user);
+
+                return 200;
+            }
+
+            return 400;
+        }
+
+        return 404;
     }
 }

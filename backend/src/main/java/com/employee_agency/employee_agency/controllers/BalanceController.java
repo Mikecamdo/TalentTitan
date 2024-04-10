@@ -27,9 +27,9 @@ public class BalanceController {
         Balance balance = balanceService.getBalanceByUser(username);
 
         if (balance == null) {
-            return ResponseEntity.ok(balance);
-        } else {
             return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(balance);
         }
     }
 

@@ -1,12 +1,16 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee_agency.employee_agency.entities.DeleteEmployerRequest;
-import com.employee_agency.employee_agency.entities.NewProfessionalRequests;
+import com.employee_agency.employee_agency.entities.Employer;
 import com.employee_agency.employee_agency.entities.User;
 import com.employee_agency.employee_agency.repositories.DeleteEmployerRequestRepository;
+import com.employee_agency.employee_agency.repositories.EmployerRepository;
 import com.employee_agency.employee_agency.repositories.UserRepository;
 
 @Service
@@ -17,11 +21,26 @@ public class DeleteEmployerRequestService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createRequest(String employerId) {
-        DeleteEmployerRequest request = new DeleteEmployerRequest();
+    @Autowired
+    private EmployerRepository employerRepository;
 
-        request.setEmployerId(employerId);
-        deleteEmployerRequestRepository.save(request);
+    public List<DeleteEmployerRequest> getAllRequests() {
+        return deleteEmployerRequestRepository.findAll();
+    }
+
+    public boolean createRequest(String employerId) {
+        Optional<Employer> employer = employerRepository.findById(employerId);
+
+        if (employer.isPresent()) {
+            DeleteEmployerRequest request = new DeleteEmployerRequest();
+
+            request.setEmployerId(employerId);
+            deleteEmployerRequestRepository.save(request);
+
+            return true;
+        }
+
+        return false;
     }
 
     public void approveRequest(String employerId) {

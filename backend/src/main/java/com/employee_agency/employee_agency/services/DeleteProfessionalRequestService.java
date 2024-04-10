@@ -1,11 +1,16 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee_agency.employee_agency.entities.DeleteProfessionalRequest;
+import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.entities.User;
 import com.employee_agency.employee_agency.repositories.DeleteProfessionalRequestRepository;
+import com.employee_agency.employee_agency.repositories.ProfessionalRepository;
 import com.employee_agency.employee_agency.repositories.UserRepository;
 
 @Service
@@ -16,11 +21,26 @@ public class DeleteProfessionalRequestService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createRequest(String professionalId) {
-        DeleteProfessionalRequest request = new DeleteProfessionalRequest();
+    @Autowired
+    private ProfessionalRepository professionalRepository;
 
-        request.setProfessionalId(professionalId);
-        deleteProfessionalRequestRepository.save(request);
+    public List<DeleteProfessionalRequest> getAllRequests() {
+        return deleteProfessionalRequestRepository.findAll();
+    }
+
+    public boolean createRequest(String professionalId) {
+        Optional<Professional> professional = professionalRepository.findById(professionalId);
+        
+        if (professional.isPresent()) {
+            DeleteProfessionalRequest request = new DeleteProfessionalRequest();
+
+            request.setProfessionalId(professionalId);
+            deleteProfessionalRequestRepository.save(request);
+
+            return true;
+        }
+        
+        return false;
     }
 
     public void approveRequest(String professionalId) {

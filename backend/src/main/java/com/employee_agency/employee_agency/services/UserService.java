@@ -1,5 +1,6 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ public class UserService {
     
     @Autowired
     private UserRepository userRepository;
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     public UserDto login(LoginRequest loginRequest) {
         User user = userRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());

@@ -7,6 +7,9 @@ import com.employee_agency.employee_agency.dto.UpdatePasswordRequest;
 import com.employee_agency.employee_agency.dto.UserDto;
 import com.employee_agency.employee_agency.entities.User;
 import com.employee_agency.employee_agency.services.UserService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/users")
@@ -22,6 +26,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {

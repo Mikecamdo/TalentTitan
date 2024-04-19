@@ -29,6 +29,8 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Professional from "../../types/Professional";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
+import { displayTransactions } from "../../api/transactionsApi";
+import { getProfessionalInfo } from "../../api/professionalApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -354,6 +356,34 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
       </Table.Tr>
     )
   );
+
+  const transaction = () => {
+    displayTransactions().then((response: any) => {
+      if (typeof response === "string") {
+        console.log(response);
+      }
+    });
+  };
+
+  const professionalInfo = () => {
+    getProfessionalInfo(userContext.currentUser).then((response: any) => {
+      setProfessional({ 
+        firstName: response.firstName, 
+        lastName: response.lastName,
+        address: response.address,
+        city: response.city,
+        state: response.state,
+        zipCode: response.zipCode,
+        phoneNumber: response.phonesNumber,
+        email: response.email,
+        username: response.username,
+        schoolName: response.schoolName,
+        degreeName: response.degreeName,
+        completionDate: response.completionDate,
+        qualifications: response.qualifications
+      })
+    })
+  };
 
   return (
     <>

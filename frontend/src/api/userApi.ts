@@ -10,8 +10,8 @@ export const attemptSignIn = (loginRequest: any) => new Promise ((resolve, rejec
     });
 });
 
-export const updatePassword = (loginRequest: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/users/update-password`, loginRequest)
+export const updatePassword = (request: any) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/users/update-password`, request)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

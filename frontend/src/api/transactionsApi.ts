@@ -10,3 +10,19 @@ export const displayTransactions = () => new Promise ((resolve, reject) => {
     });
 });
 
+export const updateTransactions = () => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/transactions/update`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+
+export const addransactions = () => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/transactions/add`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+

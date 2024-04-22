@@ -2,6 +2,8 @@ package com.employee_agency.employee_agency.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.employee_agency.employee_agency.EmailService;
 import com.employee_agency.employee_agency.entities.Staff;
 import com.employee_agency.employee_agency.entities.User;
 import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
@@ -24,6 +26,8 @@ public class StaffService {
     @Autowired
     private NewEmployerRequestsRepository newEmployerRequestsRepository;
 
+    @Autowired
+    private EmailService emailService;
 
     public boolean createStaff(Staff staff) {
         // check if username is already used by a registered user
@@ -53,6 +57,8 @@ public class StaffService {
         userRepository.save(newUser);
 
         staffRepository.save(staff);
+
+        emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
 
         return true;
     }

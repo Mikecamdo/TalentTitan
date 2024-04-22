@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.employee_agency.employee_agency.EmailService;
 import com.employee_agency.employee_agency.entities.Employer;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
 import com.employee_agency.employee_agency.entities.User;
@@ -26,6 +28,9 @@ public class NewEmployerRequestsService {
 
     @Autowired
     private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public List<NewEmployerRequests> getAllRequests() {
         return newEmployerRequestsRepository.findAll();
@@ -98,5 +103,7 @@ public class NewEmployerRequestsService {
         newEmployer.setContactEmail(currentRequest.getContactEmail());
 
         employerRepository.save(newEmployer);
+
+        emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
     }
 }

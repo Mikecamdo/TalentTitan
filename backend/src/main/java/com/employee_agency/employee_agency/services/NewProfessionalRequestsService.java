@@ -3,6 +3,8 @@ package com.employee_agency.employee_agency.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.employee_agency.employee_agency.EmailService;
 import com.employee_agency.employee_agency.entities.NewProfessionalRequests;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.entities.User;
@@ -25,6 +27,9 @@ public class NewProfessionalRequestsService {
 
     @Autowired
     private NewEmployerRequestsRepository newEmployerRequestsRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public List<NewProfessionalRequests> getAllRequests() {
         return newProfessionalRequestsRepository.findAll();
@@ -101,5 +106,8 @@ public class NewProfessionalRequestsService {
         newProfessional.setJobMatching(false);
 
         professionalRepository.save(newProfessional);
+
+        //TODO: need to not have this always send to mikecamdo@gmail.com
+        emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
     }
 }

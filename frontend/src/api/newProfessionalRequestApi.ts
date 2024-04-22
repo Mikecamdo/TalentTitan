@@ -26,8 +26,8 @@ export const updateNewProfessional = (request: any) => new Promise ((resolve, re
     });
 });
 
-export const registerNewProfessional = () => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/new-professional/register`)
+export const registerNewProfessional = (newProfessional: any) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/new-professional/register`, newProfessional)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import classes from "../css_modules/SignInPage.module.css";
 import { attemptSignIn } from "../api/userApi";
+import { notifications } from '@mantine/notifications';
 
 const formValues = {
   username: "",
@@ -71,7 +72,7 @@ export const SignInPage = () => {
         !NUMERIC_REGEX.test(values.password) ||
         !SPECIAL_REGEX.test(values.password) ||
         !LENGTH_REGEX.test(values.password)
-      ) {
+      ) { //TODO: change this back
         //!setPasswordError("Invalid password");
       } else {
         setPasswordError("");
@@ -95,7 +96,11 @@ export const SignInPage = () => {
       password: values.password,
     }).then((response: any) => {
       if (typeof response === "string") {
-        console.log(response);
+        notifications.show({
+          color: 'red',
+          title: 'Error!',
+          message: response,
+        });
       } else {
         setCurrentUser(response.username);
         setUserType(response.userType);

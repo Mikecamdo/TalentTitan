@@ -11,7 +11,7 @@ export const attemptSignIn = (loginRequest: any) => new Promise ((resolve, rejec
 });
 
 export const updatePassword = (request: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/users/update-password`, request)
+    axios.patch(`${apiEndpoint}/users/update-password`, request)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -19,7 +19,7 @@ export const updatePassword = (request: any) => new Promise ((resolve, reject) =
 });
 
 export const updateUser = (user: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/users/update`, user)
+    axios.put(`${apiEndpoint}/users/update`, user)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

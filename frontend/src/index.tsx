@@ -30,7 +30,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <MantineProvider>
     <React.StrictMode>
-      <Notifications />
+      <Notifications position="top-right" zIndex={1000} />
       <App />
     </React.StrictMode>
   </MantineProvider>

@@ -106,7 +106,7 @@ export const SignInPage = () => {
         setUserType(response.userType);
 
         if (response.firstLogin) {
-          navigate("/update-password");
+          navigate("/update-password", { state: {oldPassword: values.password}});
         } else if (response.userType == "staff") {
           if (response.username === "root") {
             navigate("/add-staff");
@@ -120,13 +120,6 @@ export const SignInPage = () => {
         console.log(response);
       }
     });
-
-    // setCurrentUser(values.username);
-    // if (values.username === "root") {
-    //   navigate("/add-staff");
-    // } else {
-    //   navigate("/update-password");
-    // }
   };
 
   return (

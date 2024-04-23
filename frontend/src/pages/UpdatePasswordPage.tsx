@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
 import {
@@ -11,6 +11,8 @@ import {
   Button,
 } from "@mantine/core";
 import classes from "../css_modules/SignInPage.module.css";
+import { updatePassword as updateThePassword } from "../api/userApi";
+import { notifications } from "@mantine/notifications";
 
 const ALPHABET_REGEX = /[a-zA-Z]/;
 const NUMERIC_REGEX = /\d/;
@@ -27,6 +29,14 @@ export const UpdatePasswordPage = () => {
 
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const location = useLocation();
+
+  const [oldPassword, setOldPassword] = useState("");
+
+  useEffect(() => {
+    setOldPassword(location.state.oldPassword);
+  }, [location]);
 
   useEffect(() => {
     if (!newPassword || !confirmPassword) {
@@ -76,11 +86,31 @@ export const UpdatePasswordPage = () => {
 
   const updatePassword = () => {
     // TODO: Call backend and update password
-    if (userType === "staff") {
-      navigate("/account-search");
-    } else {
-      navigate("/job-search");
-    }
+    updateThePassword({
+      username: currentUser,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }).then((response: any) => {
+      if (response === "Updated password") {
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+
+        if (userType === "staff") {
+          navigate("/account-search");
+        } else {
+          navigate("/job-search");
+        }
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      }
+    });
   };
 
   return (

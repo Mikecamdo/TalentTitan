@@ -62,6 +62,7 @@ public class UserService {
 
             if (user.getPassword().equals(oldPassword)) {
                 user.setPassword(newPassword);
+                user.setFirstLogin(false);
 
                 userRepository.save(user);
 

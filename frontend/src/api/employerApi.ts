@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiEndpoint = '//localhost:8080'
+const apiEndpoint = '//localhost:8080';
 
 export const getAllEmployers = () => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/employers/get-all`)

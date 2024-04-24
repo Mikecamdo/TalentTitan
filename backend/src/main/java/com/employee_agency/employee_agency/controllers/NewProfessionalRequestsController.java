@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,8 +46,8 @@ public class NewProfessionalRequestsController {
     }
 
     @DeleteMapping("/approve")
-    public ResponseEntity<String> approveNewProfessionalRequest(@RequestBody String username) {
-        newProfessionalRequestsService.approveRequest(username);
+    public ResponseEntity<String> approveNewProfessionalRequest(@RequestParam String username, @RequestParam String amountDue, @RequestParam String dueDate) {
+        newProfessionalRequestsService.approveRequest(username, amountDue, dueDate);
         return ResponseEntity.ok("Approved request successfully");
     }
 }

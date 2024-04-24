@@ -1,14 +1,18 @@
 package com.employee_agency.employee_agency.services;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee_agency.employee_agency.EmailService;
+import com.employee_agency.employee_agency.entities.Balance;
 import com.employee_agency.employee_agency.entities.NewProfessionalRequests;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.entities.User;
+import com.employee_agency.employee_agency.repositories.BalanceRepository;
 import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
 import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
 import com.employee_agency.employee_agency.repositories.ProfessionalRepository;
@@ -28,6 +32,9 @@ public class NewProfessionalRequestsService {
 
     @Autowired
     private NewEmployerRequestsRepository newEmployerRequestsRepository;
+
+    @Autowired
+    private BalanceRepository balanceRepository;
 
     @Autowired
     private EmailService emailService;
@@ -76,7 +83,7 @@ public class NewProfessionalRequestsService {
         newProfessionalRequestsRepository.save(currentNewProfessionalRequests);
     }
 
-    public void approveRequest(String username) {
+    public void approveRequest(String username, String amountDue, String dueDate) {
         NewProfessionalRequests currentRequest = newProfessionalRequestsRepository.findById(username)
             .orElseThrow(() -> new RuntimeException("Professional Request not found"));
 
@@ -84,7 +91,7 @@ public class NewProfessionalRequestsService {
 
         User newUser = new User();
         newUser.setUsername(username);
-        newUser.setPassword(generateRandomPassword()); //TODO: make it actually generate something random
+        newUser.setPassword(generateRandomPassword());
         newUser.setIsActive(true);
         newUser.setFirstLogin(true);
         newUser.setUserType("professional");
@@ -108,6 +115,13 @@ public class NewProfessionalRequestsService {
 
         professionalRepository.save(newProfessional);
 
+        Balance newBalance = new Balance();
+        newBalance.setUsername(username);
+        newBalance.setAmountDue(amountDue);
+        newBalance.setDueDate(dueDate);
+
+        balanceRepository.save(newBalance);
+        
         //TODO: need to not have this always send to mikecamdo@gmail.com
         emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
     }

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee_agency.employee_agency.EmailService;
+import com.employee_agency.employee_agency.entities.Balance;
 import com.employee_agency.employee_agency.entities.Employer;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
 import com.employee_agency.employee_agency.entities.User;
+import com.employee_agency.employee_agency.repositories.BalanceRepository;
 import com.employee_agency.employee_agency.repositories.EmployerRepository;
 import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
 import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
@@ -29,6 +31,9 @@ public class NewEmployerRequestsService {
 
     @Autowired
     private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
+
+    @Autowired
+    private BalanceRepository balanceRepository;
 
     @Autowired
     private EmailService emailService;
@@ -76,7 +81,7 @@ public class NewEmployerRequestsService {
         newEmployerRequestsRepository.save(currentNewEmployerRequests);
     }
 
-    public void approveRequest(String username) {
+    public void approveRequest(String username, String amountDue, String dueDate) {
         NewEmployerRequests currentRequest = newEmployerRequestsRepository.findById(username)
             .orElseThrow(() -> new RuntimeException("Employer Request not found"));
 
@@ -104,6 +109,13 @@ public class NewEmployerRequestsService {
         newEmployer.setContactEmail(currentRequest.getContactEmail());
 
         employerRepository.save(newEmployer);
+
+        Balance newBalance = new Balance();
+        newBalance.setUsername(username);
+        newBalance.setAmountDue(amountDue);
+        newBalance.setDueDate(dueDate);
+
+        balanceRepository.save(newBalance);
 
         emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
     }

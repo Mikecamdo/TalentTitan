@@ -835,6 +835,8 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                           });
                           setEditProfile(false);
                         } else {
+                          console.log("RESPONSE");
+                          console.log(response);
                           notifications.show({
                             color: "red",
                             title: "Error!",

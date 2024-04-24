@@ -10,16 +10,16 @@ export const getAllDeleteEmployersRequests = () => new Promise ((resolve, reject
     });
 });
 
-export const approveDeleteEmployer = (employerId: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/delete-employer/approve`, employerId)
+export const approveDeleteEmployer = (employerId: string) => new Promise ((resolve, reject) => {
+    axios.delete(`${apiEndpoint}/delete-employer/approve?employerId=${employerId}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
     });
 });
 
-export const requestDeleteEmployer = (employerId: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/delete-employer/request`, employerId)
+export const requestDeleteEmployer = (employerId: string) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/delete-employer/request?employerId=${employerId}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

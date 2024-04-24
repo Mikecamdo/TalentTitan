@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Container, Table, Checkbox, Grid, Group } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
-import { getJobPostsByCompany } from "../api/jobPostApi";
+import { getAllJobs, getJobPostsByCompany } from "../api/jobPostApi";
 
 export const ViewPostedJobsPage = () => {
   const userContext = useContext(UserContext);
@@ -28,6 +28,9 @@ export const ViewPostedJobsPage = () => {
       });
     } else if (userType) {
       //Get all jobs for professional
+      getAllJobs().then((response: any) => {
+        setJobPosts(response);
+      })
     }
   }, [currentUser, userType]);
 

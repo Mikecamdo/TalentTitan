@@ -2,6 +2,14 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080';
 
+export const getAllJobs = () => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/job-posts/get-all`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+
 export const getJobByCompanyJobId = (employerUsername: string, jobId: string) => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/job-posts/get-by-company-job-id?employerUsername=${employerUsername}&jobId=${jobId}`)
     .then(response => resolve(response.data))

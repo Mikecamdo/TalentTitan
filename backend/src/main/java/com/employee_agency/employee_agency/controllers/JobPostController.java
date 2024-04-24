@@ -24,6 +24,12 @@ public class JobPostController {
     @Autowired
     private JobPostService jobPostService;
 
+    @GetMapping("/get-all")
+    public ResponseEntity<List<JobPost>> getAllJobs() {
+        return ResponseEntity.ok(jobPostService.getAllJobs());
+    }
+    
+
     @GetMapping("/get-by-company-job-id")
     public ResponseEntity<JobPost> getJobByCompanyJobId(@RequestParam String employerUsername, @RequestParam String jobId) {
         JobPost job = jobPostService.getJobByCompanyJobId(employerUsername, jobId);

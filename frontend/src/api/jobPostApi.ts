@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080'
 
-export const getJobPostByCompany = (employerUsername: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/job-posts/get-by-company`, employerUsername)
+export const getJobPostsByCompany = (employerUsername: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/job-posts/get-by-company?employerUsername=${employerUsername}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -19,7 +19,7 @@ export const addJobPost = (jobPost: any) => new Promise ((resolve, reject) => {
 });
 
 export const updateJobPost = (jobPost: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/job-posts/update`, jobPost)
+    axios.put(`${apiEndpoint}/job-posts/update`, jobPost)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

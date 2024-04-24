@@ -53,8 +53,7 @@ export const SignInPage = () => {
       if (
         (!STARTS_WITH_ALPHABET_REGEX.test(values.username) ||
           !LENGTH_REGEX.test(values.username)) &&
-        values.username !== "root" &&
-        values.username !== "Staff"
+        values.username !== "root"
       ) {
         setUsernameError("Invalid username");
       } else {

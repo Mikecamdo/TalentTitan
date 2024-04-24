@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080'
 
-export const getQualificationsByProfessionals = (username: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/qualifications/get-by-professional`, username)
+export const getQualificationsByProfessional = (username: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/qualifications/get-by-professional?username=${username}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

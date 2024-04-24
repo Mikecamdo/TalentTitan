@@ -10,7 +10,7 @@ export const getAllProfessionals = () => new Promise ((resolve, reject) => {
     });
 });
 
-export const getProfessional = (username: any) => new Promise ((resolve, reject) => {
+export const getProfessional = (username: string) => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/professionals/get-by-username?username=${username}`)
     .then(response => resolve(response.data))
     .catch(error => {

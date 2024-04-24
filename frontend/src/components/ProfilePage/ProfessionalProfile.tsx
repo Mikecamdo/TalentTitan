@@ -30,7 +30,10 @@ import Professional from "../../types/Professional";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
 import { displayTransactions } from "../../api/transactionsApi";
-import { getProfessionalInfo } from "../../api/professionalApi";
+import { getProfessional, updateProfessional } from "../../api/professionalApi";
+import { notifications } from "@mantine/notifications";
+import { updatePassword as updateThePassword } from "../../api/userApi";
+import { requestDeleteProfessional } from "../../api/deleteProfessionalRequestApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -155,7 +158,10 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
       }
     }
 
-    if (professional.phoneNumber.length === 14 || !professional.phoneNumber) {
+    if (
+      professional.phoneNumber &&
+      (professional.phoneNumber.length === 14 || !professional.phoneNumber)
+    ) {
       setPhoneError("");
     } else {
       setPhoneError("Invalid phone number");
@@ -285,11 +291,41 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
   };
 
   const updatePassword = () => {
-    // Call backend and update password
-    handlePasswordOpened.close();
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    updateThePassword({
+      username: professional.username,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }).then((response: any) => {
+      if (response === "") {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Couldn't find the correct user to update.",
+        });
+      } else if (response === "Incorrect old password") {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      } else if (response === "Updated password") {
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+        handlePasswordOpened.close();
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "There was an error while trying to update the password.",
+        });
+      }
+    });
   };
 
   const submitPayment = () => {
@@ -303,7 +339,31 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
   const currentUser = userContext?.currentUser;
 
   useEffect(() => {
-    console.log(currentUser);
+    getProfessional(currentUser).then((response: any) => {
+      if (response) {
+        setProfessional({
+          firstName: response.firstName,
+          lastName: response.lastName,
+          address: response.addressLine,
+          city: response.city,
+          state: response.state,
+          zipCode: response.zipCode,
+          phoneNumber: response.phone,
+          email: response.email,
+          username: response.username,
+          schoolName: response.schoolName,
+          degreeName: response.degreeName,
+          completionDate: new Date(response.completionDate),
+          qualifications: [],
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Uh Oh!",
+          message: "It looks like this user doesn't exist.",
+        });
+      }
+    });
   }, [currentUser]);
 
   useEffect(() => {
@@ -366,9 +426,9 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
   };
 
   const professionalInfo = () => {
-    getProfessionalInfo(userContext.currentUser).then((response: any) => {
-      setProfessional({ 
-        firstName: response.firstName, 
+    getProfessional(userContext.currentUser).then((response: any) => {
+      setProfessional({
+        firstName: response.firstName,
         lastName: response.lastName,
         address: response.address,
         city: response.city,
@@ -380,9 +440,9 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
         schoolName: response.schoolName,
         degreeName: response.degreeName,
         completionDate: response.completionDate,
-        qualifications: response.qualifications
-      })
-    })
+        qualifications: response.qualifications,
+      });
+    });
   };
 
   return (
@@ -736,7 +796,32 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
             <Group justify="center" mt="md">
               <Button
                 onClick={() => {
-                  setEditProfile(false);
+                  updateProfessional(professional.username, {
+                    phone: professional.phoneNumber,
+                    email: professional.email,
+                    addressLine: professional.address,
+                    city: professional.city,
+                    state: professional.state,
+                    zipCode: professional.zipCode,
+                    schoolName: professional.schoolName,
+                    degreeName: professional.degreeName,
+                    completionDate: professional.completionDate,
+                  }).then((response: any) => {
+                    if (response.name === "") {
+                      notifications.show({
+                        color: "red",
+                        title: "Error!",
+                        message: "There was an error updating the profile.",
+                      });
+                    } else {
+                      notifications.show({
+                        color: "green",
+                        title: "Success!",
+                        message: "User updated successfully.",
+                      });
+                      setEditProfile(false);
+                    }
+                  });
                 }}
                 disabled={disableSave}
               >
@@ -857,8 +942,22 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
             <Button
               fullWidth
               onClick={() => {
-                //request to delete account in backend
-                handleDeletionOpened.close();
+                requestDeleteProfessional(professional.username).then((response: any) => {
+                  if (response === "Professional Deletion Request successful") {
+                    notifications.show({
+                      color: "green",
+                      title: "Success!",
+                      message: "Deletion request successful",
+                    });
+                    handleDeletionOpened.close();
+                  } else {
+                    notifications.show({
+                      color: "red",
+                      title: "Error!",
+                      message: response,
+                    });
+                  }
+                })
               }}
             >
               Yes, delete my account

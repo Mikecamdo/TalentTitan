@@ -10,16 +10,16 @@ export const getAllProfessionals = () => new Promise ((resolve, reject) => {
     });
 });
 
-export const getProfessionalInfo = (username: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/professionals/get-by-username`, username)
+export const getProfessional = (username: any) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/professionals/get-by-username?username=${username}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
     });
 });
 
-export const updateProfessionalInfo = (username: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/professionals/update`, username)
+export const updateProfessional = (username: string, professionalInfo: any) => new Promise ((resolve, reject) => {
+    axios.put(`${apiEndpoint}/professionals/update?username=${username}`, professionalInfo)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -27,7 +27,7 @@ export const updateProfessionalInfo = (username: any) => new Promise ((resolve, 
 });
 
 export const createProfessional = (professional: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/professionals/register`, professional)
+    axios.post(`${apiEndpoint}/professionals/register`, professional)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -35,7 +35,7 @@ export const createProfessional = (professional: any) => new Promise ((resolve, 
 });
 
 export const toggleJobMatching = (request: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/professionals/toggle-job-matching`, request)
+    axios.patch(`${apiEndpoint}/professionals/toggle-job-matching`, request)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

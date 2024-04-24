@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CustomSearchBar } from "../components/CustomSearchBar";
 import { Link } from "react-router-dom";
-import { Container, Table, Checkbox, Grid, Group } from "@mantine/core";
+import { Container, Table, Checkbox, Group } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
 import { getAllJobs, getJobPostsByCompany } from "../api/jobPostApi";

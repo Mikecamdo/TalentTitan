@@ -1,6 +1,9 @@
 package com.employee_agency.employee_agency.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.employee_agency.employee_agency.dto.ApproveRequestDto;
+import com.employee_agency.employee_agency.dto.DeleteRequestDto;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
 import com.employee_agency.employee_agency.services.NewEmployerRequestsService;
 
@@ -9,7 +12,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,8 +49,14 @@ public class NewEmployerRequestsController {
     }
 
     @DeleteMapping("/approve")
-    public ResponseEntity<String> approveNewEmployerRequest(@RequestParam String username, @RequestParam String amountDue, @RequestParam String dueDate) {
-        newEmployerRequestsService.approveRequest(username, amountDue, dueDate);
+    public ResponseEntity<String> approveNewEmployerRequest(@RequestBody ApproveRequestDto approval) {
+        newEmployerRequestsService.approveRequest(approval.getUsername(), approval.getAmountDue(), approval.getDueDate(), approval.getComment());
         return ResponseEntity.ok("Approved request successfully");
+    }
+
+    @DeleteMapping("/deny")
+    public ResponseEntity<String> denyNewEmployerRequest(@RequestBody DeleteRequestDto denial) {
+        newEmployerRequestsService.denyRequest(denial.getUsername(), denial.getComment());
+        return ResponseEntity.ok("Denied request successfully");
     }
 }

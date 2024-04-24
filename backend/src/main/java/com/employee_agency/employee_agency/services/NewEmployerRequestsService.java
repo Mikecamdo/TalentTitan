@@ -86,7 +86,7 @@ public class NewEmployerRequestsService {
         newEmployerRequestsRepository.save(currentNewEmployerRequests);
     }
 
-    public void approveRequest(String username, String amountDue, String dueDate) {
+    public void approveRequest(String username, String amountDue, String dueDate, String comment) {
         NewEmployerRequests currentRequest = newEmployerRequestsRepository.findById(username)
             .orElseThrow(() -> new RuntimeException("Employer Request not found"));
 
@@ -122,7 +122,17 @@ public class NewEmployerRequestsService {
 
         balanceRepository.save(newBalance);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
+        if (comment == null || comment == "") {
+            emailService.sendEmail("mikecamdo@gmail.com", "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
+        } else {
+            emailService.sendEmail("mikecamdo@gmail.com", "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword() + "\nOur staff also left the following comments regarding your account approval:\n" + comment);
+        }
+    }
+
+    public void denyRequest(String username, String comment) {
+        newEmployerRequestsRepository.deleteById(username);
+
+        emailService.sendEmail("mikecamdo@gmail.com", "Account Request Denied", "Salutations. Unfortunately, after review your account request for TalentTitan has been denied.\n Our staff submitted the following reasoning:\n" + comment + "\nWe apologize for any inconvenience and invite you to re-apply to TalentTitan at a future date.");
     }
 
     private static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";

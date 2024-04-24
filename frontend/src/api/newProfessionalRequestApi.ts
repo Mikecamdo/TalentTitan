@@ -10,8 +10,8 @@ export const getAllNewProfessionals = () => new Promise ((resolve, reject) => {
     });
 });
 
-export const approveNewProfessional = (username: string, amountDue: string, dueDate: string) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/new-professional/approve?username=${username}@amountDue=${amountDue}@dueDate=${dueDate}`)
+export const registerNewProfessional = (newProfessional: any) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/new-professional/register`, newProfessional)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -26,8 +26,16 @@ export const updateNewProfessional = (request: any) => new Promise ((resolve, re
     });
 });
 
-export const registerNewProfessional = (newProfessional: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/new-professional/register`, newProfessional)
+export const approveNewProfessional = (approval: any) => new Promise ((resolve, reject) => {
+    axios.delete(`${apiEndpoint}/new-professional/approve`, approval)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+
+export const denyNewProfessional = (denial: any) => new Promise ((resolve, reject) => {
+    axios.delete(`${apiEndpoint}/new-professional/deny`, denial)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

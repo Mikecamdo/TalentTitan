@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080'
 
-export const getAllNewEmployers = (request: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/new-employer/get-all`, request)
+export const getAllNewEmployers = () => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/new-employer/get-all`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

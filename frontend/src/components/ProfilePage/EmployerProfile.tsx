@@ -334,6 +334,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
 
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
+  const userType = userContext?.userType;
 
   useEffect(() => {
     console.log(currentUser);
@@ -364,7 +365,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !employer.username) {
+  if (!currentUser || !employer.username || !userType) {
     return <div>Loading...</div>;
   }
 
@@ -658,7 +659,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
                 </>
               )}
               {(currentUser === currentlyViewing ||
-                currentUser === "Staff") && (
+                userType === "staff") && (
                 <Button
                   onClick={() => {
                     setEditProfile(true);

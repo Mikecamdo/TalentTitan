@@ -334,12 +334,13 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
 
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
+  const userType = userContext?.userType;
 
   useEffect(() => {
-    if (currentUser) {
-      getProfessional(currentUser).then((response: any) => {
+    if (currentlyViewing) {
+      getProfessional(currentlyViewing).then((response: any) => {
         if (response) {
-          getQualificationsByProfessional(currentUser).then(
+          getQualificationsByProfessional(currentlyViewing).then(
             (response2: any) => {
               if (typeof response2 === "string") {
                 notifications.show({
@@ -384,7 +385,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
         }
       });
     }
-  }, [currentUser]);
+  }, [currentlyViewing]);
 
   useEffect(() => {
     if (!creditCard || !payAmount || creditCardError) {
@@ -411,7 +412,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !professional || !professional.firstName) {
+  if (!currentUser || !professional || !professional.firstName || !userType) {
     return <div>Loading...</div>;
   }
 
@@ -868,7 +869,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                 </>
               )}
               {(currentUser === currentlyViewing ||
-                currentUser === "Staff") && (
+                userType === "staff") && (
                 <Button
                   onClick={() => {
                     setEditProfile(true);

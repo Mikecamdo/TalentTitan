@@ -36,6 +36,10 @@ import {
   updateJobPost,
 } from "../api/jobPostApi";
 import { notifications } from "@mantine/notifications";
+import {
+  getQualificationsByJob,
+  updateQualifications,
+} from "../api/qualificationApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 
@@ -61,11 +65,7 @@ export const JobPage = () => {
   const [hourlyRate, setHourlyRate] = useState(0);
   const [companyName, setCompanyName] = useState("");
 
-  const [qualifications, setQualifications] = useState<Qualification[]>([
-    { category: "Languages", keywords: "Java, JavaScript" },
-    { category: "Databases", keywords: "MySQL" },
-    { category: "Tools", keywords: "Git, GitHub, Jira" },
-  ]);
+  const [qualifications, setQualifications] = useState<Qualification[]>([]);
   const [category, setCategory] = useState("");
   const [keywords, setKeywords] = useState("");
 
@@ -109,28 +109,6 @@ export const JobPage = () => {
     >
       <IconClock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
     </ActionIcon>
-  );
-
-  const rows = qualifications.map(
-    (qualification: Qualification, index: number) => (
-      <Table.Tr>
-        <Table.Td>{qualification.category}</Table.Td>
-        <Table.Td>
-          {qualification.keywords}
-          {editJob && (
-            <CloseButton
-              variant="transparent"
-              size="xs"
-              onClick={() => {
-                const data: Qualification[] = [...qualifications];
-                data.splice(index, 1);
-                setQualifications(data);
-              }}
-            />
-          )}
-        </Table.Td>
-      </Table.Tr>
-    )
   );
 
   const formatPhoneNumber = (textInput: string) => {
@@ -219,6 +197,30 @@ export const JobPage = () => {
           setStartTime(response.startTime);
           setEndTime(response.endTime);
           setHourlyRate(+response.hourlyRate);
+        }
+      });
+
+      getQualificationsByJob(employerId, jobId).then((response: any) => {
+        console.log("THE RESPONSE:");
+        console.log(response);
+
+        if (typeof response === "string") {
+          notifications.show({
+            color: "red",
+            title: "Error!",
+            message: "Couldn't find the specified qualifications.",
+          });
+        } else if (response.categories) {
+          let quals = [];
+
+          for (let i = 0; i < response.categories.length; i++) {
+            quals.push({
+              category: response.categories[i],
+              keywords: response.keywords[i],
+            });
+          }
+
+          setQualifications(quals);
         }
       });
     }
@@ -352,7 +354,7 @@ export const JobPage = () => {
     }
   }, [category, keywords]);
 
-  if (!currentUser || !userType || positionName === "") {
+  if (!currentUser || !userType || positionName === "" || !employerId || !jobId) {
     return <div>Loading...</div>;
   }
 
@@ -622,7 +624,31 @@ export const JobPage = () => {
                       <Table.Th>Keywords/Key phrases</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
-                  <Table.Tbody>{rows}</Table.Tbody>
+                  <Table.Tbody>
+                    {qualifications.map(
+                      (qualification: Qualification, index: number) => (
+                        <Table.Tr>
+                          <Table.Td>{qualification.category}</Table.Td>
+                          <Table.Td>
+                            {qualification.keywords}
+                            {editJob && (
+                              <CloseButton
+                                variant="transparent"
+                                size="xs"
+                                onClick={() => {
+                                  const data: Qualification[] = [
+                                    ...qualifications,
+                                  ];
+                                  data.splice(index, 1);
+                                  setQualifications(data);
+                                }}
+                              />
+                            )}
+                          </Table.Td>
+                        </Table.Tr>
+                      )
+                    )}
+                  </Table.Tbody>
                 </Table>
                 {editJob && (
                   <>
@@ -698,12 +724,36 @@ export const JobPage = () => {
                         message: "Couldn't update the specified job.",
                       });
                     } else {
-                      notifications.show({
-                        color: "green",
-                        title: "Success!",
-                        message: "Sucessfully updated the job post.",
+                      updateQualifications({
+                        employerId: employerId,
+                        companyJobId: jobId,
+                        professionalUsername: null,
+                        categories: qualifications.map(
+                          (qualification) => qualification.category
+                        ),
+                        keywords: qualifications.map(
+                          (qualification) => qualification.keywords
+                        ),
+                      }).then((response: any) => {
+                        if (
+                          response === "Successfully updated qualifications"
+                        ) {
+                          notifications.show({
+                            color: "green",
+                            title: "Success!",
+                            message: "Sucessfully updated the job post.",
+                          });
+                          setEditJob(false);
+                        } else {
+                          console.log("RESPONSE:");
+                          console.log(response);
+                          notifications.show({
+                            color: "red",
+                            title: "Error!",
+                            message: response,
+                          });
+                        }
                       });
-                      setEditJob(false);
                     }
                   });
                 }}

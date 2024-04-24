@@ -18,6 +18,7 @@ import { addJobPost } from "../api/jobPostApi";
 import { UserContext } from "../App";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import { addQualifications } from "../api/qualificationApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 
@@ -281,12 +282,30 @@ export const JobPostingPage = () => {
       hourlyRate: hourlyRate.toString(),
     }).then((response: any) => {
       if (response === "Added Job Post") {
-        notifications.show({
-          color: "green",
-          title: "Success!",
-          message: response,
+        addQualifications({
+          employerId: currentUser,
+          companyJobId: positionId,
+          professionalUsername: null,
+          categories: qualifications.map(qualification => qualification.category),
+          keywords: qualifications.map(qualification => qualification.keywords),
+        }).then((response: any) => {
+          if (response === "Successfully added qualifications") {
+            notifications.show({
+              color: "green",
+              title: "Success!",
+              message: response,
+            });
+            navigate("/job-search");
+          } else {
+            console.log("RESPONSE:");
+            console.log(response);
+            notifications.show({
+              color: "red",
+              title: "Error!",
+              message: response,
+            });
+          }
         });
-        navigate("/job-search");
       } else {
         notifications.show({
           color: "red",

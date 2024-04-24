@@ -23,8 +23,8 @@ public class QualificationService {
     @Autowired
     private JobPostRepository jobPostRepository;
 
-    public Qualification getJobQualifications(Long jobId) {
-        return qualificationRepository.findByJobPostId(jobId);
+    public Qualification getJobQualifications(String employerId, String companyJobId) {
+        return qualificationRepository.findByEmployerIdAndCompanyJobId(employerId, companyJobId);
     }
 
     public Qualification getProfessionalQualifications(String professionalUsername) {
@@ -32,17 +32,19 @@ public class QualificationService {
     }
 
     public boolean addQualifications(Qualification qualifications) {
-        if (qualifications.getJobPostId() == null) {
-            Optional<Professional> professional = professionalRepository.findById(qualifications.getProfessionalUsername());
+        if (qualifications.getProfessionalUsername() != null) {
+            Optional<Professional> professional = professionalRepository
+                    .findById(qualifications.getProfessionalUsername());
 
             if (professional.isPresent()) {
                 qualificationRepository.save(qualifications);
                 return true;
             }
         } else {
-            Optional<JobPost> jobPost = jobPostRepository.findById(qualifications.getJobPostId());
+            JobPost jobPost = jobPostRepository.findByEmployerIdAndCompanyJobId(qualifications.getEmployerId(),
+                    qualifications.getCompanyJobId());
 
-            if (jobPost.isPresent()) {
+            if (jobPost != null) {
                 qualificationRepository.save(qualifications);
                 return true;
             }
@@ -52,18 +54,26 @@ public class QualificationService {
     }
 
     public boolean updateQualifications(Qualification qualifications) {
-        if (qualifications.getJobPostId() == null) {
-            Optional<Professional> professional = professionalRepository.findById(qualifications.getProfessionalUsername());
+        if (qualifications.getEmployerId() == null) {
+            Qualification currentQualifications = qualificationRepository
+                    .findByEmployerIdAndCompanyJobId(qualifications.getEmployerId(), qualifications.getCompanyJobId());
 
-            if (professional.isPresent()) {
-                qualificationRepository.save(qualifications);
+            if (currentQualifications != null) {
+                currentQualifications.setCategories(qualifications.getCategories());
+                currentQualifications.setKeywords(qualifications.getKeywords());
+
+                qualificationRepository.save(currentQualifications);
                 return true;
             }
         } else {
-            Optional<JobPost> jobPost = jobPostRepository.findById(qualifications.getJobPostId());
+            Qualification currentQualifications = qualificationRepository
+                    .findByEmployerIdAndCompanyJobId(qualifications.getEmployerId(), qualifications.getCompanyJobId());
 
-            if (jobPost.isPresent()) {
-                qualificationRepository.save(qualifications);
+            if (currentQualifications != null) {
+                currentQualifications.setCategories(qualifications.getCategories());
+                currentQualifications.setKeywords(qualifications.getKeywords());
+
+                qualificationRepository.save(currentQualifications);
                 return true;
             }
         }

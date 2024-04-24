@@ -13,12 +13,17 @@ public class JobPostService {
     @Autowired
     private JobPostRepository jobPostRepository;
 
+    public JobPost getJobByCompanyJobId(String employerUsername, String jobId) {
+        return jobPostRepository.findByEmployerIdAndCompanyJobId(employerUsername, jobId);
+    }
+
     public List<JobPost> getJobsByCompany(String employerUsername) {
         return jobPostRepository.findAllByEmployerId(employerUsername);
     }
 
     public boolean addJobPost(JobPost jobPost) {
-        JobPost existingJob = jobPostRepository.findByEmployerIdAndCompanyJobId(jobPost.getEmployerId(), jobPost.getCompanyJobId());
+        JobPost existingJob = jobPostRepository.findByEmployerIdAndCompanyJobId(jobPost.getEmployerId(),
+                jobPost.getCompanyJobId());
 
         if (existingJob == null) {
             jobPostRepository.save(jobPost);
@@ -26,25 +31,33 @@ public class JobPostService {
         }
 
         return false;
-        
+
     }
 
-    public void updateJobPost(JobPost jobPost) {
-        JobPost currentJobPost = jobPostRepository.findById(jobPost.getId())
-            .orElseThrow(() -> new RuntimeException("JobPost not found"));
+    public boolean updateJobPost(JobPost jobPost) {
+        JobPost currentJobPost = jobPostRepository.findByEmployerIdAndCompanyJobId(jobPost.getEmployerId(),
+                jobPost.getCompanyJobId());
 
-        currentJobPost.setJobName(jobPost.getJobName());
-        currentJobPost.setCompanyJobId(jobPost.getCompanyJobId());
-        currentJobPost.setContactFirstName(jobPost.getContactFirstName());
-        currentJobPost.setContactLastName(jobPost.getContactLastName());
-        currentJobPost.setContactPhone(jobPost.getContactPhone());
-        currentJobPost.setContactEmail(jobPost.getContactEmail());
-        currentJobPost.setStartDate(jobPost.getStartDate());
-        currentJobPost.setEndDate(jobPost.getEndDate());
-        currentJobPost.setStartTime(jobPost.getStartTime());
-        currentJobPost.setEndTime(jobPost.getEndTime());
-        currentJobPost.setHourlyRate(jobPost.getHourlyRate());
+        if (currentJobPost != null) {
+            currentJobPost.setContactFirstName(jobPost.getContactFirstName());
+            currentJobPost.setContactLastName(jobPost.getContactLastName());
+            currentJobPost.setContactPhone(jobPost.getContactPhone());
+            currentJobPost.setContactEmail(jobPost.getContactEmail());
+            currentJobPost.setStartDate(jobPost.getStartDate());
+            currentJobPost.setEndDate(jobPost.getEndDate());
+            currentJobPost.setStartTime(jobPost.getStartTime());
+            currentJobPost.setEndTime(jobPost.getEndTime());
+            currentJobPost.setHourlyRate(jobPost.getHourlyRate());
 
-        jobPostRepository.save(currentJobPost);
+            jobPostRepository.save(currentJobPost);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public void deleteJobPost(Long jobPostId) {
+        jobPostRepository.deleteById(jobPostId);
     }
 }

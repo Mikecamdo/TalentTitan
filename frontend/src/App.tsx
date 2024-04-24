@@ -97,7 +97,7 @@ function App() {
                   path="/account-requests"
                   element={<ViewAccountRequestsPage />}
                 />
-                <Route path="/job" element={<JobPage />} />
+                <Route path="/job/:employerId/:jobId" element={<JobPage />} />
                 <Route
                   path="/update-password"
                   element={<UpdatePasswordPage />}

@@ -11,7 +11,7 @@ export const getAllNewEmployers = () => new Promise ((resolve, reject) => {
 });
 
 export const approveNewEmployer = (username: string, amountDue: string, dueDate: string) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/new-professional/approve?username=${username}@amountDue=${amountDue}@dueDate=${dueDate}`)
+    axios.delete(`${apiEndpoint}/new-employer/approve?username=${username}&amountDue=${amountDue}&dueDate=${dueDate}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

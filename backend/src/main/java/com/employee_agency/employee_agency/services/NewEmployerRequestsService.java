@@ -1,6 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,11 @@ public class NewEmployerRequestsService {
     private EmailService emailService;
 
     public List<NewEmployerRequests> getAllRequests() {
-        return newEmployerRequestsRepository.findAll();
+        List<NewEmployerRequests> allRequests = newEmployerRequestsRepository.findAll();
+
+        Collections.reverse(allRequests);
+
+        return allRequests;
     }
 
     public boolean createNewEmployerRequests(NewEmployerRequests newEmployerRequests) {

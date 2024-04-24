@@ -29,7 +29,13 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import classes from "../css_modules/ProfilePage.module.css";
 import { UserContext } from "../App";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  deleteJobPost,
+  getJobByCompanyJobId,
+  updateJobPost,
+} from "../api/jobPostApi";
+import { notifications } from "@mantine/notifications";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 
@@ -37,20 +43,23 @@ export const JobPage = () => {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
+  const userType = userContext?.userType;
 
-  const [positionName, setPositionName] = useState("Software Engineer");
+  const { employerId, jobId } = useParams();
+
+  const [jobPostId, setJobPostId] = useState<number>(0);
+  const [positionName, setPositionName] = useState("");
   const [positionId, setPositionId] = useState("");
-  const [contactFirstName, setContactFirstName] = useState("John");
-  const [contactLastName, setContactLastName] = useState("Jones");
-  const [contactPhoneNumber, setContactPhoneNumber] =
-    useState("(834) 209-4921");
-  const [contactEmail, setContactEmail] = useState("jjones@walmart.com");
-  const [startDate, setStartDate] = useState<Date>(new Date("2024-03-01"));
-  const [endDate, setEndDate] = useState<Date>(new Date("2024-03-15"));
-  const [startTime, setStartTime] = useState("09:00");
-  const [endTime, setEndTime] = useState("17:00");
-  const [hourlyRate, setHourlyRate] = useState("30");
-  const [companyName, setCompanyName] = useState("Walmart");
+  const [contactFirstName, setContactFirstName] = useState("");
+  const [contactLastName, setContactLastName] = useState("");
+  const [contactPhoneNumber, setContactPhoneNumber] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [hourlyRate, setHourlyRate] = useState(0);
+  const [companyName, setCompanyName] = useState("");
 
   const [qualifications, setQualifications] = useState<Qualification[]>([
     { category: "Languages", keywords: "Java, JavaScript" },
@@ -188,6 +197,34 @@ export const JobPage = () => {
   };
 
   useEffect(() => {
+    if (employerId && jobId) {
+      getJobByCompanyJobId(employerId, jobId).then((response: any) => {
+        if (response === "") {
+          notifications.show({
+            color: "red",
+            title: "Error!",
+            message: "Couldn't find the specified job.",
+          });
+        } else {
+          setJobPostId(response.id);
+          setPositionName(response.jobName);
+          setCompanyName(response.employerId);
+          setPositionId(response.companyJobId);
+          setContactFirstName(response.contactFirstName);
+          setContactLastName(response.contactLastName);
+          setContactPhoneNumber(response.contactPhone);
+          setContactEmail(response.contactEmail);
+          setStartDate(new Date(response.startDate));
+          setEndDate(new Date(response.endDate));
+          setStartTime(response.startTime);
+          setEndTime(response.endTime);
+          setHourlyRate(+response.hourlyRate);
+        }
+      });
+    }
+  }, [employerId, jobId]);
+
+  useEffect(() => {
     if (
       positionName &&
       contactFirstName &&
@@ -315,7 +352,7 @@ export const JobPage = () => {
     }
   }, [category, keywords]);
 
-  if (!currentUser) {
+  if (!currentUser || !userType || positionName === "") {
     return <div>Loading...</div>;
   }
 
@@ -360,29 +397,31 @@ export const JobPage = () => {
 
               <Group wrap="nowrap" gap={10} mt={3}>
                 <IconUser stroke={1.5} size="1rem" className={classes.icon} />
-                {editJob ? (<>
-                  <TextInput
-                    label="First Name"
-                    placeholder="Enter first name"
-                    value={contactFirstName}
-                    onChange={(delta) => {
-                      setContactFirstName(delta.target.value);
-                    }}
-                    required
-                    size="xs"
-                  />
+                {editJob ? (
+                  <>
+                    <TextInput
+                      label="First Name"
+                      placeholder="Enter first name"
+                      value={contactFirstName}
+                      onChange={(delta) => {
+                        setContactFirstName(delta.target.value);
+                      }}
+                      required
+                      size="xs"
+                    />
 
-                  <TextInput
-                    label="Last Name"
-                    placeholder="Enter last name"
-                    value={contactLastName}
-                    onChange={(delta) => {
-                      setContactLastName(delta.target.value);
-                    }}
-                    required
-                    size="xs"
-                  />
-                </>) : (
+                    <TextInput
+                      label="Last Name"
+                      placeholder="Enter last name"
+                      value={contactLastName}
+                      onChange={(delta) => {
+                        setContactLastName(delta.target.value);
+                      }}
+                      required
+                      size="xs"
+                    />
+                  </>
+                ) : (
                   <Text fz="sm" c="dimmed">
                     {contactFirstName} {contactLastName}
                   </Text>
@@ -552,9 +591,8 @@ export const JobPage = () => {
                     min={0}
                     value={hourlyRate}
                     onChange={(rate) => {
-                      console.log("THE RATE:", rate);
-                      if (typeof rate === "number") {
-                        setHourlyRate(rate.toString());
+                      if (typeof rate === "string") {
+                        setHourlyRate(+rate);
                       } else {
                         setHourlyRate(rate);
                       }
@@ -640,16 +678,43 @@ export const JobPage = () => {
             <Group justify="center" mt="md">
               <Button
                 onClick={() => {
-                  setEditJob(false);
+                  updateJobPost({
+                    employerId: employerId,
+                    companyJobId: jobId,
+                    contactFirstName: contactFirstName,
+                    contactLastName: contactLastName,
+                    contactPhone: contactPhoneNumber,
+                    contactEmail: contactEmail,
+                    startDate: startDate,
+                    endDate: endDate,
+                    startTime: startTime,
+                    endTime: endTime,
+                    hourlyRate: hourlyRate,
+                  }).then((response: any) => {
+                    if (response === "") {
+                      notifications.show({
+                        color: "red",
+                        title: "Error!",
+                        message: "Couldn't update the specified job.",
+                      });
+                    } else {
+                      notifications.show({
+                        color: "green",
+                        title: "Success!",
+                        message: "Sucessfully updated the job post.",
+                      });
+                      setEditJob(false);
+                    }
+                  });
                 }}
                 disabled={disableSave}
               >
-                Save Profile
+                Save Job Posting
               </Button>
             </Group>
           ) : (
             <Group justify="center" mt="md">
-              {currentUser === "Employer" && (
+              {userType === "employer" && (
                 <>
                   <Button
                     onClick={() => {
@@ -697,9 +762,25 @@ export const JobPage = () => {
             <Button
               fullWidth
               onClick={() => {
-                //request to delete job in backend
-                handleDeletionOpened.close();
-                navigate("/job-search");
+                deleteJobPost(jobPostId).then((response: any) => {
+                  console.log("RESPONSE:");
+                  console.log(response);
+                  if (response === "Deleted Job Post") {
+                    notifications.show({
+                      color: "green",
+                      title: "Success!",
+                      message: "Sucessfully deleted the job post.",
+                    });
+                    handleDeletionOpened.close();
+                    navigate("/job-search");
+                  } else {
+                    notifications.show({
+                      color: "red",
+                      title: "Error!",
+                      message: response,
+                    });
+                  }
+                });
               }}
             >
               Yes, delete this job

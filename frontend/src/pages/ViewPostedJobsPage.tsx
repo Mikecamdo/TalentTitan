@@ -76,7 +76,7 @@ export const ViewPostedJobsPage = () => {
                     .includes(searchValue.toLowerCase()) && (
                     <Table.Tr key={index}>
                       <Table.Td>
-                        <Link to={"/job"} className={classes.link}>
+                        <Link to={"/job/" + data.employerId + "/" + data.companyJobId} className={classes.link}>
                           {data.companyJobId}
                         </Link>
                       </Table.Td>

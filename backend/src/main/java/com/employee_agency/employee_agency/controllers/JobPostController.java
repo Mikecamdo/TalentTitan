@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.employee_agency.employee_agency.entities.JobPost;
 import com.employee_agency.employee_agency.services.JobPostService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,6 +23,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class JobPostController {
     @Autowired
     private JobPostService jobPostService;
+
+    @GetMapping("/get-by-company-job-id")
+    public ResponseEntity<JobPost> getJobByCompanyJobId(@RequestParam String employerUsername, @RequestParam String jobId) {
+        JobPost job = jobPostService.getJobByCompanyJobId(employerUsername, jobId);
+
+        if (job == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(job);
+        }
+    }
+    
 
     @GetMapping("/get-by-company")
     public ResponseEntity<List<JobPost>> getJobsByCompany(@RequestParam String employerUsername) {
@@ -48,7 +62,19 @@ public class JobPostController {
 
     @PutMapping("/update")
     public ResponseEntity<String> updateJobPost(@RequestBody JobPost jobPost) {
-        jobPostService.updateJobPost(jobPost);
-        return ResponseEntity.ok("Updated Job Post");
+        boolean success = jobPostService.updateJobPost(jobPost);
+
+        if (success) {
+            return ResponseEntity.ok("Updated Job Post");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteJobPost(@RequestParam Long jobPostId) {
+        jobPostService.deleteJobPost(jobPostId);
+
+        return ResponseEntity.ok("Deleted Job Post");
     }
 }

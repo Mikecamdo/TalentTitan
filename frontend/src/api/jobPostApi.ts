@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const apiEndpoint = '//localhost:8080'
+const apiEndpoint = '//localhost:8080';
+
+export const getJobByCompanyJobId = (employerUsername: string, jobId: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/job-posts/get-by-company-job-id?employerUsername=${employerUsername}&jobId=${jobId}`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
 
 export const getJobPostsByCompany = (employerUsername: string) => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/job-posts/get-by-company?employerUsername=${employerUsername}`)
@@ -26,3 +34,10 @@ export const updateJobPost = (jobPost: any) => new Promise ((resolve, reject) =>
     });
 });
 
+export const deleteJobPost = (jobPostId: number) => new Promise ((resolve, reject) => {
+    axios.delete(`${apiEndpoint}/job-posts/delete?jobPostId=${jobPostId}`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+})

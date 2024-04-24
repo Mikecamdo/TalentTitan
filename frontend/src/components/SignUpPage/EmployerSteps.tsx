@@ -1,6 +1,9 @@
 import { Button, Group, TextInput } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import Employer from "../../types/Employer";
+import { registerNewEmployer } from "../../api/newEmployerRequestApi";
+import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
 
 interface EmployerProps {
   employer: Employer;
@@ -185,6 +188,8 @@ export const EmployerStep3: React.FC<EmployerProps> = ({
   setEmployer,
   setCurrentStep,
 }) => {
+  const navigate = useNavigate();
+
   const [disableSignUp, setDisableSignUp] = useState(true);
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -283,6 +288,33 @@ export const EmployerStep3: React.FC<EmployerProps> = ({
   };
 
   const signUp = () => {
+    registerNewEmployer({
+      username: employer.username,
+      companyName: employer.companyName,
+      addressLine: employer.address,
+      city: employer.city,
+      state: employer.state,
+      zipCode: employer.zipCode,
+      contactFirstName: employer.contactFirstName,
+      contactLastName: employer.contactLastName,
+      contactPhone: employer.contactPhoneNumber,
+      contactEmail: employer.contactEmail
+    }).then((response: any) => {
+      if (response === "New Employer Requests registered successfully") {
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: "New account request successful",
+        });
+        navigate("/signIn");
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      }
+    });
     console.log("Signing up!");
   };
 

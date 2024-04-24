@@ -2,16 +2,16 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080'
 
-export const getQualificationsByProfessionals = (username: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/qualifications/get-by-professional`, username)
+export const getQualificationsByProfessional = (username: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/qualifications/get-by-professional?username=${username}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
     });
 });
 
-export const getQualificationsByJob = (id: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/qualifications/get-by-job`, id)
+export const getQualificationsByJob = (employerId: string, companyJobId: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/qualifications/get-by-job?employerId=${employerId}&companyJobId=${companyJobId}`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -19,6 +19,8 @@ export const getQualificationsByJob = (id: any) => new Promise ((resolve, reject
 });
 
 export const addQualifications = (qualifications: any) => new Promise ((resolve, reject) => {
+    console.log("QUALS:");
+    console.log(qualifications);
     axios.post(`${apiEndpoint}/qualifications/add`, qualifications)
     .then(response => resolve(response.data))
     .catch(error => {
@@ -27,7 +29,7 @@ export const addQualifications = (qualifications: any) => new Promise ((resolve,
 });
 
 export const updateQualifications = (qualifications: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/qualifications/update`, qualifications)
+    axios.put(`${apiEndpoint}/qualifications/update`, qualifications)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

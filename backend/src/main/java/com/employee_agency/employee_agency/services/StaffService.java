@@ -1,5 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
+import java.security.SecureRandom;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +51,7 @@ public class StaffService {
 
         User newUser = new User();
         newUser.setUsername(staff.getUsername());
-        newUser.setPassword("random"); //TODO: make this actually random
+        newUser.setPassword(generateRandomPassword());
         newUser.setFirstLogin(true);
         newUser.setIsActive(true);
         newUser.setUserType("staff");
@@ -71,6 +73,28 @@ public class StaffService {
         currentStaff.setEmail(staff.getEmail());
 
         staffRepository.save(currentStaff);
+    }
+
+    private static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
+    private static final String SPECIAL_CHARS = "!@#$%^&*()_+?";
+
+    private static String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+
+        StringBuilder password = new StringBuilder();
+
+        password.append(LOWERCASE_CHARS.charAt(random.nextInt(LOWERCASE_CHARS.length())));
+        password.append(DIGITS.charAt(random.nextInt(DIGITS.length())));
+        password.append(SPECIAL_CHARS.charAt(random.nextInt(SPECIAL_CHARS.length())));
+
+        for (int i = 0; i < 5; i++) {
+            String randomChars = LOWERCASE_CHARS + UPPERCASE_CHARS + DIGITS + SPECIAL_CHARS;
+            password.append(randomChars.charAt(random.nextInt(randomChars.length())));
+        }
+
+        return password.toString();
     }
 
 }

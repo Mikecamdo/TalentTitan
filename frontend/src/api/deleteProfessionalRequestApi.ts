@@ -18,7 +18,7 @@ export const approveDeleteProfessional = (professionalId: any) => new Promise ((
     });
 });
 
-export const requestDeleteProfessional = (professionalId: any) => new Promise ((resolve, reject) => {
+export const requestDeleteProfessional = (professionalId: string) => new Promise ((resolve, reject) => {
     axios.post(`${apiEndpoint}/delete-professional/request`, professionalId)
     .then(response => resolve(response.data))
     .catch(error => {

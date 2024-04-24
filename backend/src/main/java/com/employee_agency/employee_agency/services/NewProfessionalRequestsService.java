@@ -1,5 +1,6 @@
 package com.employee_agency.employee_agency.services;
 
+import java.security.SecureRandom;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,7 +84,7 @@ public class NewProfessionalRequestsService {
 
         User newUser = new User();
         newUser.setUsername(username);
-        newUser.setPassword("random"); //TODO: make it actually generate something random
+        newUser.setPassword(generateRandomPassword()); //TODO: make it actually generate something random
         newUser.setIsActive(true);
         newUser.setFirstLogin(true);
         newUser.setUserType("professional");
@@ -109,5 +110,27 @@ public class NewProfessionalRequestsService {
 
         //TODO: need to not have this always send to mikecamdo@gmail.com
         emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
+    }
+
+    private static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
+    private static final String SPECIAL_CHARS = "!@#$%^&*()_+?";
+
+    private static String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+
+        StringBuilder password = new StringBuilder();
+
+        password.append(LOWERCASE_CHARS.charAt(random.nextInt(LOWERCASE_CHARS.length())));
+        password.append(DIGITS.charAt(random.nextInt(DIGITS.length())));
+        password.append(SPECIAL_CHARS.charAt(random.nextInt(SPECIAL_CHARS.length())));
+
+        for (int i = 0; i < 5; i++) {
+            String randomChars = LOWERCASE_CHARS + UPPERCASE_CHARS + DIGITS + SPECIAL_CHARS;
+            password.append(randomChars.charAt(random.nextInt(randomChars.length())));
+        }
+
+        return password.toString();
     }
 }

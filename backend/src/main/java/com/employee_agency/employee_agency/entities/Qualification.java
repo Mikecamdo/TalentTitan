@@ -15,8 +15,10 @@ public class Qualification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // One of the following would be null
-    private Long jobPostId;
+    // One of the following would groups would be null
+    private String employerId;
+    private String companyJobId;
+    
     private String professionalUsername;
 
     private List<String> categories;
@@ -29,11 +31,18 @@ public class Qualification {
         this.id = id;
     }
 
-    public Long getJobPostId() {
-        return jobPostId;
+    public String getEmployerId() {
+        return employerId;
     }
-    public void setJobPostId(Long jobPostId) {
-        this.jobPostId = jobPostId;
+    public void setEmployerId(String employerId) {
+        this.employerId = employerId;
+    }
+
+    public String getCompanyJobId() {
+        return companyJobId;
+    }
+    public void setCompanyJobId(String companyJobId) {
+        this.companyJobId = companyJobId;
     }
 
     public String getProfessionalUsername() {

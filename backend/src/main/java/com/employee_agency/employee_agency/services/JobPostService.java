@@ -13,6 +13,10 @@ public class JobPostService {
     @Autowired
     private JobPostRepository jobPostRepository;
 
+    public List<JobPost> getAllJobs() {
+        return jobPostRepository.findAll();
+    }
+
     public JobPost getJobByCompanyJobId(String employerUsername, String jobId) {
         return jobPostRepository.findByEmployerIdAndCompanyJobId(employerUsername, jobId);
     }

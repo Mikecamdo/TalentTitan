@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.employee_agency.employee_agency.dto.DenyRequestDto;
 import com.employee_agency.employee_agency.entities.DeleteProfessionalRequest;
 import com.employee_agency.employee_agency.services.DeleteProfessionalRequestService;
 
@@ -38,8 +40,14 @@ public class DeleteProfessionalRequestController {
     }
     
     @DeleteMapping("/approve")
-    public ResponseEntity<String> approveDeletionRequest(@RequestBody String professionalId) {
-        deleteProfessionalRequestService.approveRequest(professionalId);
+    public ResponseEntity<String> approveDeletionRequest(@RequestParam String username) {
+        deleteProfessionalRequestService.approveRequest(username);
         return ResponseEntity.ok("Professional successfully deleted");
+    }
+
+    @DeleteMapping("/deny")
+    public ResponseEntity<String> denyDeletionRequest(@RequestBody DenyRequestDto denial) {
+        deleteProfessionalRequestService.denyRequest(denial.getUsername(), denial.getComment());
+        return ResponseEntity.ok("Request successfully denied");
     }
 }

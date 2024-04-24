@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiEndpoint = '//localhost:8080'
+const apiEndpoint = '//localhost:8080';
 
 export const getAllDeleteProfessionalsRequests = () => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/delete-professional/get-all`)
@@ -10,16 +10,24 @@ export const getAllDeleteProfessionalsRequests = () => new Promise ((resolve, re
     });
 });
 
-export const approveDeleteProfessional = (professionalId: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/delete-professional/approve`, professionalId)
+export const requestDeleteProfessional = (professionalId: string) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/delete-professional/request`, professionalId)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
     });
 });
 
-export const requestDeleteProfessional = (professionalId: string) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/delete-professional/request`, professionalId)
+export const approveDeleteProfessional = (username: string) => new Promise ((resolve, reject) => {
+    axios.delete(`${apiEndpoint}/delete-professional/approve?username=${username}`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+
+export const denyDeleteProfessional = (denial: any) => new Promise ((resolve, reject) => {
+    axios.delete(`${apiEndpoint}/delete-professional/deny`, denial)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

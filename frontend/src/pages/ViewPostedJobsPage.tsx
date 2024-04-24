@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CustomSearchBar } from "../components/CustomSearchBar";
 import { Link } from "react-router-dom";
-import { Container, Table, Checkbox, Group } from "@mantine/core";
+import { Container, Table, Checkbox, Group, Text } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
 import { getAllJobs, getJobPostsByCompany } from "../api/jobPostApi";
@@ -30,7 +30,7 @@ export const ViewPostedJobsPage = () => {
       //Get all jobs for professional
       getAllJobs().then((response: any) => {
         setJobPosts(response);
-      })
+      });
     }
   }, [currentUser, userType]);
 
@@ -79,7 +79,12 @@ export const ViewPostedJobsPage = () => {
                     .includes(searchValue.toLowerCase()) && (
                     <Table.Tr key={index}>
                       <Table.Td>
-                        <Link to={"/job/" + data.employerId + "/" + data.companyJobId} className={classes.link}>
+                        <Link
+                          to={
+                            "/job/" + data.employerId + "/" + data.companyJobId
+                          }
+                          className={classes.link}
+                        >
                           {data.companyJobId}
                         </Link>
                       </Table.Td>
@@ -99,9 +104,7 @@ export const ViewPostedJobsPage = () => {
                               month: "long",
                               day: "numeric",
                               year: "numeric",
-                            }).format(
-                              new Date(data.startDate)
-                            )}{" "}
+                            }).format(new Date(data.startDate))}{" "}
                             -{" "}
                             {new Intl.DateTimeFormat("en-US", {
                               month: "long",
@@ -133,7 +136,11 @@ export const ViewPostedJobsPage = () => {
             </Table.Tbody>
           </Table>
         ) : (
-          <>No jobs</>
+          <>
+            <Text c="dimmed" size="lg" ta="center" mt={5}>
+              Looks like you haven't posted any jobs yet...
+            </Text>
+          </>
         )}
       </Container>
     </>

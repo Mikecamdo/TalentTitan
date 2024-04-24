@@ -12,6 +12,16 @@ import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { Table } from "react-bootstrap";
+import { getAllNewProfessionals, 
+  registerNewProfessional, 
+  approveNewProfessional } from "../api/newProfessionalRequestApi";
+import { getAllNewEmployers, 
+  registerNewEmployer, 
+  approveNewEmployer } from "../api/newEmployerRequestApi";
+import { getAllDeleteProfessionalsRequests, 
+  approveDeleteProfessional } from "../api/deleteProfessionalRequestApi";
+import { getAllDeleteEmployersRequests, 
+  approveDeleteEmployer } from "../api/deleteEmployerRequestApi";
 
 export const ViewAccountRequestsPage = () => {
 
@@ -20,8 +30,16 @@ export const ViewAccountRequestsPage = () => {
     
     const [disableApprove, setDisableApprove] = useState(true);
     const [disableDeny, setDisableDeny] = useState(true);
+    const [professionalsRequests, setProfessionalsRequests] = useState(undefined);
+    const [employersRequests, setEmployersRequests] = useState(undefined);
 
     useEffect(() => {
+      // getAllNewProfessionals().then{() =>
+      //   setProfessionalsRequests();
+      // };
+      // getAllNewEmployers().then{(x) =>
+      //   setEmployersRequests(x);
+      // };
         if (monthlyFee && comment) {
             setDisableDeny(true);
             setDisableApprove(false);
@@ -34,6 +52,16 @@ export const ViewAccountRequestsPage = () => {
         }
     }, [monthlyFee, comment]);
     
+    // const approveNewProfessional = (username) => {
+    //   let newComment = "";
+    //   if (comment) {
+    //     newComment = comment;
+    //   } else {
+    //     newComment = "Professional Approved.";
+    //   }
+    // };
+
+
 
     return (<>
         <Row>
@@ -129,7 +157,7 @@ export const ViewAccountRequestsPage = () => {
                                         disabled={disableApprove}
                                         className="btn-success px-3 pt-2 me-2"
                                         onClick={() => {
-                                          
+                                          //approveNewEmployer;
                                         }}
                                       >
                                         Approve

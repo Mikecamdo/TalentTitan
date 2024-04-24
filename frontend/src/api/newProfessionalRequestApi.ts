@@ -2,15 +2,15 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080';
 
-export const getAllNewProfessionals = (request: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/new-professional/get-all`, request)
+export const getAllNewProfessionals = () => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/new-professional/get-all`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
     });
 });
 
-export const approveNewProfessional = (username: any) => new Promise ((resolve, reject) => {
+export const approveNewProfessional = (username: string) => new Promise ((resolve, reject) => {
     axios.post(`${apiEndpoint}/new-professional/approve`, username)
     .then(response => resolve(response.data))
     .catch(error => {

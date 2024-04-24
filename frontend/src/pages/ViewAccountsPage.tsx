@@ -3,11 +3,57 @@ import { CustomSearchBar } from "../components/CustomSearchBar";
 import { Link } from "react-router-dom";
 import { Container, Table } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
+import { getAllProfessionals } from "../api/professionalApi";
+import { getAllEmployers } from "../api/employerApi";
 
 export const ViewAccountsPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
 
+  const getAccounts = () => {
+    getAllProfessionals(
+    ).then((response: any) => {
+      const Data = response;
+      const rows = Data.map(
+        (data: any, index: number) =>
+          data.name.toLowerCase().includes(searchValue.toLowerCase()) && (
+            <Table.Tr>
+              <Link to={`/profile/${data.name}`} className={classes.link}>
+                <Table.Td>{data.name}</Table.Td>
+              </Link>
+              <Table.Td>{data.email}</Table.Td>
+              <Table.Td>{data.phone}</Table.Td>
+              <Table.Td>Professional</Table.Td>
+            </Table.Tr>
+          )
+      );
+    })
+
+    getAllEmployers(
+      ).then((response: any) => {
+        const dataEmployer = response;
+        const rows = dataEmployer.map(
+          (data: any, index: number) =>
+            data.name.toLowerCase().includes(searchValue.toLowerCase()) && (
+              <Table.Tr>
+                <Link to={`/profile/Employer`} className={classes.link}>
+                  <Table.Td>{data.name}</Table.Td>
+                </Link>
+                <Table.Td>{data.email}</Table.Td>
+                <Table.Td>{data.phone}</Table.Td>
+                <Table.Td>Employer</Table.Td>
+              </Table.Tr>
+            )
+        );
+      })
+  }
+  
   const dummyData = [
+    {
+      name: "",
+      email: "",
+      phone: "",
+      accountType: "",
+    },
     {
       name: "Bob Smith",
       email: "bsmith@gmail.com",
@@ -37,7 +83,7 @@ export const ViewAccountsPage = () => {
       email: "dmcmillon@walmart.com",
       phone: "(479) 273-4000",
       accountType: "Employer",
-    },
+    }
   ];
 
   const rows = dummyData.map(

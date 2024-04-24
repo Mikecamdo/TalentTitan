@@ -3,7 +3,7 @@ package com.employee_agency.employee_agency.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employee_agency.employee_agency.dto.ApproveRequestDto;
-import com.employee_agency.employee_agency.dto.DeleteRequestDto;
+import com.employee_agency.employee_agency.dto.DenyRequestDto;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
 import com.employee_agency.employee_agency.services.NewEmployerRequestsService;
 
@@ -55,7 +55,7 @@ public class NewEmployerRequestsController {
     }
 
     @DeleteMapping("/deny")
-    public ResponseEntity<String> denyNewEmployerRequest(@RequestBody DeleteRequestDto denial) {
+    public ResponseEntity<String> denyNewEmployerRequest(@RequestBody DenyRequestDto denial) {
         newEmployerRequestsService.denyRequest(denial.getUsername(), denial.getComment());
         return ResponseEntity.ok("Denied request successfully");
     }

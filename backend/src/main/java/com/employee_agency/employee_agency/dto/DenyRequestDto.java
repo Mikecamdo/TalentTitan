@@ -1,6 +1,6 @@
 package com.employee_agency.employee_agency.dto;
 
-public class DeleteRequestDto {
+public class DenyRequestDto {
     public String username;
     public String comment;
 

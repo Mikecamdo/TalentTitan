@@ -90,19 +90,39 @@ export const ViewPostedJobsPage = () => {
                       </Table.Td>
 
                       <Table.Td>
-                        {new Intl.DateTimeFormat("en-US", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        }).format(
-                          new Date(data.startDate + "T00:00:00.000")
-                        )}{" "}
-                        -{" "}
-                        {new Intl.DateTimeFormat("en-US", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        }).format(new Date(data.endDate + "T00:00:00.000"))}
+                        {data.startDate.includes("T") ? (
+                          <>
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(
+                              new Date(data.startDate)
+                            )}{" "}
+                            -{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(new Date(data.endDate))}
+                          </>
+                        ) : (
+                          <>
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(
+                              new Date(data.startDate + "T00:00:00.000")
+                            )}{" "}
+                            -{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(new Date(data.endDate + "T00:00:00.000"))}
+                          </>
+                        )}
                       </Table.Td>
                     </Table.Tr>
                   )

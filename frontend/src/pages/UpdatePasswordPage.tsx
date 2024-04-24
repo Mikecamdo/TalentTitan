@@ -85,7 +85,6 @@ export const UpdatePasswordPage = () => {
   }
 
   const updatePassword = () => {
-    // TODO: Call backend and update password
     updateThePassword({
       username: currentUser,
       oldPassword: oldPassword,

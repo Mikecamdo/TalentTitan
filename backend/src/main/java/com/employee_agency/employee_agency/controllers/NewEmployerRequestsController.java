@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,8 +47,8 @@ public class NewEmployerRequestsController {
     }
 
     @DeleteMapping("/approve")
-    public ResponseEntity<String> approveNewEmployerRequest(@RequestBody String username) {
-        newEmployerRequestsService.approveRequest(username);
+    public ResponseEntity<String> approveNewEmployerRequest(@RequestParam String username, @RequestParam String amountDue, @RequestParam String dueDate) {
+        newEmployerRequestsService.approveRequest(username, amountDue, dueDate);
         return ResponseEntity.ok("Approved request successfully");
     }
 }

@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import Staff from "../types/Staff";
 import classes from "../css_modules/AddStaffAccountPage.module.css";
+import { attemptRegister } from "../api/staffApi";
 
 const STARTS_WITH_ALPHABET_REGEX = /^[a-zA-Z]/;
 const LENGTH_REGEX = /^.{8,}$/;
@@ -228,7 +229,8 @@ export const AddStaffAccountPage = () => {
           mt="xl"
           disabled={disableButton}
           onClick={() => {
-            addNewStaffAccount();
+            attemptRegister(addNewStaffAccount());
+            attemptRegister(newStaff);
           }}
         >
           Add Account

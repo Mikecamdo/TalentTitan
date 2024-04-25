@@ -1,5 +1,6 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,11 @@ public class DeleteProfessionalRequestService {
     private ProfessionalRepository professionalRepository;
 
     public List<DeleteProfessionalRequest> getAllRequests() {
-        return deleteProfessionalRequestRepository.findAll();
+        List<DeleteProfessionalRequest> allRequests = deleteProfessionalRequestRepository.findAll();
+
+        Collections.reverse(allRequests);
+
+        return allRequests;
     }
 
     public boolean createRequest(String professionalId) {

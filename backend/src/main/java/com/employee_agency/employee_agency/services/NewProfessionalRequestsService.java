@@ -1,6 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,11 @@ public class NewProfessionalRequestsService {
     private EmailService emailService;
 
     public List<NewProfessionalRequests> getAllRequests() {
-        return newProfessionalRequestsRepository.findAll();
+        List<NewProfessionalRequests> allRequests = newProfessionalRequestsRepository.findAll();
+
+        Collections.reverse(allRequests);
+
+        return allRequests;
     }
 
     public boolean createNewProfessionalRequests(NewProfessionalRequests newProfessionalRequests) {

@@ -3,6 +3,10 @@ import { DateInput } from "@mantine/dates";
 import { useEffect, useRef, useState } from "react";
 import Qualification from "../../types/Qualification";
 import Professional from "../../types/Professional";
+import { registerNewProfessional } from "../../api/newProfessionalRequestApi";
+import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
+import { addQualifications } from "../../api/qualificationApi";
 
 interface ProfessionalProps {
   professional: Professional;
@@ -393,6 +397,8 @@ export const ProfessionalStep4: React.FC<ProfessionalProps> = ({
   setProfessional,
   setCurrentStep,
 }) => {
+  const navigate = useNavigate();
+
   const [disableAdd, setDisableAdd] = useState(true);
   const [disableSignUp, setDisableSignUp] = useState(true);
   const [category, setCategory] = useState("");
@@ -424,7 +430,55 @@ export const ProfessionalStep4: React.FC<ProfessionalProps> = ({
   }, [category, keywords]);
 
   const signUp = () => {
-    console.log("Signing up!");
+    registerNewProfessional({
+      username: professional.username,
+      firstName: professional.firstName,
+      lastName: professional.lastName,
+      phone: professional.phoneNumber,
+      email: professional.email,
+      addressLine: professional.address,
+      city: professional.city,
+      state: professional.state,
+      zipCode: professional.zipCode,
+      schoolName: professional.schoolName,
+      degreeName: professional.degreeName,
+      completionDate: professional.completionDate,
+    }).then((response: any) => {
+      if (response === "New Professional Request registered successfully") {
+        addQualifications({
+          employerId: null,
+          companyJobId: null,
+          professionalUsername: professional.username,
+          categories: professional.qualifications.map(
+            (qualification) => qualification.category
+          ),
+          keywords: professional.qualifications.map(
+            (qualification) => qualification.keywords
+          ),
+        }).then((response: any) => {
+          if (response === "Successfully added qualifications") {
+            notifications.show({
+              color: "green",
+              title: "Success!",
+              message: "New account request successful",
+            });
+            navigate("/signIn");
+          } else {
+            notifications.show({
+              color: "red",
+              title: "Error!",
+              message: response,
+            });
+          }
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      }
+    });
   };
 
   return (

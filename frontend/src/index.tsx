@@ -17,6 +17,7 @@ import '@mantine/spotlight/styles.css';
 import '@mantine/nprogress/styles.css';
 
 import { createTheme, MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -29,6 +30,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <MantineProvider>
     <React.StrictMode>
+      <Notifications position="top-right" zIndex={1000} />
       <App />
     </React.StrictMode>
   </MantineProvider>

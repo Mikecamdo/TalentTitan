@@ -17,6 +17,10 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Employer from "../../types/Employer";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
+import { getEmployerByUsername, updateEmployer } from "../../api/employerApi";
+import { notifications } from "@mantine/notifications";
+import { updatePassword as updateThePassword } from "../../api/userApi";
+import { requestDeleteEmployer } from "../../api/deleteEmployerRequestApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -39,16 +43,16 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
   const [disableSave, setDisableSave] = useState(false);
 
   const [employer, setEmployer] = useState<Employer>({
-    companyName: "Walmart",
-    address: "702 SW 8th Street",
-    city: "Bentonville",
-    state: "Arkansas",
-    zipCode: "72716",
-    contactFirstName: "Doug",
-    contactLastName: "McMillon",
-    contactPhoneNumber: "(479) 273-4000",
-    contactEmail: "dmcmillon@walmart.com",
-    username: "WalmartIsCool",
+    companyName: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    contactFirstName: "",
+    contactLastName: "",
+    contactPhoneNumber: "",
+    contactEmail: "",
+    username: "",
   });
 
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -72,7 +76,34 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
   const [creditCardError, setCreditCardError] = useState("");
 
   useEffect(() => {
-    if (employer.contactEmail) {
+    getEmployerByUsername(currentlyViewing).then((response: any) => {
+      if (response.name === "AxiosError") {
+        console.log(response);
+        notifications.show({
+          color: "red",
+          title: "Uh Oh!",
+          message: "It looks like this user doesn't exist.",
+        });
+      } else {
+        setEmployer({
+          companyName: response.companyName,
+          address: response.addressLine,
+          city: response.city,
+          state: response.state,
+          zipCode: response.zipCode,
+          contactFirstName: response.contactFirstName,
+          contactLastName: response.contactLastName,
+          contactPhoneNumber: response.contactPhone,
+          contactEmail: response.contactEmail,
+          username: response.username,
+        });
+        console.log(response);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (employer && employer.contactEmail) {
       if (!EMAIL_REGEX.test(employer.contactEmail)) {
         setEmailError("Invalid email");
       } else {
@@ -85,6 +116,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
 
   useEffect(() => {
     if (
+      employer &&
       employer.contactFirstName &&
       employer.contactLastName &&
       employer.contactEmail &&
@@ -103,7 +135,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
   }, [employer, emailError, phoneError]);
 
   useEffect(() => {
-    if (editProfile) {
+    if (editProfile && inputRef.current) {
       if (cursorPosition === 1) {
         inputRef.current.setSelectionRange(2, 2);
       } else if (cursorPosition === 5) {
@@ -118,8 +150,9 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
     }
 
     if (
-      employer.contactPhoneNumber.length === 14 ||
-      !employer.contactPhoneNumber
+      employer &&
+      (employer.contactPhoneNumber.length === 14 ||
+        !employer.contactPhoneNumber)
     ) {
       setPhoneError("");
     } else {
@@ -242,7 +275,12 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
   const setPhoneNumber = (input: string) => {
     setCursorPosition(inputRef.current.selectionStart);
 
-    setEmployer({ ...employer, contactPhoneNumber: formatPhoneNumber(input) });
+    if (employer) {
+      setEmployer({
+        ...employer,
+        contactPhoneNumber: formatPhoneNumber(input),
+      });
+    }
   };
 
   const setCreditCardNumber = (input: string) => {
@@ -250,11 +288,41 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
   };
 
   const updatePassword = () => {
-    // Call backend and update password
-    handlePasswordOpened.close();
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    updateThePassword({
+      username: employer.username,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }).then((response: any) => {
+      if (response === "") {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Couldn't find the correct user to update.",
+        });
+      } else if (response === "Incorrect old password") {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      } else if (response === "Updated password") {
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+        handlePasswordOpened.close();
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "There was an error while trying to update the password.",
+        });
+      }
+    });
   };
 
   const submitPayment = () => {
@@ -296,7 +364,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !employer) {
+  if (!currentUser || !employer.username) {
     return <div>Loading...</div>;
   }
 
@@ -543,7 +611,31 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
             <Group justify="center" mt="md">
               <Button
                 onClick={() => {
-                  setEditProfile(false);
+                  updateEmployer(employer.username, {
+                    addressLine: employer.address,
+                    city: employer.city,
+                    state: employer.state,
+                    zipCode: employer.zipCode,
+                    contactFirstName: employer.contactFirstName,
+                    contactLastName: employer.contactLastName,
+                    contactPhone: employer.contactPhoneNumber,
+                    contactEmail: employer.contactEmail,
+                  }).then((response: any) => {
+                    if (response.name === "AxiosError") {
+                      notifications.show({
+                        color: "red",
+                        title: "Error!",
+                        message: "There was an error updating the profile.",
+                      });
+                    } else {
+                      notifications.show({
+                        color: "green",
+                        title: "Success!",
+                        message: "User updated successfully.",
+                      });
+                      setEditProfile(false);
+                    }
+                  });
                 }}
                 disabled={disableSave}
               >
@@ -664,8 +756,22 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
             <Button
               fullWidth
               onClick={() => {
-                //request to delete account in backend
-                handleDeletionOpened.close();
+                requestDeleteEmployer(employer.username).then((response: any) => {
+                  if (response === "Employer Deletion Request successful") {
+                    notifications.show({
+                      color: "green",
+                      title: "Success!",
+                      message: "Deletion request successful",
+                    });
+                    handleDeletionOpened.close();
+                  } else {
+                    notifications.show({
+                      color: "red",
+                      title: "Error!",
+                      message: response,
+                    });
+                  }
+                });
               }}
             >
               Yes, delete my account

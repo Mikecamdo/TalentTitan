@@ -1,83 +1,42 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CustomSearchBar } from "../components/CustomSearchBar";
 import { Link } from "react-router-dom";
-import { Container, Table, Checkbox, Grid, Group } from "@mantine/core";
+import { Container, Table, Checkbox, Group, Text } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
+import { getAllJobs, getJobPostsByCompany } from "../api/jobPostApi";
 
 export const ViewPostedJobsPage = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
-
   const userContext = useContext(UserContext);
-  
+  const currentUser = userContext?.currentUser;
   const userType = userContext?.userType;
 
-  if (!userType) {
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const [jobPosts, setJobPosts] = useState<any>();
+
+  useEffect(() => {
+    if (currentUser && userType === "employer") {
+      getJobPostsByCompany(currentUser).then((response: any) => {
+        if (response[0]) {
+          // If jobs are found
+          setJobPosts(response);
+        } else {
+          // If no jobs are found
+          setJobPosts([]);
+        }
+      });
+    } else if (userType) {
+      //Get all jobs for professional
+      getAllJobs().then((response: any) => {
+        setJobPosts(response);
+      });
+    }
+  }, [currentUser, userType]);
+
+  if (!userType || !jobPosts) {
     return <div>Loading...</div>;
   }
-
-  const dummyData = [
-    {
-      jobId: "SFTWRE1",
-      positionTitle: "Software Engineer",
-      employer: "Amazon",
-      dates: "May 5 - May 21",
-    },
-    {
-      jobId: "SFTWRE2",
-      positionTitle: "Software Engineer",
-      employer: "Walmart",
-      dates: "June 5 - June 6",
-    },
-    {
-      jobId: "UIUX1",
-      positionTitle: "UI/UX Designer",
-      employer: "Walmart",
-      dates: "June 5 - June 6",
-    },
-  ];
-
-  const rows = dummyData.map(
-    (
-      data: {
-        jobId: string;
-        positionTitle: string;
-        employer: string;
-        dates: string;
-      },
-      index: number
-    ) =>
-      userType === "employer"
-        ? data.positionTitle
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()) &&
-          data.employer === "Walmart" && (
-            <Table.Tr>
-              <Link to={"/job"} className={classes.link}>
-                <Table.Td>{data.jobId}</Table.Td>
-              </Link>
-              <Table.Td>{data.positionTitle}</Table.Td>
-              <Link to={"/profile/Employer"} className={classes.link}>
-                <Table.Td>{data.employer}</Table.Td>
-              </Link>
-              <Table.Td>{data.dates}</Table.Td>
-            </Table.Tr>
-          )
-        : data.positionTitle
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()) && (
-            <Table.Tr>
-              <Link to={"/job"} className={classes.link}>
-                <Table.Td>{data.jobId}</Table.Td>
-              </Link>
-              <Table.Td>{data.positionTitle}</Table.Td>
-              <Link to={"/profile/Employer"} className={classes.link}>
-                <Table.Td>{data.employer}</Table.Td>
-              </Link>
-              <Table.Td>{data.dates}</Table.Td>
-            </Table.Tr>
-          )
-  );
 
   return (
     <>
@@ -93,17 +52,96 @@ export const ViewPostedJobsPage = () => {
           </Group>
         )}
 
-        <Table highlightOnHover withTableBorder mt="lg">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Job ID</Table.Th>
-              <Table.Th>Position Title</Table.Th>
-              <Table.Th>Employer</Table.Th>
-              <Table.Th>Start/End Date</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+        {jobPosts.length > 0 ? (
+          <Table highlightOnHover withTableBorder mt="lg">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Job ID</Table.Th>
+                <Table.Th>Position Title</Table.Th>
+                <Table.Th>Employer</Table.Th>
+                <Table.Th>Start/End Date</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {jobPosts.map(
+                (
+                  data: {
+                    companyJobId: string;
+                    jobName: string;
+                    employerId: string;
+                    startDate: string;
+                    endDate: string;
+                  },
+                  index: number
+                ) =>
+                  data.jobName
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) && (
+                    <Table.Tr key={index}>
+                      <Table.Td>
+                        <Link
+                          to={
+                            "/job/" + data.employerId + "/" + data.companyJobId
+                          }
+                          className={classes.link}
+                        >
+                          {data.companyJobId}
+                        </Link>
+                      </Table.Td>
+
+                      <Table.Td>{data.jobName}</Table.Td>
+
+                      <Table.Td>
+                        <Link to={"/profile/Employer"} className={classes.link}>
+                          {data.employerId}
+                        </Link>
+                      </Table.Td>
+
+                      <Table.Td>
+                        {data.startDate.includes("T") ? (
+                          <>
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(new Date(data.startDate))}{" "}
+                            -{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(new Date(data.endDate))}
+                          </>
+                        ) : (
+                          <>
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(
+                              new Date(data.startDate + "T00:00:00.000")
+                            )}{" "}
+                            -{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }).format(new Date(data.endDate + "T00:00:00.000"))}
+                          </>
+                        )}
+                      </Table.Td>
+                    </Table.Tr>
+                  )
+              )}
+            </Table.Tbody>
+          </Table>
+        ) : (
+          <>
+            <Text c="dimmed" size="lg" ta="center" mt={5}>
+              Looks like you haven't posted any jobs yet...
+            </Text>
+          </>
+        )}
       </Container>
     </>
   );

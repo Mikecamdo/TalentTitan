@@ -11,13 +11,20 @@ import {
   rem,
 } from "@mantine/core";
 import { TimeInput, DateInput } from "@mantine/dates";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import Qualification from "../types/Qualification";
 import { IconClock } from "@tabler/icons-react";
+import { addJobPost } from "../api/jobPostApi";
+import { UserContext } from "../App";
+import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
+import { addQualifications } from "../api/qualificationApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 
 export const JobPostingPage = () => {
+  const navigate = useNavigate();
+
   const [positionName, setPositionName] = useState("");
   const [positionId, setPositionId] = useState("");
   const [contactFirstName, setContactFirstName] = useState("");
@@ -28,7 +35,7 @@ export const JobPostingPage = () => {
   const [endDate, setEndDate] = useState<Date>();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [hourlyRate, setHourlyRate] = useState("");
+  const [hourlyRate, setHourlyRate] = useState(0);
 
   const [qualifications, setQualifications] = useState<Qualification[]>([]);
   const [category, setCategory] = useState("");
@@ -82,6 +89,7 @@ export const JobPostingPage = () => {
   useEffect(() => {
     if (
       positionName &&
+      positionId &&
       contactFirstName &&
       contactLastName &&
       contactPhoneNumber &&
@@ -105,6 +113,7 @@ export const JobPostingPage = () => {
     }
   }, [
     positionName,
+    positionId,
     contactFirstName,
     contactLastName,
     contactPhoneNumber,
@@ -136,16 +145,18 @@ export const JobPostingPage = () => {
   }, [contactEmail]);
 
   useEffect(() => {
-    if (cursorPosition === 1) {
-      inputRef.current.setSelectionRange(2, 2);
-    } else if (cursorPosition === 5) {
-      inputRef.current.setSelectionRange(7, 7);
-    } else if (cursorPosition === 6) {
-      inputRef.current.setSelectionRange(4, 4);
-    } else if (cursorPosition === 10) {
-      inputRef.current.setSelectionRange(11, 11);
-    } else {
-      inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+    if (inputRef.current) {
+      if (cursorPosition === 1) {
+        inputRef.current.setSelectionRange(2, 2);
+      } else if (cursorPosition === 5) {
+        inputRef.current.setSelectionRange(7, 7);
+      } else if (cursorPosition === 6) {
+        inputRef.current.setSelectionRange(4, 4);
+      } else if (cursorPosition === 10) {
+        inputRef.current.setSelectionRange(11, 11);
+      } else {
+        inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      }
     }
 
     if (contactPhoneNumber.length === 14 || !contactPhoneNumber) {
@@ -207,6 +218,13 @@ export const JobPostingPage = () => {
     }
   }, [category, keywords]);
 
+  const userContext = useContext(UserContext);
+  const currentUser = userContext?.currentUser;
+
+  if (!currentUser) {
+    return <div>Loading...</div>;
+  }
+
   const formatPhoneNumber = (textInput: string) => {
     // Regular expression to match digits
     const regex = /\d+/g;
@@ -248,6 +266,56 @@ export const JobPostingPage = () => {
     setContactPhoneNumber(formatPhoneNumber(input));
   };
 
+  const postJob = () => {
+    addJobPost({
+      employerId: currentUser,
+      jobName: positionName,
+      companyJobId: positionId,
+      contactFirstName: contactFirstName,
+      contactLastName: contactLastName,
+      contactPhone: contactPhoneNumber,
+      contactEmail: contactEmail,
+      startDate: startDate,
+      endDate: endDate,
+      startTime: startTime,
+      endTime: endTime,
+      hourlyRate: hourlyRate.toString(),
+    }).then((response: any) => {
+      if (response === "Added Job Post") {
+        addQualifications({
+          employerId: currentUser,
+          companyJobId: positionId,
+          professionalUsername: null,
+          categories: qualifications.map(qualification => qualification.category),
+          keywords: qualifications.map(qualification => qualification.keywords),
+        }).then((response: any) => {
+          if (response === "Successfully added qualifications") {
+            notifications.show({
+              color: "green",
+              title: "Success!",
+              message: response,
+            });
+            navigate("/job-search");
+          } else {
+            console.log("RESPONSE:");
+            console.log(response);
+            notifications.show({
+              color: "red",
+              title: "Error!",
+              message: response,
+            });
+          }
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <Container size={750} my={20}>
@@ -261,6 +329,16 @@ export const JobPostingPage = () => {
               value={positionName}
               onChange={(delta) => {
                 setPositionName(delta.target.value);
+              }}
+              required
+            />
+
+            <TextInput
+              label="Position ID"
+              placeholder="Enter position ID"
+              value={positionId}
+              onChange={(delta) => {
+                setPositionId(delta.target.value);
               }}
               required
             />
@@ -374,8 +452,8 @@ export const JobPostingPage = () => {
             min={0}
             value={hourlyRate}
             onChange={(rate) => {
-              if (typeof rate === "number") {
-                setHourlyRate(rate.toString());
+              if (typeof rate === "string") {
+                setHourlyRate(+rate);
               } else {
                 setHourlyRate(rate);
               }
@@ -426,7 +504,14 @@ export const JobPostingPage = () => {
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
 
-          <Button disabled={disablePost}>Post Job</Button>
+          <Button
+            disabled={disablePost}
+            onClick={() => {
+              postJob();
+            }}
+          >
+            Post Job
+          </Button>
         </Paper>
       </Container>
     </>

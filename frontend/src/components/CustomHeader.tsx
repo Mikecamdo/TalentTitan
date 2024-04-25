@@ -28,10 +28,7 @@ export const CustomHeader = () => {
             <Image src="/TalentTitanLogo.png" h={70} w="auto" fit="contain" />
           </Link>
 
-          {currentUser &&
-            currentUser != "Employer" &&
-            currentUser != "Staff" &&
-            currentUser != "root" && (
+          {userType === "professional" && (
               <>
                 <Group h="100%">
                   <Link to={"/job-search"} className={classes.link}>
@@ -41,7 +38,7 @@ export const CustomHeader = () => {
               </>
             )}
 
-          {currentUser == "Employer" && (
+          {userType == "employer" && (
             <>
               <Group h="100%">
                 <Link to={"/job-posting"} className={classes.link}>
@@ -55,7 +52,7 @@ export const CustomHeader = () => {
             </>
           )}
                         
-          {currentUser == "Staff" && (
+          {userType == "staff" && (
             <>
               <Group h="100%">
                 <Link to={"/account-requests"} className={classes.link}>

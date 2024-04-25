@@ -10,24 +10,24 @@ export const getAllEmployers = () => new Promise ((resolve, reject) => {
     });
 });
 
-export const getEmployerByUsername = (username: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/employers/get-by-username`, username)
+export const getEmployerByUsername = (username: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/employers/get-by-username?username=${username}`)
     .then(response => resolve(response.data))
     .catch(error => {
-        resolve(error.response.data);
+        resolve(error);
     });
 });
 
-export const updateEmployer = (username: any, employer: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/employers/update`, username, employer)
+export const updateEmployer = (username: string, employer: any) => new Promise ((resolve, reject) => {
+    axios.put(`${apiEndpoint}/employers/update?username=${username}`, employer)
     .then(response => resolve(response.data))
     .catch(error => {
-        resolve(error.response.data);
+        resolve(error);
     });
 });
 
 export const createEmployer = (employer: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/employers/register`, employer)
+    axios.post(`${apiEndpoint}/employers/register`, employer)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

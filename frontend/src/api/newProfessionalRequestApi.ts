@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiEndpoint = '//localhost:8080'
+const apiEndpoint = '//localhost:8080';
 
 export const getAllNewProfessionals = (request: any) => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/new-professional/get-all`, request)

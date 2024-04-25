@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import classes from "../css_modules/SignInPage.module.css";
 import { attemptSignIn } from "../api/userApi";
+import { notifications } from '@mantine/notifications';
 
 const formValues = {
   username: "",
@@ -52,8 +53,7 @@ export const SignInPage = () => {
       if (
         (!STARTS_WITH_ALPHABET_REGEX.test(values.username) ||
           !LENGTH_REGEX.test(values.username)) &&
-        values.username !== "root" &&
-        values.username !== "Staff"
+        values.username !== "root"
       ) {
         setUsernameError("Invalid username");
       } else {
@@ -71,7 +71,7 @@ export const SignInPage = () => {
         !NUMERIC_REGEX.test(values.password) ||
         !SPECIAL_REGEX.test(values.password) ||
         !LENGTH_REGEX.test(values.password)
-      ) {
+      ) { //TODO: change this back
         //!setPasswordError("Invalid password");
       } else {
         setPasswordError("");
@@ -95,13 +95,17 @@ export const SignInPage = () => {
       password: values.password,
     }).then((response: any) => {
       if (typeof response === "string") {
-        console.log(response);
+        notifications.show({
+          color: 'red',
+          title: 'Error!',
+          message: response,
+        });
       } else {
         setCurrentUser(response.username);
         setUserType(response.userType);
 
         if (response.firstLogin) {
-          navigate("/update-password");
+          navigate("/update-password", { state: {oldPassword: values.password}});
         } else if (response.userType == "staff") {
           if (response.username === "root") {
             navigate("/add-staff");
@@ -115,13 +119,6 @@ export const SignInPage = () => {
         console.log(response);
       }
     });
-
-    // setCurrentUser(values.username);
-    // if (values.username === "root") {
-    //   navigate("/add-staff");
-    // } else {
-    //   navigate("/update-password");
-    // }
   };
 
   return (

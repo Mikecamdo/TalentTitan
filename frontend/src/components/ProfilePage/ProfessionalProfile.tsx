@@ -1084,6 +1084,15 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           Amount due: ${balance.amountDue}
         </Title>
 
+        <Title order={3} className={classes.name} ta="center">
+          Due date:{" "}
+          {new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }).format(new Date(balance.dueDate + "T00:00:00.000"))}
+        </Title>
+
         <TextInput
           required
           label="Credit Card"

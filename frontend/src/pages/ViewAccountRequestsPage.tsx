@@ -135,8 +135,8 @@ export const ViewAccountRequestsPage = () => {
   }, [monthlyFee, comment]);
 
   useEffect(() => {
-    setGotNewProfessionals(false);
     if (professionalsRequests.length > newProfessionalCounter) {
+      setGotNewProfessionals(false);
       getQualificationsByProfessional(
         professionalsRequests[newProfessionalCounter].username
       ).then((response: any) => {

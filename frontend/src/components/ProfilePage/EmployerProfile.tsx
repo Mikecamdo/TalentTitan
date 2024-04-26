@@ -443,11 +443,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
         <Card shadow="md" padding="lg" radius="md" withBorder>
           <Grid>
             <Grid.Col span={4}>
-              <Avatar
-                size={125}
-                radius="md"
-                mx="auto"
-              />
+              <Avatar size={125} radius="md" mx="auto" />
 
               <Text
                 ta="center"
@@ -687,9 +683,17 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
                     })}
                   </>
                 ) : (
-                  <Text fz="sm" mt="xs" ta="center">
-                    Looks like you haven't made any transactions yet...
-                  </Text>
+                  <>
+                    {currentUser === currentlyViewing ? (
+                      <Text fz="sm" mt="xs" ta="center">
+                        Looks like you haven't made any transactions yet...
+                      </Text>
+                    ) : (
+                      <Text fz="sm" mt="xs" ta="center">
+                        Looks like they haven't made any transactions yet...
+                      </Text>
+                    )}
+                  </>
                 )}
               </Grid.Col>
             </Grid>

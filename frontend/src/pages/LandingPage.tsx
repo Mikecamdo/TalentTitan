@@ -5,7 +5,7 @@ export const LandingPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/signUp");
+    navigate("/signIn");
   }, []);
 
   return <div></div>;

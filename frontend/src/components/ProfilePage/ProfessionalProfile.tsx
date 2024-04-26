@@ -29,7 +29,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Professional from "../../types/Professional";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
-import { displayTransactions } from "../../api/transactionsApi";
+import { getUserTransactions } from "../../api/transactionsApi";
 import { getProfessional, updateProfessional } from "../../api/professionalApi";
 import { notifications } from "@mantine/notifications";
 import { updatePassword as updateThePassword } from "../../api/userApi";
@@ -81,6 +81,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
   });
 
   const [balance, setBalance] = useState<any>();
+  const [transactions, setTransactions] = useState<any>();
 
   const [cursorPosition, setCursorPosition] = useState(0);
   const inputRef = useRef<any>(null);
@@ -332,7 +333,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     // Call backend and submit payment
     payBalance({
       username: currentUser,
-      paymentAmount: payAmount
+      paymentAmount: payAmount,
     }).then((response: any) => {
       if (response.dueDate) {
         notifications.show({
@@ -352,8 +353,6 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
         });
       }
     });
-
-    
   };
 
   const userContext = useContext(UserContext);
@@ -412,6 +411,18 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
               });
             }
           });
+
+          getUserTransactions(response.username).then((response: any) => {
+            if (response.length) {
+              setTransactions(response);
+            } else {
+              notifications.show({
+                color: "red",
+                title: "Error!",
+                message: "Error while retrieving the user's transactions",
+              });
+            }
+          });
         } else {
           notifications.show({
             color: "red",
@@ -458,7 +469,14 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !professional || !professional.firstName || !userType || !balance) {
+  if (
+    !currentUser ||
+    !professional ||
+    !professional.firstName ||
+    !userType ||
+    !balance ||
+    !transactions
+  ) {
     return <div>Loading...</div>;
   }
 
@@ -483,14 +501,6 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
       </Table.Tr>
     )
   );
-
-  const transaction = () => {
-    displayTransactions().then((response: any) => {
-      if (typeof response === "string") {
-        console.log(response);
-      }
-    });
-  };
 
   return (
     <>
@@ -829,12 +839,31 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                 <Text fz="lg" fw={500} className={classes.name} ta="center">
                   Transaction History
                 </Text>
-                <Text fz="sm">
-                  February 11, 2024: Received $50 from Walmart
-                </Text>
-                <Text fz="sm" mt="xs">
-                  February 1, 2024: Paid $10 to Talent Titan (subscription fee)
-                </Text>
+
+                {transactions.length > 0 ? (
+                  <>
+                    {transactions.map((transaction: any, index: number) => {
+                      return (
+                        <Text fz="sm" mt="xs" key={index}>
+                          {new Intl.DateTimeFormat("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }).format(
+                            new Date(
+                              transaction.transactionDate + "T00:00:00.000"
+                            )
+                          )}
+                          : Paid ${transaction.amountPaid} to Talent Titan
+                        </Text>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <Text fz="sm" mt="xs">
+                    Looks like you haven't made any transactions yet...
+                  </Text>
+                )}
               </Grid.Col>
             </Grid>
           </Card.Section>
@@ -914,8 +943,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                   </Button>
                 </>
               )}
-              {(currentUser === currentlyViewing ||
-                userType === "staff") && (
+              {(currentUser === currentlyViewing || userType === "staff") && (
                 <Button
                   onClick={() => {
                     setEditProfile(true);
@@ -1071,7 +1099,9 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           placeholder="Enter payment amount"
           value={payAmount}
           onChange={(delta) => {
-            if (parseFloat(delta.target.value) > parseFloat(balance.amountDue)) {
+            if (
+              parseFloat(delta.target.value) > parseFloat(balance.amountDue)
+            ) {
               setPayAmount(balance.amountDue);
             } else if (parseFloat(delta.target.value) < 0) {
               setPayAmount("0");

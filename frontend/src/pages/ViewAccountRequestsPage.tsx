@@ -25,6 +25,7 @@ import {
   approveDeleteEmployer,
 } from "../api/deleteEmployerRequestApi";
 import { notifications } from "@mantine/notifications";
+import { getQualificationsByProfessional } from "../api/qualificationApi";
 
 export const ViewAccountRequestsPage = () => {
   const [monthlyFee, setMonthlyFee] = useState<number | undefined>(undefined);
@@ -32,18 +33,31 @@ export const ViewAccountRequestsPage = () => {
 
   const [disableApprove, setDisableApprove] = useState(true);
   const [disableDeny, setDisableDeny] = useState(true);
+  const [disableDeleteApprove, setDisableDeleteApprove] = useState(false);
+
   const [professionalsRequests, setProfessionalsRequests] = useState<any[]>([]);
   const [employersRequests, setEmployersRequests] = useState<any[]>([]);
 
+  const [deleteProfessionalsRequests, setDeleteProfessionalsRequests] = useState<any[]>([]);
+  const [deleteEmployersRequests, setDeleteEmployersRequests] = useState<any[]>([]);
+
   const [gotNewProfessionals, setGotNewProfessionals] = useState(false);
   const [gotNewEmployers, setGotNewEmployers] = useState(false);
+  const [gotDeleteProfessionals, setGotDeleteProfessionals] = useState(false);
+  const [gotDeleteEmployers, setGotDeleteEmployers] = useState(false);
 
   const [newEmployerCounter, setNewEmployerCounter] = useState(0);
+  const [newProfessionalCounter, setNewProfessionalCounter] = useState(0);
+  const [deleteProfessionalCounter, setDeleteProfessionalCounter] = useState(0);
+  const [deleteEmployerCounter, setDeleteEmployerCounter] = useState(0);
 
   useEffect(() => {
     getAllNewProfessionals().then((response: any) => {
       if (response) {
         setProfessionalsRequests(response);
+        // getQualificationsByProfessional(response[0].username).then((response: any) => {
+
+        // };
       }
       setGotNewProfessionals(true);
     });
@@ -53,6 +67,20 @@ export const ViewAccountRequestsPage = () => {
         setEmployersRequests(response);
       }
       setGotNewEmployers(true);
+    });
+
+    getAllDeleteProfessionalsRequests().then((response: any) => {
+      if (response) {
+        setDeleteProfessionalsRequests(response);
+      }
+      setGotDeleteProfessionals(true);
+    });
+
+    getAllDeleteEmployersRequests().then((response: any) => {
+      if (response) {
+        setDeleteEmployersRequests(response);
+      }
+      setGotDeleteEmployers(true);
     });
   }, []);
 
@@ -69,7 +97,30 @@ export const ViewAccountRequestsPage = () => {
     }
   }, [monthlyFee, comment]);
 
-  const approveRequest = () => {
+  const approveNewProfessionalRequest = () => {
+    if (monthlyFee) {
+      approveNewProfessional(employersRequests[newProfessionalCounter].username, monthlyFee.toString(), "2024-05-01").then((response: any) => {
+        console.log("THE RESPONSE")
+        console.log(response)
+        if (response === "Approved request successfully") {
+          setNewProfessionalCounter(newProfessionalCounter + 1);
+          notifications.show({
+            color: "green",
+            title: "Success!",
+            message: response,
+          });
+        } else {
+          notifications.show({
+            color: "red",
+            title: "Error!",
+            message: "Could not approve request",
+          });
+        }
+      })
+    }
+  }
+
+  const approveNewEmployerRequest = () => {
     if (monthlyFee) {
       approveNewEmployer(employersRequests[newEmployerCounter].username, monthlyFee.toString(), "2024-05-01").then((response: any) => {
         console.log("THE RESPONSE")
@@ -92,7 +143,53 @@ export const ViewAccountRequestsPage = () => {
     }
   }
 
-  if (!gotNewProfessionals || !gotNewEmployers) {
+  const approveDeleteProfessionalRequest = () => {
+    if (monthlyFee) {
+      approveDeleteProfessional(deleteProfessionalsRequests[deleteProfessionalCounter].username).then((response: any) => {
+        console.log("THE RESPONSE")
+        console.log(response)
+        if (response === "Approved deletion request successfully") {
+          setDeleteProfessionalCounter(deleteProfessionalCounter + 1);
+          notifications.show({
+            color: "green",
+            title: "Success!",
+            message: response,
+          });
+        } else {
+          notifications.show({
+            color: "red",
+            title: "Error!",
+            message: "Could not approve deletion request",
+          });
+        }
+      })
+    }
+  }
+
+  const approveDeleteEmployerRequest = () => {
+    if (monthlyFee) {
+      approveDeleteEmployer(deleteEmployersRequests[deleteEmployerCounter].username).then((response: any) => {
+        console.log("THE RESPONSE")
+        console.log(response)
+        if (response === "Approved request successfully") {
+          setDeleteEmployerCounter(deleteEmployerCounter + 1);
+          notifications.show({
+            color: "green",
+            title: "Success!",
+            message: response,
+          });
+        } else {
+          notifications.show({
+            color: "red",
+            title: "Error!",
+            message: "Could not approve request",
+          });
+        }
+      })
+    }
+  }
+
+  if (!gotNewProfessionals || !gotNewEmployers || !gotDeleteProfessionals || !gotDeleteEmployers) {
     return <div>Loading...</div>;
   }
 
@@ -106,6 +203,13 @@ export const ViewAccountRequestsPage = () => {
           fill
         >
           <Tab eventKey="employers" title="Employers">
+            <Tabs
+              defaultActiveKey="employers-new"
+              id="employer-account-request-tabs"
+              className="mb-3 "
+              fill
+            >
+              <Tab eventKey="employers-new" title="New Employer Account Requests">
             {employersRequests.length > newEmployerCounter ? (
               <Container fluid>
                 <Row>
@@ -199,7 +303,7 @@ export const ViewAccountRequestsPage = () => {
                                 disabled={disableApprove}
                                 className="btn-success px-3 pt-2 me-2"
                                 onClick={() => {
-                                  approveRequest();
+                                  approveNewEmployerRequest();
                                 }}
                               >
                                 Approve
@@ -220,9 +324,89 @@ export const ViewAccountRequestsPage = () => {
                 </Row>
               </Container>
             ) : <div>No requests</div>}
+            </Tab>
+            <Tab eventKey="employers-delete" title="Employer Account Deletion Requests">
+            {deleteEmployersRequests.length > deleteEmployerCounter ? (
+              <Container fluid>
+                <Row>
+                  <Col
+                    className="d-flex mb-4 mx-auto"
+                    xs={12}
+                    sm={12}
+                    md={10}
+                    lg={10}
+                    xl={10}
+                    xxl={10}
+                  >
+                    <Card className="flex-fill">
+                      <Card.Header className="pb-0 pt-3 button-bg text-light">
+                        <Row>
+                          <Col>
+                            <h5>User: {deleteEmployersRequests[deleteEmployerCounter].employerId}</h5>
+                          </Col>
+                          <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
+                            <h5 className="text-end">{new Date().toUTCString()}</h5>
+                          </Col>
+                        </Row>
+                      </Card.Header>
+                      <Card.Body>
+                        <Card.Text>
+                          <Row className="my-2">
+                            <Form.Group controlId="comment" className="col-12">
+                              <Form.Label>Comments:</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                name="comment"
+                                placeholder="Add comments"
+                                value={comment}
+                                rows={5}
+                                onChange={(delta) => {
+                                  setComment(delta.target.value);
+                                }}
+                              />
+                            </Form.Group>
+                          </Row>
+
+                          <Row className="mt-3">
+                            <Col>
+                              <Button
+                                disabled={disableDeleteApprove}
+                                className="btn-success px-3 pt-2 me-2"
+                                onClick={() => {
+                                  approveDeleteEmployerRequest();
+                                }}
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                disabled={disableDeny}
+                                className="btn-danger px-2"
+                                onClick={() => {}}
+                              >
+                                Deny
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              </Container>
+            ) : <div>No requests</div>}
+            </Tab>
+            </Tabs>
           </Tab>
 
           <Tab eventKey="professionals" title="Professionals">
+          <Tabs
+              defaultActiveKey="professionals-new"
+              id="professional-account-request-tabs"
+              className="mb-3 "
+              fill
+            >
+              <Tab eventKey="professionals-new" title="New Profesional Account Requests">
+              {professionalsRequests.length > newProfessionalCounter ? (
             <Container fluid>
               <Row>
                 <Col
@@ -238,7 +422,7 @@ export const ViewAccountRequestsPage = () => {
                     <Card.Header className="pb-0 pt-3 button-bg text-light">
                       <Row>
                         <Col>
-                          <h5>Applicant: Bob Smith</h5>
+                          <h5>Applicant: {professionalsRequests[newProfessionalCounter].firstName} {professionalsRequests[newProfessionalCounter].lastName}</h5>
                         </Col>
                         <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
                           <h5 className="text-end">2/11/2024</h5>
@@ -250,27 +434,27 @@ export const ViewAccountRequestsPage = () => {
                         <Row>
                           <Col className="mb-3">
                             <div>Mailing Address:</div>
-                            <div>6425 Boaz Lane</div>
-                            <div>Dallas, TX</div>
-                            <div>75205</div>
+                            <div>{professionalsRequests[newProfessionalCounter].addressLine}</div>
+                            <div>{professionalsRequests[newProfessionalCounter].city}, {professionalsRequests[newProfessionalCounter].state}</div>
+                            <div>{professionalsRequests[newProfessionalCounter].zipCode}</div>
                           </Col>
                           <Col className="mb-3">
                             <div>Contact Info:</div>
-                            <div>bsmith@gmail.com</div>
-                            <div>604-987-1541</div>
+                            <div>{professionalsRequests[newProfessionalCounter].email}</div>
+                            <div>{professionalsRequests[newProfessionalCounter].phone}</div>
                           </Col>
                           <Col className="mb-3">
                             <div>Username:</div>
-                            <div>BobTheBuilder</div>
+                            <div>{professionalsRequests[newProfessionalCounter].username}</div>
                           </Col>
                         </Row>
 
                         <Row>
                           <Col className="mb-3">
                             <div>Degree:</div>
-                            <div>Southern Methodist University</div>
-                            <div>B.S. Computer Science</div>
-                            <div>May 2024</div>
+                            <div>{professionalsRequests[newProfessionalCounter].schoolName}</div>
+                            <div>{professionalsRequests[newProfessionalCounter].degreeName}</div>
+                            <div>{professionalsRequests[newProfessionalCounter].completionDate}</div>
                           </Col>
 
                           <Col className="mb-3">
@@ -365,6 +549,79 @@ export const ViewAccountRequestsPage = () => {
                 </Col>
               </Row>
             </Container>
+              ) : <div>No requests</div>}
+            </Tab>
+            <Tab eventKey="professionals-delete" title="Delete Profesional Account Requests">
+            {deleteProfessionalsRequests.length > deleteProfessionalCounter ? (
+              <Container fluid>
+                <Row>
+                  <Col
+                    className="d-flex mb-4 mx-auto"
+                    xs={12}
+                    sm={12}
+                    md={10}
+                    lg={10}
+                    xl={10}
+                    xxl={10}
+                  >
+                    <Card className="flex-fill">
+                      <Card.Header className="pb-0 pt-3 button-bg text-light">
+                        <Row>
+                          <Col>
+                            <h5>User: {deleteProfessionalsRequests[deleteProfessionalCounter].professionalId}</h5>
+                          </Col>
+                          <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
+                            <h5 className="text-end">{new Date().toUTCString()}</h5>
+                          </Col>
+                        </Row>
+                      </Card.Header>
+                      <Card.Body>
+                        <Card.Text>
+                          <Row className="my-2">
+                            <Form.Group controlId="comment" className="col-12">
+                              <Form.Label>Comments:</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                name="comment"
+                                placeholder="Add comments"
+                                value={comment}
+                                rows={5}
+                                onChange={(delta) => {
+                                  setComment(delta.target.value);
+                                }}
+                              />
+                            </Form.Group>
+                          </Row>
+
+                          <Row className="mt-3">
+                            <Col>
+                              <Button
+                                disabled={disableDeleteApprove}
+                                className="btn-success px-3 pt-2 me-2"
+                                onClick={() => {
+                                  approveDeleteProfessionalRequest();
+                                }}
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                disabled={disableDeny}
+                                className="btn-danger px-2"
+                                onClick={() => {}}
+                              >
+                                Deny
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              </Container>
+            ) : <div>No requests</div>}
+            </Tab>
+            </Tabs>
           </Tab>
         </Tabs>
       </Row>

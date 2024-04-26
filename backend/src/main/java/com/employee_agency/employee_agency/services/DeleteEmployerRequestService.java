@@ -1,5 +1,6 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,11 @@ public class DeleteEmployerRequestService {
     private EmailService emailService;
 
     public List<DeleteEmployerRequest> getAllRequests() {
-        return deleteEmployerRequestRepository.findAll();
+        List<DeleteEmployerRequest> allRequests = deleteEmployerRequestRepository.findAll();
+
+        Collections.reverse(allRequests);
+
+        return allRequests;
     }
 
     public boolean createRequest(String employerId) {

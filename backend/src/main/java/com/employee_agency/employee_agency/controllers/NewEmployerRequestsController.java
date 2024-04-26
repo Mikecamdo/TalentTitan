@@ -54,7 +54,7 @@ public class NewEmployerRequestsController {
         return ResponseEntity.ok("Approved request successfully");
     }
 
-    @DeleteMapping("/deny")
+    @PostMapping("/deny")
     public ResponseEntity<String> denyNewEmployerRequest(@RequestBody DenyRequestDto denial) {
         newEmployerRequestsService.denyRequest(denial.getUsername(), denial.getComment());
         return ResponseEntity.ok("Denied request successfully");

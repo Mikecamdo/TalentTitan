@@ -27,7 +27,9 @@ export const approveDeleteProfessional = (username: string) => new Promise ((res
 });
 
 export const denyDeleteProfessional = (denial: any) => new Promise ((resolve, reject) => {
-    axios.delete(`${apiEndpoint}/delete-professional/deny`, denial)
+    console.log("DENIAL:");
+    console.log(denial);
+    axios.post(`${apiEndpoint}/delete-professional/deny`, denial)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

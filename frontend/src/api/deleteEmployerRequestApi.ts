@@ -27,7 +27,7 @@ export const approveDeleteEmployer = (username: string) => new Promise ((resolve
 });
 
 export const denyDeleteEmployer = (denial: any) => new Promise ((resolve, reject) => {
-    axios.delete(`${apiEndpoint}/delete-employer/deny`, denial)
+    axios.post(`${apiEndpoint}/delete-employer/deny`, denial)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

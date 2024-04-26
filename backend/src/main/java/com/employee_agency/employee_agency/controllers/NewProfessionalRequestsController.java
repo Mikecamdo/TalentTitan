@@ -53,7 +53,7 @@ public class NewProfessionalRequestsController {
         return ResponseEntity.ok("Approved request successfully");
     }
 
-    @DeleteMapping("/deny")
+    @PostMapping("/deny")
     public ResponseEntity<String> denyNewProfessionalRequest(@RequestBody DenyRequestDto denial) {
         newProfessionalRequestsService.denyRequest(denial.getUsername(), denial.getComment());
         return ResponseEntity.ok("Denied request successfully");

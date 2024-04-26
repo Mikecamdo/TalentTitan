@@ -11,18 +11,22 @@ import Table from "react-bootstrap/Table";
 import {
   getAllNewProfessionals,
   approveNewProfessional,
+  denyNewProfessional,
 } from "../api/newProfessionalRequestApi";
 import {
   getAllNewEmployers,
   approveNewEmployer,
+  denyNewEmployer,
 } from "../api/newEmployerRequestApi";
 import {
   getAllDeleteProfessionalsRequests,
   approveDeleteProfessional,
+  denyDeleteProfessional,
 } from "../api/deleteProfessionalRequestApi";
 import {
   getAllDeleteEmployersRequests,
   approveDeleteEmployer,
+  denyDeleteEmployer,
 } from "../api/deleteEmployerRequestApi";
 import { notifications } from "@mantine/notifications";
 import { getQualificationsByProfessional } from "../api/qualificationApi";
@@ -103,7 +107,7 @@ export const ViewAccountRequestsPage = () => {
   const approveNewProfessionalRequest = () => {
     if (monthlyFee) {
       approveNewProfessional({
-        username: employersRequests[newProfessionalCounter].username,
+        username: professionalsRequests[newProfessionalCounter].username,
         amountDue: monthlyFee.toString(),
         dueDate: "2024-05-01",
         comment: comment,
@@ -202,6 +206,102 @@ export const ViewAccountRequestsPage = () => {
     });
   };
 
+  const denyNewEmployerRequest = () => {
+    denyNewEmployer({
+      username: employersRequests[newEmployerCounter].username,
+      comment: comment
+    }).then((response: any) => {
+      console.log("THE RESPONSE");
+      console.log(response);
+      if (response === "Denied request successfully") {
+        setNewEmployerCounter(newEmployerCounter + 1);
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Could not approve request",
+        });
+      }
+    });
+  }
+
+  const denyDeleteEmployerRequest = () => {
+    denyDeleteEmployer({
+      username: deleteEmployersRequests[deleteEmployerCounter].employerId,
+      comment: comment
+    }).then((response: any) => {
+      console.log("THE RESPONSE");
+      console.log(response);
+      if (response === "Request successfully denied") {
+        setDeleteEmployerCounter(deleteEmployerCounter + 1);
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Could not approve request",
+        });
+      }
+    });
+  }
+
+  const denyNewProfessionalRequest = () => {
+    denyNewProfessional({
+      username: professionalsRequests[newProfessionalCounter].username,
+      comment: comment
+    }).then((response: any) => {
+      console.log("THE RESPONSE");
+      console.log(response);
+      if (response === "Denied request successfully") {
+        setNewProfessionalCounter(newProfessionalCounter + 1);
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Could not approve request",
+        });
+      }
+    });
+  }
+
+  const denyDeleteProfessionalRequest = () => {
+    denyDeleteProfessional({
+      username: deleteProfessionalsRequests[deleteProfessionalCounter].professionalId,
+      comment: comment
+    }).then((response: any) => {
+      console.log("THE RESPONSE");
+      console.log(response);
+      if (response === "Request successfully denied") {
+        setDeleteProfessionalCounter(deleteProfessionalCounter + 1);
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Could not approve request",
+        });
+      }
+    });
+  }
+
   if (
     !gotNewProfessionals ||
     !gotNewEmployers ||
@@ -253,11 +353,6 @@ export const ViewAccountRequestsPage = () => {
                                     employersRequests[newEmployerCounter]
                                       .companyName
                                   }
-                                </h5>
-                              </Col>
-                              <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
-                                <h5 className="text-end">
-                                  {new Date().toUTCString()}
                                 </h5>
                               </Col>
                             </Row>
@@ -384,7 +479,9 @@ export const ViewAccountRequestsPage = () => {
                                   <Button
                                     disabled={disableDeny}
                                     className="btn-danger px-2"
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                      denyNewEmployerRequest();
+                                    }}
                                   >
                                     Deny
                                   </Button>
@@ -402,7 +499,7 @@ export const ViewAccountRequestsPage = () => {
               </Tab>
               <Tab
                 eventKey="employers-delete"
-                title="Employer Account Deletion Requests"
+                title="Delete Employer Account Requests"
               >
                 {deleteEmployersRequests.length > deleteEmployerCounter ? (
                   <Container fluid>
@@ -427,11 +524,6 @@ export const ViewAccountRequestsPage = () => {
                                       deleteEmployerCounter
                                     ].employerId
                                   }
-                                </h5>
-                              </Col>
-                              <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
-                                <h5 className="text-end">
-                                  {new Date().toUTCString()}
                                 </h5>
                               </Col>
                             </Row>
@@ -471,7 +563,9 @@ export const ViewAccountRequestsPage = () => {
                                   <Button
                                     disabled={disableDeny}
                                     className="btn-danger px-2"
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                      denyDeleteEmployerRequest();
+                                    }}
                                   >
                                     Deny
                                   </Button>
@@ -499,7 +593,7 @@ export const ViewAccountRequestsPage = () => {
             >
               <Tab
                 eventKey="professionals-new"
-                title="New Profesional Account Requests"
+                title="New Professional Account Requests"
               >
                 {professionalsRequests.length > newProfessionalCounter ? (
                   <Container fluid>
@@ -530,9 +624,6 @@ export const ViewAccountRequestsPage = () => {
                                     ].lastName
                                   }
                                 </h5>
-                              </Col>
-                              <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
-                                <h5 className="text-end">2/11/2024</h5>
                               </Col>
                             </Row>
                           </Card.Header>
@@ -709,7 +800,9 @@ export const ViewAccountRequestsPage = () => {
                                   <Button
                                     disabled={disableDeny}
                                     className="btn-danger px-2"
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                      denyNewProfessionalRequest();
+                                    }}
                                   >
                                     Deny
                                   </Button>
@@ -727,7 +820,7 @@ export const ViewAccountRequestsPage = () => {
               </Tab>
               <Tab
                 eventKey="professionals-delete"
-                title="Delete Profesional Account Requests"
+                title="Delete Professional Account Requests"
               >
                 {deleteProfessionalsRequests.length >
                 deleteProfessionalCounter ? (
@@ -753,11 +846,6 @@ export const ViewAccountRequestsPage = () => {
                                       deleteProfessionalCounter
                                     ].professionalId
                                   }
-                                </h5>
-                              </Col>
-                              <Col xs={7} sm={8} md={8} lg={4} xl={3} xxl={3}>
-                                <h5 className="text-end">
-                                  {new Date().toUTCString()}
                                 </h5>
                               </Col>
                             </Row>
@@ -797,7 +885,9 @@ export const ViewAccountRequestsPage = () => {
                                   <Button
                                     disabled={disableDeny}
                                     className="btn-danger px-2"
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                      denyDeleteProfessionalRequest();
+                                    }}
                                   >
                                     Deny
                                   </Button>

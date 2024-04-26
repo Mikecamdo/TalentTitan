@@ -45,7 +45,7 @@ public class DeleteEmployerRequestController {
         return ResponseEntity.ok("Employer successfully deleted");
     }
 
-    @DeleteMapping("/deny")
+    @PostMapping("/deny")
     public ResponseEntity<String> denyDeletionRequest(@RequestBody DenyRequestDto denial) {
         deleteEmployerRequestService.denyRequest(denial.getUsername(), denial.getComment());
         return ResponseEntity.ok("Request successfully denied");

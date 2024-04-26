@@ -61,12 +61,16 @@ public class DeleteEmployerRequestService {
 
         deleteEmployerRequestRepository.deleteById(employerId);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "TalentTitan Deletion Request Approved", "Salutations. After review, your account deletion request for TalentTitan has been approved.\nWe thank you for using our platform and hope to see you again soon!");
+        Employer employer = employerRepository.findById(employerId).orElseThrow(() -> new RuntimeException("Employer not found"));
+
+        emailService.sendEmail(employer.getContactEmail(), "TalentTitan Deletion Request Approved", "Salutations. After review, your account deletion request for TalentTitan has been approved.\nWe thank you for using our platform and hope to see you again soon!");
     }
 
     public void denyRequest(String username, String comment) {
         deleteEmployerRequestRepository.deleteById(username);
+
+        Employer employer = employerRepository.findById(username).orElseThrow(() -> new RuntimeException("Employer not found"));
         
-        emailService.sendEmail("mikecamdo@gmail.com", "TalentTitan Deletion Request Denied", "Salutations. Unfortunately, after review your account deletion request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe invite you to re-request account deletion after all of our staff's concerns have been dealt with.");
+        emailService.sendEmail(employer.getContactEmail(), "TalentTitan Deletion Request Denied", "Salutations. Unfortunately, after review your account deletion request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe invite you to re-request account deletion after all of our staff's concerns have been dealt with.");
     }
 }

@@ -123,16 +123,19 @@ public class NewEmployerRequestsService {
         balanceRepository.save(newBalance);
 
         if (comment == null || comment == "") {
-            emailService.sendEmail("mikecamdo@gmail.com", "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
+            emailService.sendEmail(newEmployer.getContactEmail(), "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \nUsername: " + newUser.getUsername() + "\nPassword: " + newUser.getPassword() + "\nMonthly Fee: " + amountDue + "\nFirst Monthly Fee Due Date: " + dueDate);
         } else {
-            emailService.sendEmail("mikecamdo@gmail.com", "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword() + "\nOur staff also left the following comments regarding your account approval:\n" + comment);
+            emailService.sendEmail(newEmployer.getContactEmail(), "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \nUsername: " + newUser.getUsername() + "\nPassword: " + newUser.getPassword()  + "\nMonthly Fee: " + amountDue + "\nFirst Monthly Fee Due Date: " + dueDate + "\nOur staff also left the following comments regarding your account approval:\n" + comment);
         }
     }
 
     public void denyRequest(String username, String comment) {
-        newEmployerRequestsRepository.deleteById(username);
+        NewEmployerRequests currentRequest = newEmployerRequestsRepository.findById(username)
+            .orElseThrow(() -> new RuntimeException("Employer Request not found"));
+        
+            newEmployerRequestsRepository.deleteById(username);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "Account Request Denied", "Salutations. Unfortunately, after review your account request for TalentTitan has been denied.\n Our staff submitted the following reasoning:\n" + comment + "\nWe apologize for any inconvenience and invite you to re-apply to TalentTitan at a future date.");
+        emailService.sendEmail(currentRequest.getContactEmail(), "Account Request Denied", "Salutations. Unfortunately, after review your account request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe apologize for any inconvenience and invite you to re-apply to TalentTitan at a future date.");
     }
 
     private static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";

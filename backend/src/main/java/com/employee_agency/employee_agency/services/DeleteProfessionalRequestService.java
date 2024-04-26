@@ -61,12 +61,16 @@ public class DeleteProfessionalRequestService {
         deletedUser.setIsActive(false);
         userRepository.save(deletedUser);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "TalentTitan Deletion Request Approved", "Salutations. After review, your account deletion request for TalentTitan has been approved.\nWe thank you for using our platform and hope to see you again soon!");
+        Professional professional = professionalRepository.findById(professionalId).orElseThrow(() -> new RuntimeException("Professional not found"));
+
+        emailService.sendEmail(professional.getEmail(), "TalentTitan Deletion Request Approved", "Salutations. After review, your account deletion request for TalentTitan has been approved.\nWe thank you for using our platform and hope to see you again soon!");
     }
 
     public void denyRequest(String username, String comment) {
         deleteProfessionalRequestRepository.deleteById(username);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "TalentTitan Deletion Request Denied", "Salutations. Unfortunately, after review your account deletion request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe invite you to re-request account deletion after all of our staff's concerns have been dealt with.");
+        Professional professional = professionalRepository.findById(username).orElseThrow(() -> new RuntimeException("Professional not found"));
+
+        emailService.sendEmail(professional.getEmail(), "TalentTitan Deletion Request Denied", "Salutations. Unfortunately, after review your account deletion request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe invite you to re-request account deletion after all of our staff's concerns have been dealt with.");
     }
 }

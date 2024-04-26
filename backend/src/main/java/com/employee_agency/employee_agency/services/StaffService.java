@@ -71,7 +71,7 @@ public class StaffService {
 
         staffRepository.save(staff);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
+        emailService.sendEmail(staff.getEmail(), "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \nUsername: " + newUser.getUsername() + "\nPassword: " + newUser.getPassword());
 
         return true;
     }

@@ -53,13 +53,13 @@ public class DeleteEmployerRequestService {
     }
 
     public void approveRequest(String employerId) {
-        deleteEmployerRequestRepository.deleteById(employerId);
-
         User deletedUser = userRepository.findById(employerId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
         deletedUser.setIsActive(false);
         userRepository.save(deletedUser);
+
+        deleteEmployerRequestRepository.deleteById(employerId);
 
         emailService.sendEmail("mikecamdo@gmail.com", "TalentTitan Deletion Request Approved", "Salutations. After review, your account deletion request for TalentTitan has been approved.\nWe thank you for using our platform and hope to see you again soon!");
     }

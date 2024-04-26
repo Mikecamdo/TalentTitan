@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiEndpoint = '//localhost:8080'
 
-export const getQualificationsByProfessional = (username: string) => new Promise ((resolve, reject) => {
+export const getQualificationsByProfessional = (username: any) => new Promise ((resolve, reject) => {
     axios.get(`${apiEndpoint}/qualifications/get-by-professional?username=${username}`)
     .then(response => resolve(response.data))
     .catch(error => {
@@ -19,8 +19,6 @@ export const getQualificationsByJob = (employerId: string, companyJobId: string)
 });
 
 export const addQualifications = (qualifications: any) => new Promise ((resolve, reject) => {
-    console.log("QUALS:");
-    console.log(qualifications);
     axios.post(`${apiEndpoint}/qualifications/add`, qualifications)
     .then(response => resolve(response.data))
     .catch(error => {

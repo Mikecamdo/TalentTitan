@@ -27,7 +27,7 @@ export const updateNewEmployer = (request: any) => new Promise ((resolve, reject
 });
 
 export const approveNewEmployer = (approval: any) => new Promise ((resolve, reject) => {
-    axios.delete(`${apiEndpoint}/new-employer/approve`, approval)
+    axios.post(`${apiEndpoint}/new-employer/approve`, approval)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -47,7 +46,7 @@ public class NewProfessionalRequestsController {
         return ResponseEntity.ok("New Professional Account updated successfully");
     }
 
-    @DeleteMapping("/approve")
+    @PostMapping("/approve")
     public ResponseEntity<String> approveNewProfessionalRequest(@RequestBody ApproveRequestDto approval) {
         newProfessionalRequestsService.approveRequest(approval.getUsername(), approval.getAmountDue(), approval.getDueDate(), approval.getComment());
         return ResponseEntity.ok("Approved request successfully");

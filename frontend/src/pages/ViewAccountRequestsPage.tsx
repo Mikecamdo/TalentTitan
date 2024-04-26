@@ -30,6 +30,7 @@ import {
 } from "../api/deleteEmployerRequestApi";
 import { notifications } from "@mantine/notifications";
 import { getQualificationsByProfessional } from "../api/qualificationApi";
+import Qualification from "../types/Qualification";
 
 export const ViewAccountRequestsPage = () => {
   const [monthlyFee, setMonthlyFee] = useState<number | undefined>(undefined);
@@ -58,15 +59,44 @@ export const ViewAccountRequestsPage = () => {
   const [deleteProfessionalCounter, setDeleteProfessionalCounter] = useState(0);
   const [deleteEmployerCounter, setDeleteEmployerCounter] = useState(0);
 
+  const [qualifications, setQualifications] = useState<any>();
+
   useEffect(() => {
     getAllNewProfessionals().then((response: any) => {
       if (response) {
         setProfessionalsRequests(response);
-        // getQualificationsByProfessional(response[0].username).then((response: any) => {
 
-        // };
+        if (response.length > 0) {
+          getQualificationsByProfessional(response[0].username).then(
+            (response: any) => {
+              if (response.categories) {
+                let quals = [];
+
+                for (let i = 0; i < response.categories.length; i++) {
+                  quals.push({
+                    category: response.categories[i],
+                    keywords: response.keywords[i],
+                  });
+                }
+
+                console.log("ADDING QUALS");
+                console.log(quals);
+
+                setQualifications(quals);
+                setGotNewProfessionals(true);
+              } else {
+                notifications.show({
+                  color: "red",
+                  title: "Error!",
+                  message: "Could not retrieve qualifications",
+                });
+              }
+            }
+          );
+        } else {
+          setGotNewProfessionals(true);
+        }
       }
-      setGotNewProfessionals(true);
     });
 
     getAllNewEmployers().then((response: any) => {
@@ -103,6 +133,38 @@ export const ViewAccountRequestsPage = () => {
       setDisableApprove(true);
     }
   }, [monthlyFee, comment]);
+
+  useEffect(() => {
+    setGotNewProfessionals(false);
+    if (professionalsRequests.length > newProfessionalCounter) {
+      getQualificationsByProfessional(
+        professionalsRequests[newProfessionalCounter].username
+      ).then((response: any) => {
+        if (response.categories) {
+          let quals = [];
+
+          for (let i = 0; i < response.categories.length; i++) {
+            quals.push({
+              category: response.categories[i],
+              keywords: response.keywords[i],
+            });
+          }
+
+          console.log("ADDING QUALS");
+          console.log(quals);
+
+          setQualifications(quals);
+          setGotNewProfessionals(true);
+        } else {
+          notifications.show({
+            color: "red",
+            title: "Error!",
+            message: "Could not retrieve qualifications",
+          });
+        }
+      });
+    }
+  }, [newProfessionalCounter]);
 
   const approveNewProfessionalRequest = () => {
     if (monthlyFee) {
@@ -209,7 +271,7 @@ export const ViewAccountRequestsPage = () => {
   const denyNewEmployerRequest = () => {
     denyNewEmployer({
       username: employersRequests[newEmployerCounter].username,
-      comment: comment
+      comment: comment,
     }).then((response: any) => {
       console.log("THE RESPONSE");
       console.log(response);
@@ -228,12 +290,12 @@ export const ViewAccountRequestsPage = () => {
         });
       }
     });
-  }
+  };
 
   const denyDeleteEmployerRequest = () => {
     denyDeleteEmployer({
       username: deleteEmployersRequests[deleteEmployerCounter].employerId,
-      comment: comment
+      comment: comment,
     }).then((response: any) => {
       console.log("THE RESPONSE");
       console.log(response);
@@ -252,12 +314,12 @@ export const ViewAccountRequestsPage = () => {
         });
       }
     });
-  }
+  };
 
   const denyNewProfessionalRequest = () => {
     denyNewProfessional({
       username: professionalsRequests[newProfessionalCounter].username,
-      comment: comment
+      comment: comment,
     }).then((response: any) => {
       console.log("THE RESPONSE");
       console.log(response);
@@ -276,12 +338,13 @@ export const ViewAccountRequestsPage = () => {
         });
       }
     });
-  }
+  };
 
   const denyDeleteProfessionalRequest = () => {
     denyDeleteProfessional({
-      username: deleteProfessionalsRequests[deleteProfessionalCounter].professionalId,
-      comment: comment
+      username:
+        deleteProfessionalsRequests[deleteProfessionalCounter].professionalId,
+      comment: comment,
     }).then((response: any) => {
       console.log("THE RESPONSE");
       console.log(response);
@@ -300,7 +363,7 @@ export const ViewAccountRequestsPage = () => {
         });
       }
     });
-  }
+  };
 
   if (
     !gotNewProfessionals ||
@@ -315,7 +378,7 @@ export const ViewAccountRequestsPage = () => {
     <>
       <Row>
         <Tabs
-          defaultActiveKey="employers"
+          defaultActiveKey="professionals"
           id="account-request-tabs"
           className="mb-3 "
           fill
@@ -725,15 +788,24 @@ export const ViewAccountRequestsPage = () => {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr>
-                                        <td>Languages</td>
-                                        <td>Java, Python</td>
-                                      </tr>
-
-                                      <tr>
-                                        <td>Database</td>
-                                        <td>MySQL, Mongo DB</td>
-                                      </tr>
+                                      {qualifications &&
+                                        qualifications.map(
+                                          (
+                                            qualification: Qualification,
+                                            index: number
+                                          ) => {
+                                            return (
+                                              <tr key={index}>
+                                                <td>
+                                                  {qualification.category}
+                                                </td>
+                                                <td>
+                                                  {qualification.keywords}
+                                                </td>
+                                              </tr>
+                                            );
+                                          }
+                                        )}
                                     </tbody>
                                   </Table>
                                 </Col>

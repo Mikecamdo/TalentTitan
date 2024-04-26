@@ -336,6 +336,11 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
       paymentAmount: payAmount,
     }).then((response: any) => {
       if (response.dueDate) {
+        getUserTransactions(currentlyViewing).then((response: any) => {
+          if (response.length >= 0) {
+            setTransactions(response);
+          }
+        })
         notifications.show({
           color: "green",
           title: "Success!",
@@ -413,7 +418,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           });
 
           getUserTransactions(response.username).then((response: any) => {
-            if (response.length) {
+            if (response.length >= 0) {
               setTransactions(response);
             } else {
               notifications.show({
@@ -860,7 +865,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                     })}
                   </>
                 ) : (
-                  <Text fz="sm" mt="xs">
+                  <Text fz="sm" mt="xs" ta="center">
                     Looks like you haven't made any transactions yet...
                   </Text>
                 )}

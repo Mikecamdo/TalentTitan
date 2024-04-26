@@ -5,7 +5,6 @@ import { LandingPage } from "./pages/LandingPage";
 import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
 import { CustomHeader } from "./components/CustomHeader";
-import User from "./types/User";
 import { ProfilePage } from "./pages/ProfilePage";
 import { JobPostingPage } from "./pages/JobPostingPage";
 import { ViewPostedJobsPage } from "./pages/ViewPostedJobsPage";
@@ -36,9 +35,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState<string | undefined>(undefined);
   const [userType, setUserType] = useState<string | undefined>(undefined);
   const [opened, { toggle }] = useDisclosure();
-  //const _setCurrentUser = (user: string | undefined) => setCurrentUser(user);
 
-  //TODO probably will update this in the future
   //the following useEffects allow for user persistence (so if the page is reloaded, you aren't logged out)
   useEffect(() => {
     let temp: string | null = window.localStorage.getItem("CURRENT_USER");

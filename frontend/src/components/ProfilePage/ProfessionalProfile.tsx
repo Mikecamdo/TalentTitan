@@ -30,7 +30,11 @@ import Professional from "../../types/Professional";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
 import { getUserTransactions } from "../../api/transactionsApi";
-import { getProfessional, updateProfessional } from "../../api/professionalApi";
+import {
+  getProfessional,
+  toggleJobMatching,
+  updateProfessional,
+} from "../../api/professionalApi";
 import { notifications } from "@mantine/notifications";
 import { updatePassword as updateThePassword } from "../../api/userApi";
 import { requestDeleteProfessional } from "../../api/deleteProfessionalRequestApi";
@@ -340,7 +344,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           if (response.length >= 0) {
             setTransactions(response);
           }
-        })
+        });
         notifications.show({
           color: "green",
           title: "Success!",
@@ -949,13 +953,33 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                 </>
               )}
               {(currentUser === currentlyViewing || userType === "staff") && (
-                <Button
-                  onClick={() => {
-                    setEditProfile(true);
-                  }}
-                >
-                  Edit Profile
-                </Button>
+                <>
+                  <Button
+                    onClick={() => {
+                      setEditProfile(true);
+                    }}
+                  >
+                    Edit Profile
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      toggleJobMatching({
+                        professionalUsername: currentlyViewing,
+                        jobMatching: true,
+                      }).then((response: any) => {
+                        if (response === "Started Job Matching") {
+                          notifications.show({
+                            color: "green",
+                            title: "Success!",
+                            message: "Job Matching started",
+                          });
+                        }
+                      });
+                    }}
+                  >
+                    Initiate Job Matching
+                  </Button>
+                </>
               )}
             </Group>
           )}

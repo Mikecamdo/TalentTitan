@@ -1,23 +1,21 @@
 package com.employee_agency.employee_agency.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "job-matchings")
-public class JobMatching {
+@Table(name = "job-matches")
+public class JobMatch {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     private String professionalUsername;
-    // @Id
     private long jobId;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "professional_username")
-    // private Professional professional;
 
     public String getProfessionalUsername() {
         return professionalUsername;
@@ -34,8 +32,4 @@ public class JobMatching {
     public void setJobId(long jobId) {
         this.jobId = jobId;
     }
-
-    // public Professional getProfessional() {
-    //     return professional;
-    // }
 }

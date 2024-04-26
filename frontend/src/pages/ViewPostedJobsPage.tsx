@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import { Container, Table, Checkbox, Group, Text } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
-import { getAllJobs, getJobPostsByCompany, getJobsByJobMatch } from "../api/jobPostApi";
+import {
+  getAllJobs,
+  getJobPostsByCompany,
+  getJobsByJobMatch,
+} from "../api/jobPostApi";
 
 export const ViewPostedJobsPage = () => {
   const userContext = useContext(UserContext);
@@ -60,14 +64,16 @@ export const ViewPostedJobsPage = () => {
 
         {userType !== "employer" && (
           <Group justify="center" mt="lg">
-            <Checkbox label="Only Matched Jobs"
-            onChange={(event) => {
-              if (event.currentTarget.checked) {
-                setJobPosts(jobMatches);
-              } else {
-                setJobPosts(allJobPosts);
-              }
-            }} />
+            <Checkbox
+              label="Only Matched Jobs"
+              onChange={(event) => {
+                if (event.currentTarget.checked) {
+                  setJobPosts(jobMatches);
+                } else {
+                  setJobPosts(allJobPosts);
+                }
+              }}
+            />
           </Group>
         )}
 
@@ -110,11 +116,7 @@ export const ViewPostedJobsPage = () => {
 
                       <Table.Td>{data.jobName}</Table.Td>
 
-                      <Table.Td>
-                        <Link to={"/profile/Employer"} className={classes.link}>
-                          {data.employerId}
-                        </Link>
-                      </Table.Td>
+                      <Table.Td>{data.employerId}</Table.Td>
 
                       <Table.Td>
                         {data.startDate.includes("T") ? (

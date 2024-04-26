@@ -261,7 +261,6 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
           <Grid>
             <Grid.Col span={4}>
               <Avatar
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png"
                 size={125}
                 radius="md"
                 mx="auto"

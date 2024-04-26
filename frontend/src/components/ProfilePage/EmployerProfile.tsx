@@ -444,7 +444,6 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
           <Grid>
             <Grid.Col span={4}>
               <Avatar
-                src="https://assets-global.website-files.com/64248e7fd5f30d79c9e57d64/64e6177329c2d71389b1b219_walmart.png"
                 size={125}
                 radius="md"
                 mx="auto"

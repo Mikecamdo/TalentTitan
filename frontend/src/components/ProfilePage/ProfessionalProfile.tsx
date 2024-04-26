@@ -518,7 +518,6 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           <Grid>
             <Grid.Col span={3}>
               <Avatar
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png"
                 size={125}
                 radius="md"
                 mx="auto"

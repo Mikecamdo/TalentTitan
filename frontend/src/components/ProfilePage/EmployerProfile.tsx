@@ -895,7 +895,6 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
           placeholder="Enter credit card details"
           value={creditCard}
           onChange={(delta) => {
-            //setCreditCard(delta.target.value);
             setCreditCardNumber(delta.target.value);
           }}
           error={creditCardError}

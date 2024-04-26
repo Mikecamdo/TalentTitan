@@ -121,19 +121,7 @@ public class ProfessionalService {
                         double category_similarity = 1.0 - (double) category_distance / category_maxLength;
                         System.out.printf("Category Similarity: %f\n", category_similarity);
 
-                        if (category_similarity >= 0.4) {
-                            // int keywords_distance = LevenshteinDistance.getDefaultInstance().apply(profKeywords.get(j), jobKeywords.get(k));
-                            // int keywords_maxLength = Math.max(profKeywords.get(j).length(), jobKeywords.get(k).length());
-
-                            // // Normalize the distance to get similarity as a percentage
-                            // double keywords_similarity = 1.0 - (double) keywords_distance / keywords_maxLength;
-                            // System.out.printf("Keywords Similarity: %f\n", keywords_similarity);
-
-                            // if (keywords_similarity >= 0.4) {
-                            //     System.out.println("SIMILIAR!!");
-                            //     similiarQualifications++;
-                            // }
-                            
+                        if (category_similarity >= 0.4) {                            
                             double keywords_similarity = calculateJaccardSimilarity(Arrays.asList(profKeywords.get(j).split("\\s*,\\s*")), Arrays.asList(jobKeywords.get(k).split("\\s*,\\s*")));
                             System.out.printf("Keywords Similarity: %f\n", keywords_similarity);
 

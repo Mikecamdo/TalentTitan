@@ -9,6 +9,7 @@ import {
   getJobPostsByCompany,
   getJobsByJobMatch,
 } from "../api/jobPostApi";
+import { getAllEmployers } from "../api/employerApi";
 
 export const ViewPostedJobsPage = () => {
   const userContext = useContext(UserContext);
@@ -21,6 +22,8 @@ export const ViewPostedJobsPage = () => {
 
   const [allJobPosts, setAllJobPosts] = useState<any>();
   const [jobMatches, setJobMatches] = useState<any>();
+
+  const [allEmployers, setAllEmployers] = useState<any>();
 
   useEffect(() => {
     if (currentUser && userType === "employer") {
@@ -41,16 +44,18 @@ export const ViewPostedJobsPage = () => {
       });
 
       getJobsByJobMatch(currentUser).then((response: any) => {
-        console.log("RESPONSE:");
-        console.log(response);
         if (response.length >= 0) {
           setJobMatches(response);
         }
       });
     }
+
+    getAllEmployers().then((response: any) => {
+      setAllEmployers(response);
+    })
   }, [currentUser, userType]);
 
-  if (!userType || !jobPosts || (userType === "professional" && !jobMatches)) {
+  if (!userType || !jobPosts || (userType === "professional" && !jobMatches) || !allEmployers) {
     return <div>Loading...</div>;
   }
 
@@ -116,7 +121,7 @@ export const ViewPostedJobsPage = () => {
 
                       <Table.Td>{data.jobName}</Table.Td>
 
-                      <Table.Td>{data.employerId}</Table.Td>
+                      <Table.Td>{allEmployers.find((employer: any) => employer.username === data.employerId).companyName}</Table.Td>
 
                       <Table.Td>
                         {data.startDate.includes("T") ? (

@@ -1,6 +1,7 @@
 package com.employee_agency.employee_agency.services;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,16 @@ public class StaffService {
 
     @Autowired
     private EmailService emailService;
+
+    public Staff getStaffByUsername(String username) {
+        Optional<Staff> staff = staffRepository.findById(username);
+
+        if (staff.isPresent()) {
+            return staff.get();
+        }
+
+        return null;
+    }
 
     public boolean createStaff(Staff staff) {
         // check if username is already used by a registered user

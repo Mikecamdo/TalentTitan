@@ -46,8 +46,8 @@ public class BalanceController {
     }
 
     @PatchMapping("/pay")
-    public ResponseEntity<String> payBalance(@RequestBody PaymentDto payment) {
-        balanceService.payBalance(payment.getUsername(), payment.getPaymentAmount());
-        return ResponseEntity.ok("Payment successful");
+    public ResponseEntity<?> payBalance(@RequestBody PaymentDto payment) {
+        Balance currentBalance = balanceService.payBalance(payment.getUsername(), payment.getPaymentAmount());
+        return ResponseEntity.ok(currentBalance);
     }
 }

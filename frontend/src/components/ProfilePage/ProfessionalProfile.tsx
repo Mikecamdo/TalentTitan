@@ -38,6 +38,7 @@ import {
   getQualificationsByProfessional,
   updateQualifications,
 } from "../../api/qualificationApi";
+import { getBalance, payBalance } from "../../api/balancesApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -78,6 +79,8 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     completionDate: new Date(),
     qualifications: [],
   });
+
+  const [balance, setBalance] = useState<any>();
 
   const [cursorPosition, setCursorPosition] = useState(0);
   const inputRef = useRef<any>(null);
@@ -327,9 +330,30 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
 
   const submitPayment = () => {
     // Call backend and submit payment
-    handlePaymentOpened.close();
-    setCreditCard("");
-    setPayAmount("");
+    payBalance({
+      username: currentUser,
+      paymentAmount: payAmount
+    }).then((response: any) => {
+      if (response.dueDate) {
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: "Payment successful",
+        });
+        handlePaymentOpened.close();
+        setCreditCard("");
+        setPayAmount("");
+        setBalance(response);
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Error while making payment",
+        });
+      }
+    });
+
+    
   };
 
   const userContext = useContext(UserContext);
@@ -376,6 +400,18 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
               }
             }
           );
+
+          getBalance(response.username).then((response: any) => {
+            if (response.username) {
+              setBalance(response);
+            } else {
+              notifications.show({
+                color: "red",
+                title: "Error!",
+                message: "Error while retrieving the user's balance",
+              });
+            }
+          });
         } else {
           notifications.show({
             color: "red",
@@ -395,6 +431,16 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCardError, payAmount]);
 
+  const [disablePayment, setDisablePayment] = useState(false);
+
+  useEffect(() => {
+    if (balance && parseFloat(balance.amountDue) == 0) {
+      setDisablePayment(true);
+    } else {
+      setDisablePayment(false);
+    }
+  }, [balance]);
+
   useEffect(() => {
     const numbersArray = creditCard.match(/\d+/g);
     const creditCardNumbers = numbersArray ? numbersArray.join("") : "";
@@ -412,7 +458,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !professional || !professional.firstName || !userType) {
+  if (!currentUser || !professional || !professional.firstName || !userType || !balance) {
     return <div>Loading...</div>;
   }
 
@@ -1002,7 +1048,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
         centered
       >
         <Title order={3} className={classes.name} ta="center">
-          Amount due: $40
+          Amount due: ${balance.amountDue}
         </Title>
 
         <TextInput
@@ -1011,10 +1057,10 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           placeholder="Enter credit card details"
           value={creditCard}
           onChange={(delta) => {
-            //setCreditCard(delta.target.value);
             setCreditCardNumber(delta.target.value);
           }}
           error={creditCardError}
+          disabled={disablePayment}
         />
 
         <TextInput
@@ -1025,13 +1071,15 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           placeholder="Enter payment amount"
           value={payAmount}
           onChange={(delta) => {
-            // TODO: change this to make it dynamic (can't pay more than the total amount due)
-            if (parseInt(delta.target.value) > 40) {
-              setPayAmount("40");
+            if (parseFloat(delta.target.value) > parseFloat(balance.amountDue)) {
+              setPayAmount(balance.amountDue);
+            } else if (parseFloat(delta.target.value) < 0) {
+              setPayAmount("0");
             } else {
               setPayAmount(delta.target.value);
             }
           }}
+          disabled={disablePayment}
         />
 
         <Button

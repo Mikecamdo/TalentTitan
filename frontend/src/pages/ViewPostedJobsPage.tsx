@@ -137,9 +137,15 @@ export const ViewPostedJobsPage = () => {
           </Table>
         ) : (
           <>
-            <Text c="dimmed" size="lg" ta="center" mt={5}>
-              Looks like you haven't posted any jobs yet...
-            </Text>
+            {userType === "employer" ? (
+              <Text c="dimmed" size="lg" ta="center" mt={5}>
+                Looks like you haven't posted any jobs yet...
+              </Text>
+            ) : (
+              <Text c="dimmed" size="lg" ta="center" mt={5}>
+                Looks like there aren't any jobs at the moment...
+              </Text>
+            )}
           </>
         )}
       </Container>

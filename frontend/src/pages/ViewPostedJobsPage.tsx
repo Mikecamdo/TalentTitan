@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Container, Table, Checkbox, Group, Text } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
-import { getAllJobs, getJobPostsByCompany } from "../api/jobPostApi";
+import { getAllJobs, getJobPostsByCompany, getJobsByJobMatch } from "../api/jobPostApi";
 
 export const ViewPostedJobsPage = () => {
   const userContext = useContext(UserContext);
@@ -14,6 +14,9 @@ export const ViewPostedJobsPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [jobPosts, setJobPosts] = useState<any>();
+
+  const [allJobPosts, setAllJobPosts] = useState<any>();
+  const [jobMatches, setJobMatches] = useState<any>();
 
   useEffect(() => {
     if (currentUser && userType === "employer") {
@@ -26,15 +29,24 @@ export const ViewPostedJobsPage = () => {
           setJobPosts([]);
         }
       });
-    } else if (userType) {
+    } else if (currentUser && userType) {
       //Get all jobs for professional
       getAllJobs().then((response: any) => {
         setJobPosts(response);
+        setAllJobPosts(response);
+      });
+
+      getJobsByJobMatch(currentUser).then((response: any) => {
+        console.log("RESPONSE:");
+        console.log(response);
+        if (response.length >= 0) {
+          setJobMatches(response);
+        }
       });
     }
   }, [currentUser, userType]);
 
-  if (!userType || !jobPosts) {
+  if (!userType || !jobPosts || (userType === "professional" && !jobMatches)) {
     return <div>Loading...</div>;
   }
 
@@ -48,7 +60,14 @@ export const ViewPostedJobsPage = () => {
 
         {userType !== "employer" && (
           <Group justify="center" mt="lg">
-            <Checkbox label="Only Matched Jobs" />
+            <Checkbox label="Only Matched Jobs"
+            onChange={(event) => {
+              if (event.currentTarget.checked) {
+                setJobPosts(jobMatches);
+              } else {
+                setJobPosts(allJobPosts);
+              }
+            }} />
           </Group>
         )}
 

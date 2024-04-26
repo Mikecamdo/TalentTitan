@@ -26,6 +26,14 @@ export const getJobPostsByCompany = (employerUsername: string) => new Promise ((
     });
 });
 
+export const getJobsByJobMatch = (professionalUsername: string) => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/job-posts/get-by-job-match?professionalUsername=${professionalUsername}`)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+
 export const addJobPost = (jobPost: any) => new Promise ((resolve, reject) => {
     axios.post(`${apiEndpoint}/job-posts/add`, jobPost)
     .then(response => resolve(response.data))

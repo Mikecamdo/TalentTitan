@@ -43,7 +43,7 @@ public class BalanceService {
         balanceRepository.save(currentBalance);
     }
 
-    public void payBalance(String username, String paymentAmount) {
+    public Balance payBalance(String username, String paymentAmount) {
         Balance currentBalance = balanceRepository.findById(username)
             .orElseThrow(() -> new RuntimeException("Balance not found"));
 
@@ -71,5 +71,7 @@ public class BalanceService {
         newTransaction.setTransactionDate(dateString);
 
         transactionRepository.save(newTransaction);
+
+        return currentBalance;
     }
 }

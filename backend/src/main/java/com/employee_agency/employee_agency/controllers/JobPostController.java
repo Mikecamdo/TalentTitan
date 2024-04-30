@@ -52,6 +52,19 @@ public class JobPostController {
             return ResponseEntity.ok(jobs);
         }
     }
+
+    @GetMapping("/get-by-job-match")
+    public ResponseEntity<List<JobPost>> getJobsByJobMatch(@RequestParam String professionalUsername) {
+        System.out.println("MADE IT TO CONTROLLER");
+        List<JobPost> jobs = jobPostService.getJobsByJobMatch(professionalUsername);
+
+        if (jobs == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(jobs);
+        }
+    }
+    
     
 
     @PostMapping("/add")

@@ -29,14 +29,14 @@ export const CustomHeader = () => {
           </Link>
 
           {userType === "professional" && (
-              <>
-                <Group h="100%">
-                  <Link to={"/job-search"} className={classes.link}>
-                                        View Posted Jobs
-                  </Link>
-                </Group>
-              </>
-            )}
+            <>
+              <Group h="100%">
+                <Link to={"/job-search"} className={classes.link}>
+                  View Posted Jobs
+                </Link>
+              </Group>
+            </>
+          )}
 
           {userType == "employer" && (
             <>
@@ -46,31 +46,31 @@ export const CustomHeader = () => {
                 </Link>
 
                 <Link to={"/job-search"} className={classes.link}>
-                                        View Posted Jobs
+                  View Posted Jobs
                 </Link>
               </Group>
             </>
           )}
-                        
+
           {userType == "staff" && (
             <>
               <Group h="100%">
                 <Link to={"/account-requests"} className={classes.link}>
-                                        View Account Requests
+                  View Account Requests
                 </Link>
 
                 <Link to={"/account-search"} className={classes.link}>
-                                        View Accounts
+                  View Accounts
                 </Link>
-              </Group>
-            </>
-          )}
 
-          {currentUser == "root" && (
-            <>
-              <Link to={"/add-staff"} className={classes.link}>
-                Add New Staff Account
-              </Link>
+                {currentUser == "root" && (
+                  <>
+                    <Link to={"/add-staff"} className={classes.link}>
+                      Add New Staff Account
+                    </Link>
+                  </>
+                )}
+              </Group>
             </>
           )}
 
@@ -92,7 +92,7 @@ export const CustomHeader = () => {
                 <Link to={`/profile/${currentUser}`} className={classes.link}>
                   {currentUser}
                 </Link>
-                            /
+                /
                 <Link
                   to={"/"}
                   className={classes.link}
@@ -101,13 +101,13 @@ export const CustomHeader = () => {
                     setUserType(undefined);
                   }}
                 >
-                            Sign Out
-                            </Link>
+                  Sign Out
+                </Link>
               </Group>
-        </>
+            </>
           )}
         </Group>
       </header>
     </Box>
-    );
+  );
 };

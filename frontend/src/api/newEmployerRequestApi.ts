@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-const apiEndpoint = '//localhost:8080'
+const apiEndpoint = '//localhost:8080';
 
-export const getAllNewEmployers = (request: any) => new Promise ((resolve, reject) => {
-    axios.get(`${apiEndpoint}/new-employer/get-all`, request)
+export const getAllNewEmployers = () => new Promise ((resolve, reject) => {
+    axios.get(`${apiEndpoint}/new-employer/get-all`)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
     });
 });
 
-export const approveNewEmployer = (username: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/new-employer/approve`, username)
+export const registerNewEmployer = (newEmployer: any) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/new-employer/register`, newEmployer)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);
@@ -26,8 +26,16 @@ export const updateNewEmployer = (request: any) => new Promise ((resolve, reject
     });
 });
 
-export const registerNewEmployer = (newEmployer: any) => new Promise ((resolve, reject) => {
-    axios.post(`${apiEndpoint}/new-employer/register`, newEmployer)
+export const approveNewEmployer = (approval: any) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/new-employer/approve`, approval)
+    .then(response => resolve(response.data))
+    .catch(error => {
+        resolve(error.response.data);
+    });
+});
+
+export const denyNewEmployer = (denial: any) => new Promise ((resolve, reject) => {
+    axios.post(`${apiEndpoint}/new-employer/deny`, denial)
     .then(response => resolve(response.data))
     .catch(error => {
         resolve(error.response.data);

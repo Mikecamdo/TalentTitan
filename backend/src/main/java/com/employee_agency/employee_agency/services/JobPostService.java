@@ -1,17 +1,23 @@
 package com.employee_agency.employee_agency.services;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee_agency.employee_agency.entities.JobMatch;
 import com.employee_agency.employee_agency.entities.JobPost;
+import com.employee_agency.employee_agency.repositories.JobMatchRepository;
 import com.employee_agency.employee_agency.repositories.JobPostRepository;
 
 @Service
 public class JobPostService {
     @Autowired
     private JobPostRepository jobPostRepository;
+
+    @Autowired
+    private JobMatchRepository jobMatchRepository;
 
     public List<JobPost> getAllJobs() {
         return jobPostRepository.findAll();
@@ -23,6 +29,21 @@ public class JobPostService {
 
     public List<JobPost> getJobsByCompany(String employerUsername) {
         return jobPostRepository.findAllByEmployerId(employerUsername);
+    }
+
+    public List<JobPost> getJobsByJobMatch(String professionalUsername) {
+        List<JobMatch> jobMatches = jobMatchRepository.findAllByProfessionalUsername(professionalUsername);
+        
+        if (jobMatches != null) {
+            List<Long> jobIds = new Vector<Long>();
+            for (int i = 0; i < jobMatches.size(); i++) {
+                jobIds.add(jobMatches.get(i).getJobId());
+            }
+
+            return jobPostRepository.findAllById(jobIds);
+        }
+
+        return null;
     }
 
     public boolean addJobPost(JobPost jobPost) {

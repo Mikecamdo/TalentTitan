@@ -40,6 +40,7 @@ import {
   getQualificationsByJob,
   updateQualifications,
 } from "../api/qualificationApi";
+import { getEmployerByUsername } from "../api/employerApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 
@@ -186,7 +187,6 @@ export const JobPage = () => {
         } else {
           setJobPostId(response.id);
           setPositionName(response.jobName);
-          setCompanyName(response.employerId);
           setPositionId(response.companyJobId);
           setContactFirstName(response.contactFirstName);
           setContactLastName(response.contactLastName);
@@ -201,9 +201,6 @@ export const JobPage = () => {
       });
 
       getQualificationsByJob(employerId, jobId).then((response: any) => {
-        console.log("THE RESPONSE:");
-        console.log(response);
-
         if (typeof response === "string") {
           notifications.show({
             color: "red",
@@ -223,6 +220,12 @@ export const JobPage = () => {
           setQualifications(quals);
         }
       });
+
+      getEmployerByUsername(employerId).then((response: any) => {
+        if (response.companyName) {
+          setCompanyName(response.companyName);
+        }
+      })
     }
   }, [employerId, jobId]);
 
@@ -354,7 +357,7 @@ export const JobPage = () => {
     }
   }, [category, keywords]);
 
-  if (!currentUser || !userType || positionName === "" || !employerId || !jobId) {
+  if (!currentUser || !userType || positionName === "" || !employerId || !jobId || !companyName) {
     return <div>Loading...</div>;
   }
 
@@ -365,7 +368,6 @@ export const JobPage = () => {
           <Grid>
             <Grid.Col span={4}>
               <Avatar
-                src="https://assets-global.website-files.com/64248e7fd5f30d79c9e57d64/64e6177329c2d71389b1b219_walmart.png"
                 size={125}
                 radius="md"
                 mx="auto"

@@ -17,6 +17,9 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
 import Staff from "../../types/Staff";
+import { notifications } from "@mantine/notifications";
+import { getStaffByUsername, updateStaff } from "../../api/staffApi";
+import { updatePassword as updateThePassword } from "../../api/userApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -31,11 +34,11 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
   const [disableSave, setDisableSave] = useState(false);
 
   const [staff, setStaff] = useState<Staff>({
-    firstName: "Erik",
-    lastName: "Diamond",
-    username: "Diamond24",
-    phoneNumber: "(123) 456-7890",
-    email: "diamond@outlook.com",
+    firstName: "",
+    lastName: "",
+    username: "",
+    phoneNumber: "",
+    email: "",
   });
 
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -50,6 +53,30 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  useEffect(() => {
+    if (currentlyViewing) {
+      getStaffByUsername(currentlyViewing).then((response: any) => {
+        if (response) {
+          console.log("RESPONSE");
+          console.log(response);
+          setStaff({
+            firstName: response.firstName,
+            lastName: response.lastName,
+            username: response.username,
+            phoneNumber: response.phone,
+            email: response.email,
+          });
+        } else {
+          notifications.show({
+            color: "red",
+            title: "Uh Oh!",
+            message: "It looks like this user doesn't exist.",
+          });
+        }
+      });
+    }
+  }, [currentlyViewing]);
 
   useEffect(() => {
     if (staff.email) {
@@ -79,7 +106,7 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
   }, [staff, emailError, phoneError]);
 
   useEffect(() => {
-    if (editProfile) {
+    if (editProfile && inputRef.current) {
       if (cursorPosition === 1) {
         inputRef.current.setSelectionRange(2, 2);
       } else if (cursorPosition === 5) {
@@ -93,7 +120,10 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
       }
     }
 
-    if (staff.phoneNumber.length === 14 || !staff.phoneNumber) {
+    if (
+      staff.phoneNumber &&
+      (staff.phoneNumber.length === 14 || !staff.phoneNumber)
+    ) {
       setPhoneError("");
     } else {
       setPhoneError("Invalid phone number");
@@ -170,17 +200,47 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
   };
 
   const setPhoneNumber = (input: string) => {
-    setCursorPosition(inputRef.current.selectionStart);
+    if (inputRef.current) setCursorPosition(inputRef.current.selectionStart);
 
     setStaff({ ...staff, phoneNumber: formatPhoneNumber(input) });
   };
 
   const updatePassword = () => {
-    // Call backend and update password
-    handlePasswordOpened.close();
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    updateThePassword({
+      username: staff.username,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }).then((response: any) => {
+      if (response === "") {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Couldn't find the correct user to update.",
+        });
+      } else if (response === "Incorrect old password") {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: response,
+        });
+      } else if (response === "Updated password") {
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: response,
+        });
+        handlePasswordOpened.close();
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "There was an error while trying to update the password.",
+        });
+      }
+    });
   };
 
   const userContext = useContext(UserContext);
@@ -190,7 +250,7 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
     console.log(currentUser);
   }, [currentUser]);
 
-  if (!currentUser || !staff) {
+  if (!currentUser || !staff || !staff.username) {
     return <div>Loading...</div>;
   }
 
@@ -201,7 +261,6 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
           <Grid>
             <Grid.Col span={4}>
               <Avatar
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png"
                 size={125}
                 radius="md"
                 mx="auto"
@@ -321,7 +380,28 @@ export const StaffProfile: React.FC<ProfileProps> = ({ currentlyViewing }) => {
             <Group justify="center" mt="md">
               <Button
                 onClick={() => {
-                  setEditProfile(false);
+                  updateStaff({
+                    username: staff.username,
+                    firstName: staff.firstName,
+                    lastName: staff.lastName,
+                    phone: staff.phoneNumber,
+                    email: staff.email
+                  }).then((response: any) => {
+                    if (response === "Staff updated successfully") {
+                      notifications.show({
+                        color: "green",
+                        title: "Success!",
+                        message: "User updated successfully.",
+                      });
+                      setEditProfile(false);
+                    } else {
+                      notifications.show({
+                        color: "red",
+                        title: "Error!",
+                        message: "There was an error updating the profile.",
+                      });
+                    }
+                  });
                 }}
                 disabled={disableSave}
               >

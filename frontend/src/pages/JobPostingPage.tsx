@@ -293,7 +293,7 @@ export const JobPostingPage = () => {
             notifications.show({
               color: "green",
               title: "Success!",
-              message: response,
+              message: "Successfully posted job",
             });
             navigate("/job-search");
           } else {

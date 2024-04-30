@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/staff")
@@ -16,6 +19,18 @@ public class StaffController {
 
     @Autowired
     private StaffService staffService;
+
+    @GetMapping("/get-by-username")
+    public ResponseEntity<Staff> getStaffByUsername(@RequestParam String username) {
+        Staff staff = staffService.getStaffByUsername(username);
+
+        if (staff == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(staff);
+        }
+    }
+    
 
     @PostMapping("/register")
     public ResponseEntity<String> registerStaff(@RequestBody Staff staff) {

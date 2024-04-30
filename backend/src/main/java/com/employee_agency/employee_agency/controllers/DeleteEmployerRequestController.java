@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.employee_agency.employee_agency.dto.DenyRequestDto;
 import com.employee_agency.employee_agency.entities.DeleteEmployerRequest;
 import com.employee_agency.employee_agency.services.DeleteEmployerRequestService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -38,8 +40,14 @@ public class DeleteEmployerRequestController {
     }
     
     @DeleteMapping("/approve")
-    public ResponseEntity<String> approveDeletionRequest(@RequestParam String employerId) {
-        deleteEmployerRequestService.approveRequest(employerId);
+    public ResponseEntity<String> approveDeletionRequest(@RequestParam String username) {
+        deleteEmployerRequestService.approveRequest(username);
         return ResponseEntity.ok("Employer successfully deleted");
+    }
+
+    @PostMapping("/deny")
+    public ResponseEntity<String> denyDeletionRequest(@RequestBody DenyRequestDto denial) {
+        deleteEmployerRequestService.denyRequest(denial.getUsername(), denial.getComment());
+        return ResponseEntity.ok("Request successfully denied");
     }
 }

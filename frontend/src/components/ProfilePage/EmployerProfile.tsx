@@ -21,6 +21,8 @@ import { getEmployerByUsername, updateEmployer } from "../../api/employerApi";
 import { notifications } from "@mantine/notifications";
 import { updatePassword as updateThePassword } from "../../api/userApi";
 import { requestDeleteEmployer } from "../../api/deleteEmployerRequestApi";
+import { getBalance, payBalance } from "../../api/balancesApi";
+import { getUserTransactions } from "../../api/transactionsApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -75,6 +77,9 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
 
   const [creditCardError, setCreditCardError] = useState("");
 
+  const [balance, setBalance] = useState<any>();
+  const [transactions, setTransactions] = useState<any>();
+
   useEffect(() => {
     getEmployerByUsername(currentlyViewing).then((response: any) => {
       if (response.name === "AxiosError") {
@@ -85,6 +90,30 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
           message: "It looks like this user doesn't exist.",
         });
       } else {
+        getBalance(response.username).then((response: any) => {
+          if (response.username) {
+            setBalance(response);
+          } else {
+            notifications.show({
+              color: "red",
+              title: "Error!",
+              message: "Error while retrieving the user's balance",
+            });
+          }
+        });
+
+        getUserTransactions(response.username).then((response: any) => {
+          if (response.length >= 0) {
+            setTransactions(response);
+          } else {
+            notifications.show({
+              color: "red",
+              title: "Error!",
+              message: "Error while retrieving the user's transactions",
+            });
+          }
+        });
+
         setEmployer({
           companyName: response.companyName,
           address: response.addressLine,
@@ -97,7 +126,6 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
           contactEmail: response.contactEmail,
           username: response.username,
         });
-        console.log(response);
       }
     });
   }, []);
@@ -327,13 +355,38 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
 
   const submitPayment = () => {
     // Call backend and submit payment
-    handlePaymentOpened.close();
-    setCreditCard("");
-    setPayAmount("");
+    payBalance({
+      username: currentUser,
+      paymentAmount: payAmount,
+    }).then((response: any) => {
+      if (response.dueDate) {
+        getUserTransactions(currentlyViewing).then((response: any) => {
+          if (response.length >= 0) {
+            setTransactions(response);
+          }
+        });
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: "Payment successful",
+        });
+        handlePaymentOpened.close();
+        setCreditCard("");
+        setPayAmount("");
+        setBalance(response);
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Error while making payment",
+        });
+      }
+    });
   };
 
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
+  const userType = userContext?.userType;
 
   useEffect(() => {
     console.log(currentUser);
@@ -346,6 +399,16 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
       setDisablePay(false);
     }
   }, [creditCardError, payAmount]);
+
+  const [disablePayment, setDisablePayment] = useState(false);
+
+  useEffect(() => {
+    if (balance && parseFloat(balance.amountDue) == 0) {
+      setDisablePayment(true);
+    } else {
+      setDisablePayment(false);
+    }
+  }, [balance]);
 
   useEffect(() => {
     const numbersArray = creditCard.match(/\d+/g);
@@ -364,7 +427,13 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !employer.username) {
+  if (
+    !currentUser ||
+    !employer.username ||
+    !userType ||
+    !balance ||
+    !transactions
+  ) {
     return <div>Loading...</div>;
   }
 
@@ -374,12 +443,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
         <Card shadow="md" padding="lg" radius="md" withBorder>
           <Grid>
             <Grid.Col span={4}>
-              <Avatar
-                src="https://assets-global.website-files.com/64248e7fd5f30d79c9e57d64/64e6177329c2d71389b1b219_walmart.png"
-                size={125}
-                radius="md"
-                mx="auto"
-              />
+              <Avatar size={125} radius="md" mx="auto" />
 
               <Text
                 ta="center"
@@ -599,10 +663,38 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
                 <Text fz="lg" fw={500} className={classes.name} ta="center">
                   Transaction History
                 </Text>
-                <Text fz="sm">February 11, 2024: Paid $50 to Bob Smith</Text>
-                <Text fz="sm" mt="xs">
-                  January 17, 2024: Paid $10 to Talent Titan (subscription fee)
-                </Text>
+                {transactions.length > 0 ? (
+                  <>
+                    {transactions.map((transaction: any, index: number) => {
+                      return (
+                        <Text fz="sm" mt="xs" key={index}>
+                          {new Intl.DateTimeFormat("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }).format(
+                            new Date(
+                              transaction.transactionDate + "T00:00:00.000"
+                            )
+                          )}
+                          : Paid ${transaction.amountPaid} to Talent Titan
+                        </Text>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {currentUser === currentlyViewing ? (
+                      <Text fz="sm" mt="xs" ta="center">
+                        Looks like you haven't made any transactions yet...
+                      </Text>
+                    ) : (
+                      <Text fz="sm" mt="xs" ta="center">
+                        Looks like they haven't made any transactions yet...
+                      </Text>
+                    )}
+                  </>
+                )}
               </Grid.Col>
             </Grid>
           </Card.Section>
@@ -657,8 +749,7 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
                   </Button>
                 </>
               )}
-              {(currentUser === currentlyViewing ||
-                currentUser === "Staff") && (
+              {(currentUser === currentlyViewing || userType === "staff") && (
                 <Button
                   onClick={() => {
                     setEditProfile(true);
@@ -756,22 +847,24 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
             <Button
               fullWidth
               onClick={() => {
-                requestDeleteEmployer(employer.username).then((response: any) => {
-                  if (response === "Employer Deletion Request successful") {
-                    notifications.show({
-                      color: "green",
-                      title: "Success!",
-                      message: "Deletion request successful",
-                    });
-                    handleDeletionOpened.close();
-                  } else {
-                    notifications.show({
-                      color: "red",
-                      title: "Error!",
-                      message: response,
-                    });
+                requestDeleteEmployer(employer.username).then(
+                  (response: any) => {
+                    if (response === "Employer Deletion Request successful") {
+                      notifications.show({
+                        color: "green",
+                        title: "Success!",
+                        message: "Deletion request successful",
+                      });
+                      handleDeletionOpened.close();
+                    } else {
+                      notifications.show({
+                        color: "red",
+                        title: "Error!",
+                        message: response,
+                      });
+                    }
                   }
-                });
+                );
               }}
             >
               Yes, delete my account
@@ -787,7 +880,16 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
         centered
       >
         <Title order={3} className={classes.name} ta="center">
-          Amount due: $40
+          Amount due: ${balance.amountDue}
+        </Title>
+
+        <Title order={3} className={classes.name} ta="center">
+          Due date:{" "}
+          {new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }).format(new Date(balance.dueDate + "T00:00:00.000"))}
         </Title>
 
         <TextInput
@@ -796,10 +898,10 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
           placeholder="Enter credit card details"
           value={creditCard}
           onChange={(delta) => {
-            //setCreditCard(delta.target.value);
             setCreditCardNumber(delta.target.value);
           }}
           error={creditCardError}
+          disabled={disablePayment}
         />
 
         <TextInput
@@ -810,13 +912,17 @@ export const EmployerProfile: React.FC<ProfileProps> = ({
           placeholder="Enter payment amount"
           value={payAmount}
           onChange={(delta) => {
-            // TODO: change this to make it dynamic (can't pay more than the total amount due)
-            if (parseInt(delta.target.value) > 40) {
-              setPayAmount("40");
+            if (
+              parseFloat(delta.target.value) > parseFloat(balance.amountDue)
+            ) {
+              setPayAmount(balance.amountDue);
+            } else if (parseFloat(delta.target.value) < 0) {
+              setPayAmount("0");
             } else {
               setPayAmount(delta.target.value);
             }
           }}
+          disabled={disablePayment}
         />
 
         <Button

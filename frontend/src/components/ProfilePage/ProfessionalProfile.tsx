@@ -29,8 +29,12 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Professional from "../../types/Professional";
 import { ProfileProps } from "../../pages/ProfilePage";
 import { UserContext } from "../../App";
-import { displayTransactions } from "../../api/transactionsApi";
-import { getProfessional, updateProfessional } from "../../api/professionalApi";
+import { getUserTransactions } from "../../api/transactionsApi";
+import {
+  getProfessional,
+  toggleJobMatching,
+  updateProfessional,
+} from "../../api/professionalApi";
 import { notifications } from "@mantine/notifications";
 import { updatePassword as updateThePassword } from "../../api/userApi";
 import { requestDeleteProfessional } from "../../api/deleteProfessionalRequestApi";
@@ -38,6 +42,7 @@ import {
   getQualificationsByProfessional,
   updateQualifications,
 } from "../../api/qualificationApi";
+import { getBalance, payBalance } from "../../api/balancesApi";
 
 const EMAIL_REGEX = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const ALPHABET_REGEX = /[a-zA-Z]/;
@@ -78,6 +83,9 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     completionDate: new Date(),
     qualifications: [],
   });
+
+  const [balance, setBalance] = useState<any>();
+  const [transactions, setTransactions] = useState<any>();
 
   const [cursorPosition, setCursorPosition] = useState(0);
   const inputRef = useRef<any>(null);
@@ -327,19 +335,44 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
 
   const submitPayment = () => {
     // Call backend and submit payment
-    handlePaymentOpened.close();
-    setCreditCard("");
-    setPayAmount("");
+    payBalance({
+      username: currentUser,
+      paymentAmount: payAmount,
+    }).then((response: any) => {
+      if (response.dueDate) {
+        getUserTransactions(currentlyViewing).then((response: any) => {
+          if (response.length >= 0) {
+            setTransactions(response);
+          }
+        });
+        notifications.show({
+          color: "green",
+          title: "Success!",
+          message: "Payment successful",
+        });
+        handlePaymentOpened.close();
+        setCreditCard("");
+        setPayAmount("");
+        setBalance(response);
+      } else {
+        notifications.show({
+          color: "red",
+          title: "Error!",
+          message: "Error while making payment",
+        });
+      }
+    });
   };
 
   const userContext = useContext(UserContext);
   const currentUser = userContext?.currentUser;
+  const userType = userContext?.userType;
 
   useEffect(() => {
-    if (currentUser) {
-      getProfessional(currentUser).then((response: any) => {
+    if (currentlyViewing) {
+      getProfessional(currentlyViewing).then((response: any) => {
         if (response) {
-          getQualificationsByProfessional(currentUser).then(
+          getQualificationsByProfessional(currentlyViewing).then(
             (response2: any) => {
               if (typeof response2 === "string") {
                 notifications.show({
@@ -375,6 +408,30 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
               }
             }
           );
+
+          getBalance(response.username).then((response: any) => {
+            if (response.username) {
+              setBalance(response);
+            } else {
+              notifications.show({
+                color: "red",
+                title: "Error!",
+                message: "Error while retrieving the user's balance",
+              });
+            }
+          });
+
+          getUserTransactions(response.username).then((response: any) => {
+            if (response.length >= 0) {
+              setTransactions(response);
+            } else {
+              notifications.show({
+                color: "red",
+                title: "Error!",
+                message: "Error while retrieving the user's transactions",
+              });
+            }
+          });
         } else {
           notifications.show({
             color: "red",
@@ -384,7 +441,7 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
         }
       });
     }
-  }, [currentUser]);
+  }, [currentlyViewing]);
 
   useEffect(() => {
     if (!creditCard || !payAmount || creditCardError) {
@@ -393,6 +450,16 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
       setDisablePay(false);
     }
   }, [creditCardError, payAmount]);
+
+  const [disablePayment, setDisablePayment] = useState(false);
+
+  useEffect(() => {
+    if (balance && parseFloat(balance.amountDue) == 0) {
+      setDisablePayment(true);
+    } else {
+      setDisablePayment(false);
+    }
+  }, [balance]);
 
   useEffect(() => {
     const numbersArray = creditCard.match(/\d+/g);
@@ -411,7 +478,14 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     }
   }, [creditCard]);
 
-  if (!currentUser || !professional || !professional.firstName) {
+  if (
+    !currentUser ||
+    !professional ||
+    !professional.firstName ||
+    !userType ||
+    !balance ||
+    !transactions
+  ) {
     return <div>Loading...</div>;
   }
 
@@ -437,26 +511,13 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
     )
   );
 
-  const transaction = () => {
-    displayTransactions().then((response: any) => {
-      if (typeof response === "string") {
-        console.log(response);
-      }
-    });
-  };
-
   return (
     <>
       <Container size="md">
         <Card shadow="md" padding="lg" radius="md" withBorder>
           <Grid>
             <Grid.Col span={3}>
-              <Avatar
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png"
-                size={125}
-                radius="md"
-                mx="auto"
-              />
+              <Avatar size={125} radius="md" mx="auto" />
 
               <Text
                 ta="center"
@@ -782,12 +843,39 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                 <Text fz="lg" fw={500} className={classes.name} ta="center">
                   Transaction History
                 </Text>
-                <Text fz="sm">
-                  February 11, 2024: Received $50 from Walmart
-                </Text>
-                <Text fz="sm" mt="xs">
-                  February 1, 2024: Paid $10 to Talent Titan (subscription fee)
-                </Text>
+
+                {transactions.length > 0 ? (
+                  <>
+                    {transactions.map((transaction: any, index: number) => {
+                      return (
+                        <Text fz="sm" mt="xs" key={index}>
+                          {new Intl.DateTimeFormat("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }).format(
+                            new Date(
+                              transaction.transactionDate + "T00:00:00.000"
+                            )
+                          )}
+                          : Paid ${transaction.amountPaid} to Talent Titan
+                        </Text>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {currentUser === currentlyViewing ? (
+                      <Text fz="sm" mt="xs" ta="center">
+                        Looks like you haven't made any transactions yet...
+                      </Text>
+                    ) : (
+                      <Text fz="sm" mt="xs" ta="center">
+                        Looks like they haven't made any transactions yet...
+                      </Text>
+                    )}
+                  </>
+                )}
               </Grid.Col>
             </Grid>
           </Card.Section>
@@ -867,15 +955,34 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
                   </Button>
                 </>
               )}
-              {(currentUser === currentlyViewing ||
-                currentUser === "Staff") && (
-                <Button
-                  onClick={() => {
-                    setEditProfile(true);
-                  }}
-                >
-                  Edit Profile
-                </Button>
+              {(currentUser === currentlyViewing || userType === "staff") && (
+                <>
+                  <Button
+                    onClick={() => {
+                      setEditProfile(true);
+                    }}
+                  >
+                    Edit Profile
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      toggleJobMatching({
+                        professionalUsername: currentlyViewing,
+                        jobMatching: true,
+                      }).then((response: any) => {
+                        if (response === "Started Job Matching") {
+                          notifications.show({
+                            color: "green",
+                            title: "Success!",
+                            message: "Job Matching started",
+                          });
+                        }
+                      });
+                    }}
+                  >
+                    Initiate Job Matching
+                  </Button>
+                </>
               )}
             </Group>
           )}
@@ -1001,7 +1108,16 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
         centered
       >
         <Title order={3} className={classes.name} ta="center">
-          Amount due: $40
+          Amount due: ${balance.amountDue}
+        </Title>
+
+        <Title order={3} className={classes.name} ta="center">
+          Due date:{" "}
+          {new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }).format(new Date(balance.dueDate + "T00:00:00.000"))}
         </Title>
 
         <TextInput
@@ -1010,10 +1126,10 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           placeholder="Enter credit card details"
           value={creditCard}
           onChange={(delta) => {
-            //setCreditCard(delta.target.value);
             setCreditCardNumber(delta.target.value);
           }}
           error={creditCardError}
+          disabled={disablePayment}
         />
 
         <TextInput
@@ -1024,13 +1140,17 @@ export const ProfessionalProfile: React.FC<ProfileProps> = ({
           placeholder="Enter payment amount"
           value={payAmount}
           onChange={(delta) => {
-            // TODO: change this to make it dynamic (can't pay more than the total amount due)
-            if (parseInt(delta.target.value) > 40) {
-              setPayAmount("40");
+            if (
+              parseFloat(delta.target.value) > parseFloat(balance.amountDue)
+            ) {
+              setPayAmount(balance.amountDue);
+            } else if (parseFloat(delta.target.value) < 0) {
+              setPayAmount("0");
             } else {
               setPayAmount(delta.target.value);
             }
           }}
+          disabled={disablePayment}
         />
 
         <Button

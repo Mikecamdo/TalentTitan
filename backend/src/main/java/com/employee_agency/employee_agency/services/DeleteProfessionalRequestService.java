@@ -1,11 +1,13 @@
 package com.employee_agency.employee_agency.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee_agency.employee_agency.EmailService;
 import com.employee_agency.employee_agency.entities.DeleteProfessionalRequest;
 import com.employee_agency.employee_agency.entities.Professional;
 import com.employee_agency.employee_agency.entities.User;
@@ -24,8 +26,15 @@ public class DeleteProfessionalRequestService {
     @Autowired
     private ProfessionalRepository professionalRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public List<DeleteProfessionalRequest> getAllRequests() {
-        return deleteProfessionalRequestRepository.findAll();
+        List<DeleteProfessionalRequest> allRequests = deleteProfessionalRequestRepository.findAll();
+
+        Collections.reverse(allRequests);
+
+        return allRequests;
     }
 
     public boolean createRequest(String professionalId) {
@@ -51,5 +60,17 @@ public class DeleteProfessionalRequestService {
 
         deletedUser.setIsActive(false);
         userRepository.save(deletedUser);
+
+        Professional professional = professionalRepository.findById(professionalId).orElseThrow(() -> new RuntimeException("Professional not found"));
+
+        emailService.sendEmail(professional.getEmail(), "TalentTitan Deletion Request Approved", "Salutations. After review, your account deletion request for TalentTitan has been approved.\nWe thank you for using our platform and hope to see you again soon!");
+    }
+
+    public void denyRequest(String username, String comment) {
+        deleteProfessionalRequestRepository.deleteById(username);
+
+        Professional professional = professionalRepository.findById(username).orElseThrow(() -> new RuntimeException("Professional not found"));
+
+        emailService.sendEmail(professional.getEmail(), "TalentTitan Deletion Request Denied", "Salutations. Unfortunately, after review your account deletion request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe invite you to re-request account deletion after all of our staff's concerns have been dealt with.");
     }
 }

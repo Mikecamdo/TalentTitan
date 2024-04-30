@@ -1,64 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomSearchBar } from "../components/CustomSearchBar";
 import { Link } from "react-router-dom";
 import { Container, Table } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
+import { getAllProfessionals } from "../api/professionalApi";
+import { getAllEmployers } from "../api/employerApi";
 
 export const ViewAccountsPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
+  const [accounts, setAccounts] = useState<any>();
 
-  const dummyData = [
-    {
-      name: "Bob Smith",
-      email: "bsmith@gmail.com",
-      phone: "(123) 456-7890",
-      accountType: "Professional",
-    },
-    {
-      name: "Frank Ocean",
-      email: "focean@outlook.com",
-      phone: "(510) 741-9003",
-      accountType: "Professional",
-    },
-    {
-      name: "Bob the Builder",
-      email: "bbuilder@gmail.com",
-      phone: "(832) 234-9463",
-      accountType: "Employer",
-    },
-    {
-      name: "Jerry Smith",
-      email: "jdawg@gmail.com",
-      phone: "(123) 456-7890",
-      accountType: "Professional",
-    },
-    {
-      name: "Walmart",
-      email: "dmcmillon@walmart.com",
-      phone: "(479) 273-4000",
-      accountType: "Employer",
-    },
-  ];
+  useEffect(() => {
+    getAllProfessionals().then((response: any) => {
+      getAllEmployers().then((response2: any) => {
+        setAccounts(response.concat(response2));
+      });
+    });
+  }, []);
 
-  const rows = dummyData.map(
-    (data: any, index: number) =>
-      data.name.toLowerCase().includes(searchValue.toLowerCase()) && (
-        <Table.Tr>
-          {data.accountType === "Professional" ? (
-            <Link to={`/profile/${data.name}`} className={classes.link}>
-              <Table.Td>{data.name}</Table.Td>
-            </Link>
-          ) : (
-            <Link to={`/profile/Employer`} className={classes.link}>
-              <Table.Td>{data.name}</Table.Td>
-            </Link>
-          )}
-          <Table.Td>{data.email}</Table.Td>
-          <Table.Td>{data.phone}</Table.Td>
-          <Table.Td>{data.accountType}</Table.Td>
-        </Table.Tr>
-      )
-  );
+  useEffect(() => {}, [accounts]);
+
+  if (!accounts) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -77,7 +41,43 @@ export const ViewAccountsPage = () => {
               <Table.Th>Account Type</Table.Th>
             </Table.Tr>
           </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
+          <Table.Tbody>
+            {accounts.map(
+              (data: any, index: number) =>
+                data.username
+                  .toLowerCase()
+                  .includes(searchValue.toLowerCase()) && (
+                  <Table.Tr key={index}>
+                    <Table.Td>
+                      <Link
+                        to={`/profile/${data.username}`}
+                        className={classes.link}
+                      >
+                        {data.username}
+                      </Link>
+                    </Table.Td>
+
+                    {data.email ? (
+                      <Table.Td>{data.email}</Table.Td>
+                    ) : (
+                      <Table.Td>{data.contactEmail}</Table.Td>
+                    )}
+
+                    {data.phone ? (
+                      <Table.Td>{data.phone}</Table.Td>
+                    ) : (
+                      <Table.Td>{data.contactPhone}</Table.Td>
+                    )}
+
+                    {data.phone ? (
+                      <Table.Td>Professional</Table.Td>
+                    ) : (
+                      <Table.Td>Employer</Table.Td>
+                    )}
+                  </Table.Tr>
+                )
+            )}
+          </Table.Tbody>
         </Table>
       </Container>
     </>

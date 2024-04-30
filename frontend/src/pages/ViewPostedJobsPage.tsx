@@ -4,7 +4,12 @@ import { Link } from "react-router-dom";
 import { Container, Table, Checkbox, Group, Text } from "@mantine/core";
 import classes from "../css_modules/ViewAccountsPage.module.css";
 import { UserContext } from "../App";
-import { getAllJobs, getJobPostsByCompany } from "../api/jobPostApi";
+import {
+  getAllJobs,
+  getJobPostsByCompany,
+  getJobsByJobMatch,
+} from "../api/jobPostApi";
+import { getAllEmployers } from "../api/employerApi";
 
 export const ViewPostedJobsPage = () => {
   const userContext = useContext(UserContext);
@@ -14,6 +19,11 @@ export const ViewPostedJobsPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [jobPosts, setJobPosts] = useState<any>();
+
+  const [allJobPosts, setAllJobPosts] = useState<any>();
+  const [jobMatches, setJobMatches] = useState<any>();
+
+  const [allEmployers, setAllEmployers] = useState<any>();
 
   useEffect(() => {
     if (currentUser && userType === "employer") {
@@ -26,15 +36,26 @@ export const ViewPostedJobsPage = () => {
           setJobPosts([]);
         }
       });
-    } else if (userType) {
+    } else if (currentUser && userType) {
       //Get all jobs for professional
       getAllJobs().then((response: any) => {
         setJobPosts(response);
+        setAllJobPosts(response);
+      });
+
+      getJobsByJobMatch(currentUser).then((response: any) => {
+        if (response.length >= 0) {
+          setJobMatches(response);
+        }
       });
     }
+
+    getAllEmployers().then((response: any) => {
+      setAllEmployers(response);
+    })
   }, [currentUser, userType]);
 
-  if (!userType || !jobPosts) {
+  if (!userType || !jobPosts || (userType === "professional" && !jobMatches) || !allEmployers) {
     return <div>Loading...</div>;
   }
 
@@ -48,7 +69,16 @@ export const ViewPostedJobsPage = () => {
 
         {userType !== "employer" && (
           <Group justify="center" mt="lg">
-            <Checkbox label="Only Matched Jobs" />
+            <Checkbox
+              label="Only Matched Jobs"
+              onChange={(event) => {
+                if (event.currentTarget.checked) {
+                  setJobPosts(jobMatches);
+                } else {
+                  setJobPosts(allJobPosts);
+                }
+              }}
+            />
           </Group>
         )}
 
@@ -91,11 +121,7 @@ export const ViewPostedJobsPage = () => {
 
                       <Table.Td>{data.jobName}</Table.Td>
 
-                      <Table.Td>
-                        <Link to={"/profile/Employer"} className={classes.link}>
-                          {data.employerId}
-                        </Link>
-                      </Table.Td>
+                      <Table.Td>{allEmployers.find((employer: any) => employer.username === data.employerId).companyName}</Table.Td>
 
                       <Table.Td>
                         {data.startDate.includes("T") ? (
@@ -137,9 +163,15 @@ export const ViewPostedJobsPage = () => {
           </Table>
         ) : (
           <>
-            <Text c="dimmed" size="lg" ta="center" mt={5}>
-              Looks like you haven't posted any jobs yet...
-            </Text>
+            {userType === "employer" ? (
+              <Text c="dimmed" size="lg" ta="center" mt={5}>
+                Looks like you haven't posted any jobs yet...
+              </Text>
+            ) : (
+              <Text c="dimmed" size="lg" ta="center" mt={5}>
+                Looks like there aren't any jobs at the moment...
+              </Text>
+            )}
           </>
         )}
       </Container>

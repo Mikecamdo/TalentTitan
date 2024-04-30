@@ -1,15 +1,18 @@
 package com.employee_agency.employee_agency.services;
 
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee_agency.employee_agency.EmailService;
+import com.employee_agency.employee_agency.entities.Balance;
 import com.employee_agency.employee_agency.entities.Employer;
 import com.employee_agency.employee_agency.entities.NewEmployerRequests;
 import com.employee_agency.employee_agency.entities.User;
+import com.employee_agency.employee_agency.repositories.BalanceRepository;
 import com.employee_agency.employee_agency.repositories.EmployerRepository;
 import com.employee_agency.employee_agency.repositories.NewEmployerRequestsRepository;
 import com.employee_agency.employee_agency.repositories.NewProfessionalRequestsRepository;
@@ -31,10 +34,17 @@ public class NewEmployerRequestsService {
     private NewProfessionalRequestsRepository newProfessionalRequestsRepository;
 
     @Autowired
+    private BalanceRepository balanceRepository;
+
+    @Autowired
     private EmailService emailService;
 
     public List<NewEmployerRequests> getAllRequests() {
-        return newEmployerRequestsRepository.findAll();
+        List<NewEmployerRequests> allRequests = newEmployerRequestsRepository.findAll();
+
+        Collections.reverse(allRequests);
+
+        return allRequests;
     }
 
     public boolean createNewEmployerRequests(NewEmployerRequests newEmployerRequests) {
@@ -76,7 +86,7 @@ public class NewEmployerRequestsService {
         newEmployerRequestsRepository.save(currentNewEmployerRequests);
     }
 
-    public void approveRequest(String username) {
+    public void approveRequest(String username, String amountDue, String dueDate, String comment) {
         NewEmployerRequests currentRequest = newEmployerRequestsRepository.findById(username)
             .orElseThrow(() -> new RuntimeException("Employer Request not found"));
 
@@ -105,7 +115,27 @@ public class NewEmployerRequestsService {
 
         employerRepository.save(newEmployer);
 
-        emailService.sendEmail("mikecamdo@gmail.com", "Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \n Username: " + newUser.getUsername() + "\n Password: " + newUser.getPassword());
+        Balance newBalance = new Balance();
+        newBalance.setUsername(username);
+        newBalance.setAmountDue(amountDue);
+        newBalance.setDueDate(dueDate);
+
+        balanceRepository.save(newBalance);
+
+        if (comment == null || comment == "") {
+            emailService.sendEmail(newEmployer.getContactEmail(), "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \nUsername: " + newUser.getUsername() + "\nPassword: " + newUser.getPassword() + "\nMonthly Fee: " + amountDue + "\nFirst Monthly Fee Due Date: " + dueDate);
+        } else {
+            emailService.sendEmail(newEmployer.getContactEmail(), "New Account Details", "Congratulations! Your account has been approved for TalentTitan. Here are your account details: \nUsername: " + newUser.getUsername() + "\nPassword: " + newUser.getPassword()  + "\nMonthly Fee: " + amountDue + "\nFirst Monthly Fee Due Date: " + dueDate + "\nOur staff also left the following comments regarding your account approval:\n" + comment);
+        }
+    }
+
+    public void denyRequest(String username, String comment) {
+        NewEmployerRequests currentRequest = newEmployerRequestsRepository.findById(username)
+            .orElseThrow(() -> new RuntimeException("Employer Request not found"));
+        
+            newEmployerRequestsRepository.deleteById(username);
+
+        emailService.sendEmail(currentRequest.getContactEmail(), "Account Request Denied", "Salutations. Unfortunately, after review your account request for TalentTitan has been denied.\nOur staff submitted the following reasoning:\n" + comment + "\nWe apologize for any inconvenience and invite you to re-apply to TalentTitan at a future date.");
     }
 
     private static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
